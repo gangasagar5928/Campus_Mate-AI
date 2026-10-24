@@ -15,6 +15,12 @@ from typing import Dict, Any, Optional
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
+import asyncio
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
+
 from uagents import Agent, Context, Protocol
 from models import (
     InterviewQuery,
