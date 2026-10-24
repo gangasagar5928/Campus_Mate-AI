@@ -145,3 +145,26 @@ class DailyActionPlan(Model):
     remedial_sessions_count: int = Field(default=0, description="Number of remedial sessions injected into plan")
     summary_notes: str = Field(default="", description="Executive summary of the day's strategy and focus areas")
     notes: Optional[str] = Field(default=None, description="Compatibility alias for summary_notes")
+
+
+# ==============================================================================
+# Shared Contracts 3 & 4: InterviewQuery & InterviewEvaluation (Member 1/2 <-> Member 3)
+# ==============================================================================
+
+class InterviewQuery(Model):
+    """
+    Query contract sent to Member 3's Interview Agent to trigger a mock interview session.
+    """
+    query_id: str = Field(default="QUERY-001", description="Unique session request ID")
+    session_id: Optional[str] = Field(default=None, description="Session ID for compatibility")
+    student_id: str = Field(default="GCET-STUDENT-001", description="Candidate roll number")
+    branch: str = Field(default="ECE", description="Candidate branch: 'ECE' or 'CSE'")
+    company: str = Field(default="qualcomm", description="Target company")
+    tier: str = Field(default="standard", description="standard (free) or tier-1 (1 FET)")
+    question_id: Optional[str] = Field(default=None, description="Question ID")
+    payment_tx_hash: Optional[str] = Field(default=None, description="FET payment tx hash")
+    subject: str = Field(default="Digital Electronics", description="Subject domain, e.g. Digital Electronics or Operating Systems")
+    topic: str = Field(default="Sequential Logic", description="Focal topic, e.g. Sequential Logic / Flip-Flops")
+    question_count: int = Field(default=5, ge=1, le=15, description="Number of questions in the interview")
+    difficulty: str = Field(default="intermediate", description="Difficulty: easy, intermediate, hard")
+    target_role: Optional[str] = Field(default="Hardware / Firmware Engineer", description="Target job title")
