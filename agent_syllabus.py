@@ -56,3 +56,21 @@ async def handle_startup(ctx: Context):
     ctx.logger.info(f"Agent Address : {syllabus_agent.address}")
     ctx.logger.info(f"Listening Port: {PORT}")
     ctx.logger.info("=" * 60)
+
+
+@syllabus_agent.on_message(model=PlanRequest)
+async def handle_plan_request(ctx: Context, sender: str, req: PlanRequest):
+    """Primary handler for Member 2 PlanRequest contract."""
+    ctx.logger.info(f"[Syllabus] Received PlanRequest from {sender} for {req.student_profile.name}")
+    try:
+        plan = balancer_engine.generate_daily_action_plan(
+            profile=req.student_profile,
+            evaluations=req.recent_evaluations,
+            target_date=req.requested_date
+        )
+        resp = PlanResponse(request_id=req.request_id, success=True, plan=plan)
+    except Exception as exc:
+        ctx.logger.error(f"[Syllabus] Error generating plan: {exc}")
+        resp = PlanResponse(request_id=req.request_id, success=False, error_message=str(exc))
+
+    await ctx.send(sender, resp)
