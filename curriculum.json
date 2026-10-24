@@ -238,7 +238,118 @@
     "CSE": {
       "branch_name": "Computer Science & Engineering",
       "semester": 5,
-      "subjects": []
+      "subjects": [
+        {
+          "subject_code": "KCS-501",
+          "subject_name": "Data Structures & Algorithms",
+          "semester": 5,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Critical (MAANG, Tier-1 Product Companies, Coding Rounds)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Asymptotic Analysis, Stacks & Queues",
+              "weightage_percent": 15.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "Asymptotic Notations (Big-O, Omega, Theta, Little-o)",
+                "Master Theorem for Divide-and-Conquer Recurrences",
+                "Array Representations and Space Complexity",
+                "Stack Operations, Infix to Postfix Conversion, Evaluation",
+                "Circular Queue, Deque, Priority Queue Implementation"
+              ],
+              "key_concepts": [
+                "Master theorem casework",
+                "Monotonic stack pattern",
+                "Circular queue array wrapping arithmetic"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Linked Lists & Hierarchical Trees",
+              "weightage_percent": 20.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Singly, Doubly, and Circular Linked Lists",
+                "Fast & Slow Pointer Technique (Cycle detection, Middle of List)",
+                "Binary Tree Traversals (Inorder, Preorder, Postorder, Level Order)",
+                "Binary Search Tree (BST) Operations (Insert, Delete, Search)",
+                "AVL Trees (Rotations: LL, RR, LR, RL, Balance Factor)",
+                "B-Trees and B+ Trees Fundamentals"
+              ],
+              "key_concepts": [
+                "Floyd's cycle detection algorithm",
+                "AVL balance factor maintenance via rotations",
+                "B-Tree node splitting and branching factor"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Graph Algorithms & Traversals",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Graph Representations (Adjacency Matrix vs Adjacency List)",
+                "Breadth First Search (BFS) and Depth First Search (DFS)",
+                "Topological Sort (Kahn's Algorithm and DFS-based)",
+                "Cycle Detection in Directed and Undirected Graphs",
+                "Minimum Spanning Tree (Kruskal's Algorithm with Disjoint Set Union, Prim's)",
+                "Single-Source Shortest Path (Dijkstra's Algorithm, Bellman-Ford)",
+                "All-Pairs Shortest Path (Floyd-Warshall)"
+              ],
+              "key_concepts": [
+                "Disjoint Set Union (Union by Rank & Path Compression)",
+                "Dijkstra greedy shortest path with min-heap",
+                "Bellman-Ford negative weight cycle detection"
+              ]
+            },
+            {
+              "unit_number": 4,
+              "unit_title": "Dynamic Programming & Greedy Design Strategies",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Greedy vs Dynamic Programming Paradigms",
+                "Fractional Knapsack (Greedy) vs 0/1 Knapsack (DP)",
+                "Longest Common Subsequence (LCS)",
+                "Longest Increasing Subsequence (LIS)",
+                "Matrix Chain Multiplication (MCM)",
+                "Coin Change Problem and Subset Sum Problem"
+              ],
+              "key_concepts": [
+                "Optimal substructure and overlapping subproblems",
+                "Memoization vs Tabulation trade-offs",
+                "State space transition equations"
+              ]
+            },
+            {
+              "unit_number": 5,
+              "unit_title": "Sorting, Searching & Intractability (P vs NP)",
+              "weightage_percent": 15.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "Comparison Sorts: Merge Sort, Quick Sort, Heap Sort",
+                "Linear Time Sorts: Counting Sort, Radix Sort",
+                "Lower Bound for Comparison-based Sorting (Omega(N log N))",
+                "Ternary Search and Binary Search Variations",
+                "Complexity Classes: P, NP, NP-Complete, and NP-Hard",
+                "Reducibility and Cook's Theorem Overview"
+              ],
+              "key_concepts": [
+                "Quick sort pivot selection and randomized partitioning",
+                "Heapify procedure and in-place heapsort",
+                "Polynomial time reduction"
+              ]
+            }
+          ]
+        }
+      ]
     }
   }
 }
