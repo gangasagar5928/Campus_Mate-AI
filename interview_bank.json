@@ -4,7 +4,38 @@
       "name": "Qualcomm",
       "track": "Hardware & Embedded Systems / VLSI",
       "description": "Chip design, Verilog/SystemVerilog RTL modeling, STA timing closure, and mobile SoC architecture.",
-      "questions": []
+      "questions": [
+        {
+          "id": "qualcomm_verilog_01",
+          "company": "Qualcomm",
+          "track": "VLSI / Digital Design",
+          "tier": "standard",
+          "fee_fet": 0.0,
+          "topic": "Verilog Blocking vs Non-Blocking Assignments",
+          "difficulty": "Medium",
+          "question": "In Verilog RTL design, explain the fundamental behavioral difference between blocking (`=`) and non-blocking (`<=`) assignments. How does the event-scheduling queue handle each during simulation, and what are the severe synthesis or race-condition consequences if they are used incorrectly in sequential `always @(posedge clk)` vs combinational `always @(*)` blocks?",
+          "expected_rubric": {
+            "must_include": [
+              "Blocking (=) executes sequentially in active region and blocks subsequent statements until completion",
+              "Non-blocking (<=) schedules RHS evaluation in active region and updates LHS in NBA (Non-blocking Assignment) region",
+              "Sequential logic (@(posedge clk)) must strictly use non-blocking (<=) to avoid race conditions across flip-flops",
+              "Combinational logic (@(*)) should use blocking (=) to ensure immediate signal updates and avoid latch inference",
+              "Stratified Event Queue understanding (Active, Inactive, NBA regions)"
+            ],
+            "bonus_points": [
+              "Explanation of delta cycles in Verilog event scheduling",
+              "Shift register example showing race condition when blocking '=' is incorrectly used across clocked stages",
+              "Synthesis tool interpretation and unexpected latch generation warnings"
+            ],
+            "common_pitfalls": [
+              "Confusing simulation delta delay with physical wire propagation delay",
+              "Claiming non-blocking assignments run in parallel hardware without explaining the two-stage evaluation-update mechanism",
+              "Failing to mention latch synthesis when combinational branches are incomplete"
+            ]
+          },
+          "ideal_sample_answer": "In Verilog, blocking assignments (`=`) are evaluated and committed immediately in the Active region of the simulation event queue, blocking the execution of subsequent statements within the procedural block. In contrast, non-blocking assignments (`<=`) evaluate the Right-Hand-Side (RHS) in the Active region, but defer updating the Left-Hand-Side (LHS) until the NBA (Non-Blocking Assignment) event region, after all active evaluations have finished.\n\nIn sequential logic `always @(posedge clk)`, non-blocking assignments must always be used. If blocking assignments are used, the execution order between independent always blocks at the same clock edge is non-deterministic, causing simulation-synthesis mismatches and race conditions (e.g., in a shift register where data shoots through multiple stages in one clock edge). In combinational logic `always @(*)`, blocking assignments should be used so that intermediate variable updates propagate immediately, preventing accidental latch inference."
+        }
+      ]
     }
   }
 }
