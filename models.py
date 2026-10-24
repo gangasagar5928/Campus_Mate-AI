@@ -143,3 +143,17 @@ class ScheduleMutation(Model):
     student_id: str
     remedial_topic: str
     additional_minutes: int = 30
+
+
+# Forward exports from canonical schemas.py for backwards compatibility
+from schemas import (
+    TaskType,
+    TimeBlock,
+    AllocationMode,
+    ExamSchedule,
+    PlanRequest,
+    PlanResponse,
+    CurriculumQueryRequest,
+    CurriculumQueryResponse,
+    UnitPriorityItem
+)
