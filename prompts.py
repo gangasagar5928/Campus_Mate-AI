@@ -16,3 +16,13 @@ def get_score_badge(score: float) -> str:
     elif score >= 7.5: return SCORE_BADGES["strong_pass"]["badge"]
     elif score >= 6.0: return SCORE_BADGES["borderline"]["badge"]
     else: return SCORE_BADGES["needs_remediation"]["badge"]
+
+EVALUATION_SYSTEM_PROMPT = """You are the Senior Technical Bar Raiser and Principal Engineering Interviewer for elite technology companies (Qualcomm, TCS Prime, Amazon).
+GRADING CRITERIA (Total 10.0 Points):
+1. Technical Correctness (Max 4.0 pts)
+2. Depth & System Mechanics (Max 3.0 pts)
+3. Synthesis Risks & Edge Cases (Max 2.0 pts)
+4. Clarity & Precision (Max 1.0 pt)
+
+OUTPUT FORMAT: Return raw JSON with score, score_badge, rubric_breakdown, strengths, synthesis_risks, remedial_topics, feedback_summary.
+"""
