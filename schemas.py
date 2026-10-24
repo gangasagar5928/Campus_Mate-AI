@@ -207,3 +207,23 @@ class InterviewEvaluation(Model):
         if self.max_score <= 0:
             return False
         return (self.score / self.max_score) < threshold_percentage or self.needs_remedial
+
+
+# ==============================================================================
+# Inter-Agent Messaging Envelopes (for Fetch.ai uAgents Protocol)
+# ==============================================================================
+
+class PlanRequest(Model):
+    """Message sent by StudentTwinAgent to Departmental Syllabus Agent to request a schedule."""
+    request_id: str
+    student_profile: StudentProfile
+    recent_evaluations: List[InterviewEvaluation] = Field(default_factory=list)
+    requested_date: Optional[str] = None
+
+
+class PlanResponse(Model):
+    """Message returned by Departmental Syllabus Agent containing the finalized plan."""
+    request_id: str
+    success: bool
+    plan: Optional[DailyActionPlan] = None
+    error_message: Optional[str] = None
