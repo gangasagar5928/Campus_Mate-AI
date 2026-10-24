@@ -56,3 +56,80 @@ class CurriculumLoader:
         if not branch_data:
             return []
         return branch_data.get("subjects", [])
+
+
+class DeterministicBalancingEngine:
+    """Core deterministic scheduling and dynamic ratio allocation engine."""
+    def __init__(self, curriculum_loader: Optional[CurriculumLoader] = None):
+        self.curriculum_loader = curriculum_loader or CurriculumLoader()
+
+    @staticmethod
+    def get_nearest_exam(upcoming_exams: List[ExamSchedule]) -> Optional[ExamSchedule]:
+        if not upcoming_exams:
+            return None
+        return min(upcoming_exams, key=lambda e: e.days_to_exam)
+
+    def calculate_priorities_for_profile(
+        self, profile: StudentProfile
+    ) -> List[UnitPriorityItem]:
+        """Calculates deterministic unit priorities using credit weights and exam proximity."""
+        subjects = self.curriculum_loader.get_branch_subjects(profile.branch)
+        exam_map = {e.subject_code.upper(): e for e in profile.upcoming_exams}
+        exam_name_map = {e.subject_name.lower(): e for e in profile.upcoming_exams}
+        weak_topics_lower = [w.lower() for w in profile.weak_topics]
+        priority_items: List[UnitPriorityItem] = []
+
+        for subj in subjects:
+            code = subj.get("subject_code", "")
+            name = subj.get("subject_name", "")
+            credits = float(subj.get("credit_weight", 4.0))
+
+            matched_exam = exam_map.get(code.upper())
+            if not matched_exam:
+                for k, v in exam_name_map.items():
+                    if k in name.lower() or name.lower() in k:
+                        matched_exam = v
+                        break
+
+            days_to_exam = matched_exam.days_to_exam if matched_exam else None
+
+            for unit in subj.get("units", []):
+                u_num = unit.get("unit_number", 1)
+                u_title = unit.get("title", f"Unit {u_num}")
+                weight_pct = float(unit.get("weightage_percent", 20.0))
+                is_hy = bool(unit.get("is_high_yield", False))
+                topics = unit.get("topics", [])
+                rec_minutes = int(unit.get("recommended_study_minutes", 60))
+
+                base_priority = (weight_pct / 100.0) * credits
+                if is_hy:
+                    base_priority *= 1.35
+
+                if days_to_exam is not None:
+                    proximity_factor = 1.0 + (10.0 / (days_to_exam + 1.0))
+                    calculated_p = base_priority * proximity_factor
+                else:
+                    calculated_p = base_priority * 1.0
+
+                for t in topics:
+                    if any(w in t.lower() for w in weak_topics_lower):
+                        calculated_p *= 1.25
+                        break
+
+                priority_items.append(
+                    UnitPriorityItem(
+                        subject_code=code,
+                        subject_name=name,
+                        unit_number=u_num,
+                        unit_title=u_title,
+                        weightage_percent=weight_pct,
+                        credit_weight=credits,
+                        is_high_yield=is_hy,
+                        calculated_priority=round(calculated_p, 3),
+                        recommended_study_minutes=rec_minutes,
+                        topics=topics
+                    )
+                )
+
+        priority_items.sort(key=lambda item: item.calculated_priority, reverse=True)
+        return priority_items
