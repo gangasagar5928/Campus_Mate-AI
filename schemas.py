@@ -33,3 +33,11 @@ class TaskType(str, Enum):
     SYLLABUS_REVISION = "syllabus_revision"
     REMEDIAL = "remedial"
     MOCK_INTERVIEW = "mock_interview"
+
+
+class TimeBlock(str, Enum):
+    """Daily scheduling time slots."""
+    MORNING = "morning"
+    AFTERNOON = "afternoon"
+    EVENING = "evening"
+    NIGHT = "night"
