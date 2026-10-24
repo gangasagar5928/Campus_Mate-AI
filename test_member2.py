@@ -271,3 +271,4 @@ if __name__ == "__main__":
     unittest.main()
 
 # Verified dynamic ratios: Normal(60/40), Approaching(50/50), Urgent(10/90)
+# Verified mutation hook: score < 6.0 inserts 30-min Evening Block session
