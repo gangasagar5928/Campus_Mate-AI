@@ -1,4 +1,14 @@
-# OmniRoute: Member 3 Subsystem
+<p align="center">
+  <img src="assets/logo.png" alt="CampusMate AI Logo" width="220" />
+</p>
+
+# CampusMate AI — Autonomous Academic & Career Agent System
+
+> **Track:** ASI:One Agent Challenge – From Intent to Action  
+> **Team:** Code Innovex  
+> **Target Platforms:** Fetch.ai uAgents, Agentverse, ASI:One (Agent Chat Protocol - ACP)
+
+---
 ## Interviewer Agent, Payment Protocol & Video Lead
 
 > **Primary Objective:** Own the company-tailored interview drill engine, LLM grading rubric, Payment Protocol bonus, and final submission packaging.
