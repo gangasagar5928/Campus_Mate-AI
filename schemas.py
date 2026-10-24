@@ -168,3 +168,42 @@ class InterviewQuery(Model):
     question_count: int = Field(default=5, ge=1, le=15, description="Number of questions in the interview")
     difficulty: str = Field(default="intermediate", description="Difficulty: easy, intermediate, hard")
     target_role: Optional[str] = Field(default="Hardware / Firmware Engineer", description="Target job title")
+
+
+class InterviewEvaluation(Model):
+    """
+    Evaluation feedback emitted by Member 3's Interview Agent.
+    If score is low (< 6.0), Member 2's mutation hook intercepts this and inserts
+    a 30-minute evening remedial session.
+    """
+    evaluation_id: Optional[str] = Field(default="EVAL-001", description="Unique evaluation ID, e.g. EVAL-20261024-001")
+    session_id: Optional[str] = Field(default=None, description="Session ID from Member 3")
+    question_id: Optional[str] = Field(default=None, description="Question ID assessed")
+    student_id: str = Field(default="GCET-STUDENT-001", description="Candidate roll number")
+    company: Optional[str] = Field(default=None, description="Target company assessed")
+    subject: str = Field(default="Technical Core", description="Subject assessed")
+    topic: str = Field(default="Concepts", description="Topic assessed, e.g. Flip-Flops, Deadlocks, SQL Normalization")
+    score: float = Field(..., ge=0.0, le=10.0, description="Overall score out of 10.0")
+    score_badge: Optional[str] = Field(default=None, description="Score badge label (e.g., Bronze, Silver, Gold)")
+    max_score: float = Field(default=10.0, description="Maximum scale (defaults to 10.0)")
+    feedback: Optional[str] = Field(default="", description="Detailed textual feedback and conceptual gaps identified")
+    feedback_summary: Optional[str] = Field(default="", description="Summary feedback from Member 3")
+    rubric_breakdown: Dict[str, float] = Field(default_factory=dict, description="Rubric criteria breakdown")
+    strengths: List[str] = Field(default_factory=list, description="Candidate strengths")
+    synthesis_risks: List[str] = Field(default_factory=list, description="Synthesis risks identified")
+    weak_subtopics: List[str] = Field(default_factory=list, description="Specific subtopics where candidate struggled")
+    remedial_topics: List[str] = Field(default_factory=list, description="Recommended remedial topics from Member 3")
+    needs_remedial: bool = Field(
+        default=False,
+        description="Flag indicating performance was subpar (automatically set if score < 6.0)"
+    )
+    timestamp: str = Field(
+        default="2026-10-24T12:00:00",
+        description="ISO timestamp of evaluation"
+    )
+
+    def is_low_score(self, threshold_percentage: float = 0.60) -> bool:
+        """Determines if the score falls below the remedial threshold (default: 60%)."""
+        if self.max_score <= 0:
+            return False
+        return (self.score / self.max_score) < threshold_percentage or self.needs_remedial
