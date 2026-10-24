@@ -229,6 +229,35 @@
             ]
           },
           "ideal_sample_answer": "Validating a BST cannot be done by merely checking `node.left.val < node.val < node.right.val` because that only tests local parent-child validity. For example, a left child could have a right grandchild whose value is greater than the root, violating the global BST property.\n\nOptimal Algorithm: Traverse the tree while propagating valid value bounds `(min_allowed, max_allowed)` initialized to `(-\u221e, +\u221e)`. For each node:\n1. Check if `min_val < node.val < max_val`. If not, return False.\n2. Recurse left with `(min_val, node.val)`.\n3. Recurse right with `(node.val, max_val)`.\nAlternatively, perform an in-order traversal and verify that visited values are strictly monotonically increasing. Time Complexity: $O(N)$ where $N$ is total nodes. Space Complexity: $O(h)$ for the recursion stack ($O(\\log N)$ balanced, $O(N)$ worst-case skewed).\n\nLowest Common Ancestor (LCA) in BST: Starting at root:\n- If both $p.val < node.val$ and $q.val < node.val$, the LCA must be in the left subtree; move $node = node.left$.\n- If both $p.val > node.val$ and $q.val > node.val$, move $node = node.right$.\n- As soon as $p$ and $q$ diverge (or one equals $node$), current $node$ is the Lowest Common Ancestor. This iterative search takes $O(h)$ time and $O(1)$ auxiliary space."
+        },
+        {
+          "id": "amazon_dsa_02",
+          "company": "Amazon",
+          "track": "DSA / Graph & Routing Algorithms",
+          "tier": "standard",
+          "fee_fet": 0.0,
+          "topic": "Shortest Path & Topological Sorting in Fulfillment Logistics",
+          "difficulty": "Medium-Hard",
+          "question": "In Amazon's fulfillment network, package delivery routes must find the shortest travel time across delivery hubs with non-negative road transit delays, while package sorting facilities require topological ordering to resolve order assembly dependencies (Directed Acyclic Graph). Compare Dijkstra's algorithm with topological sorting for DAG shortest paths. Why does DAG shortest path run in $O(V + E)$ while Dijkstra requires $O((V + E) \\log V)$?",
+          "expected_rubric": {
+            "must_include": [
+              "Dijkstra uses min-heap priority queue to greedily expand closest unvisited vertex, handling cyclic graphs with non-negative weights",
+              "Dijkstra complexity: O((V + E) log V) due to priority queue insertions/decrease-key operations",
+              "DAG shortest path: topological sort (Kahn's or DFS post-order) linearizes vertices so all edges point left-to-right",
+              "DAG relaxation: single pass relaxing outgoing edges in topological order guarantees optimal distance without back-tracking",
+              "DAG complexity: O(V + E) because each vertex and edge is relaxed exactly once in topological sequence"
+            ],
+            "bonus_points": [
+              "DAG relaxation works even with negative edge weights unlike standard Dijkstra",
+              "Cycle detection in logistics assembly graphs using in-degree array in Kahn's algorithm",
+              "Real-world fulfillment batching and dynamic traffic rerouting consideration"
+            ],
+            "common_pitfalls": [
+              "Attempting to run topological sort on graphs with directed cycles",
+              "Failing to explain why the DAG structure eliminates the need for a min-heap"
+            ]
+          },
+          "ideal_sample_answer": "In fulfillment networks, route optimization depends on graph topology:\n1. Dijkstra's Algorithm works on general directed graphs (which may contain cycles) with non-negative edge weights. Because edges can lead back or branch unpredictably, it maintains a Min-Heap priority queue to always greedily process the unvisited vertex with the minimum tentative distance. Updating the heap on edge relaxations yields an $O((V + E) \\log V)$ time complexity.\n\n2. DAG Shortest Path works when the network is a Directed Acyclic Graph (e.g. assembly dependencies). In a DAG, we can perform a Topological Sort (using Kahn's algorithm or DFS post-order) in $O(V + E)$. In topological order, all directed edges point strictly from earlier vertices to later vertices. We then iterate through the linear order, relaxing outgoing edges of each vertex. When we reach vertex $u$, all possible paths leading into $u$ have already been permanently resolved! Thus, no min-heap is required, and every vertex and edge is processed once in $O(V + E)$ linear time."
         }
       ]
     }
