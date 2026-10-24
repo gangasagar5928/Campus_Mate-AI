@@ -193,6 +193,12 @@
           "ideal_sample_answer": "In real-time telematics and HFT, mutex-based queues incur OS context switches, scheduler delays, and potential priority inversions. A lock-free SPSC ring buffer guarantees bounded wait-free progress.\n\nThe ring buffer maintains two atomic indices: `head` (producer write pointer) and `tail` (consumer read pointer). For synchronization without sequential consistency overhead:\n- In `push(item)`: The producer loads `tail` using `memory_order_acquire` to ensure it observes consumer reads. It writes the data element into the buffer, then stores the updated `head` with `memory_order_release`, ensuring the payload is globally visible before `head` is updated.\n- In `pop(item)`: The consumer loads `head` with `memory_order_acquire`. After copying the item, it updates `tail` with `memory_order_release`.\n- Local index updates use `memory_order_relaxed` since each pointer is written by exactly one thread.\n\nCache-Line False Sharing: In modern CPUs, cache coherency protocols operate on 64-byte cache lines. If `head` and `tail` share the same line, writes by core A invalidate the cache line on core B ('cache ping-pong'), collapsing throughput. We mitigate this using `alignas(std::hardware_destructive_interference_size)` on both atomic members to guarantee they reside in separate CPU cache lines."
         }
       ]
+    },
+    "amazon": {
+      "name": "Amazon",
+      "track": "Data Structures, Algorithms & Distributed Systems",
+      "description": "Amazon Technical Track: Tree/Graph algorithms, scalable cloud architecture, and Leadership Principles.",
+      "questions": []
     }
   }
 }
