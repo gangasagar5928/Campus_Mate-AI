@@ -161,6 +161,36 @@
             ]
           },
           "ideal_sample_answer": "In C++, dynamic polymorphism uses two structures: a `vtable` (virtual table) and a `vptr` (virtual pointer). The compiler generates one static `vtable` per polymorphic class containing function pointers to its virtual methods. Each instantiated object contains an invisible hidden `vptr` member pointing to its class's `vtable`. When a virtual function is invoked on a pointer/reference, the program dereferences the object's `vptr`, locates the function index in the `vtable`, and dispatches the call dynamically.\n\nVirtual Destructor: If a base class pointer points to a derived class object allocated on the heap, executing `delete base_ptr` without a virtual destructor results in undefined behavior\u2014only the base destructor runs! The derived class destructor is bypassed, leaking derived dynamic members. Declaring a virtual destructor ensures the derived destructor executes first.\n\nObject Slicing: Occurs when a derived class instance is assigned to a base class variable by value (`Base b = derived;`). The compiler allocates only enough space for the Base class, 'slicing off' derived attributes and copying only base fields. The `vptr` in `b` is initialized to the Base class `vtable`, losing polymorphic behavior."
+        },
+        {
+          "id": "tcs_prime_adv_01",
+          "company": "TCS Prime",
+          "track": "TCS Prime Advanced Systems Track (Tier-1 Premium)",
+          "tier": "tier-1",
+          "fee_fet": 1.0,
+          "topic": "Lock-Free Ring Buffer & C++20 Concurrency",
+          "difficulty": "Hard / Tier-1",
+          "question": "[TIER-1 TCS PRIME ADVANCED PACK]\nDesign a single-producer single-consumer (SPSC) lock-free circular ring buffer in modern C++ utilizing `std::atomic` and memory order semantics (`memory_order_acquire`, `memory_order_release`, `memory_order_relaxed`). Why does avoiding `std::mutex` provide deterministic latency in high-frequency trading or real-time telematics? Address cache-line false sharing between the head and tail indices and explain how `alignas(hardware_destructive_interference_size)` mitigates it.",
+          "expected_rubric": {
+            "must_include": [
+              "SPSC queue with head and tail atomic indices",
+              "Lock-free advantage: avoids kernel context switching, priority inversion, and blocking latency",
+              "Release-Acquire semantics: Producer uses store with memory_order_release; Consumer uses load with memory_order_acquire",
+              "Producer loads head with relaxed (local owner), consumer loads tail with relaxed (local owner)",
+              "False sharing: head and tail residing on same 64-byte cache line cause continuous CPU cache invalidations across cores",
+              "Mitigation: alignas(64) or alignas(hardware_destructive_interference_size) to place indices on separate cache lines"
+            ],
+            "bonus_points": [
+              "Ring buffer wraparound using power-of-two capacity and bitwise AND masking `(index & (capacity - 1))`",
+              "Comparing sequential consistency (`memory_order_seq_cst`) overhead vs acquire-release",
+              "ABA problem explanation and why SPSC queues are inherently immune to ABA"
+            ],
+            "common_pitfalls": [
+              "Using default memory_order_seq_cst without explaining memory barriers",
+              "Overlooking cache line ping-pong (false sharing) between core caches"
+            ]
+          },
+          "ideal_sample_answer": "In real-time telematics and HFT, mutex-based queues incur OS context switches, scheduler delays, and potential priority inversions. A lock-free SPSC ring buffer guarantees bounded wait-free progress.\n\nThe ring buffer maintains two atomic indices: `head` (producer write pointer) and `tail` (consumer read pointer). For synchronization without sequential consistency overhead:\n- In `push(item)`: The producer loads `tail` using `memory_order_acquire` to ensure it observes consumer reads. It writes the data element into the buffer, then stores the updated `head` with `memory_order_release`, ensuring the payload is globally visible before `head` is updated.\n- In `pop(item)`: The consumer loads `head` with `memory_order_acquire`. After copying the item, it updates `tail` with `memory_order_release`.\n- Local index updates use `memory_order_relaxed` since each pointer is written by exactly one thread.\n\nCache-Line False Sharing: In modern CPUs, cache coherency protocols operate on 64-byte cache lines. If `head` and `tail` share the same line, writes by core A invalidate the cache line on core B ('cache ping-pong'), collapsing throughput. We mitigate this using `alignas(std::hardware_destructive_interference_size)` on both atomic members to guarantee they reside in separate CPU cache lines."
         }
       ]
     }
