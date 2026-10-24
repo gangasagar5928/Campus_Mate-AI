@@ -49,13 +49,16 @@ class CurriculumLoader:
                 self._curriculum_cache = json.load(f)
         return self._curriculum_cache
 
-    def get_branch_subjects(self, branch: str) -> List[Dict[str, Any]]:
+    def get_branch_subjects(self, branch: str, semester: Optional[int] = None) -> List[Dict[str, Any]]:
         data = self.load()
         branches = data.get("branches", {})
-        branch_data = branches.get(branch.upper())
-        if not branch_data:
-            return []
-        return branch_data.get("subjects", [])
+        branch_data = branches.get(branch.upper(), {})
+        all_subjects = branch_data.get("subjects", [])
+        if semester is not None:
+            filtered = [s for s in all_subjects if s.get("semester") == semester]
+            if filtered:
+                return filtered
+        return all_subjects
 
 
 class DeterministicBalancingEngine:
@@ -73,7 +76,7 @@ class DeterministicBalancingEngine:
         self, profile: StudentProfile
     ) -> List[UnitPriorityItem]:
         """Calculates deterministic unit priorities using credit weights and exam proximity."""
-        subjects = self.curriculum_loader.get_branch_subjects(profile.branch)
+        subjects = self.curriculum_loader.get_branch_subjects(profile.branch, getattr(profile, 'semester', None))
         exam_map = {e.subject_code.upper(): e for e in profile.upcoming_exams}
         exam_name_map = {e.subject_name.lower(): e for e in profile.upcoming_exams}
         weak_topics_lower = [w.lower() for w in profile.weak_topics]

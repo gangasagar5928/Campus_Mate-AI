@@ -232,6 +232,153 @@
               ]
             }
           ]
+        },
+        {
+          "subject_code": "KEC-601",
+          "subject_name": "Digital Communication",
+          "semester": 6,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "High (Qualcomm, Intel, Signal Processing, Embedded)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Pulse Modulation (PAM, PWM, PPM)",
+              "weightage_percent": 25.0,
+              "is_high_yield": false,
+              "estimated_hours": 6,
+              "topics": [
+                "Pulse Modulation (PAM, PWM, PPM)"
+              ],
+              "key_concepts": [
+                "Pulse Modulation (PAM, PWM, PPM)"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Digital Modulation Techniques (ASK, PSK, QPSK)",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 8,
+              "topics": [
+                "Digital Modulation Techniques (ASK, PSK, QPSK)"
+              ],
+              "key_concepts": [
+                "Digital Modulation Techniques (ASK, PSK, QPSK)"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Information Theory & Channel Coding",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Information Theory & Channel Coding"
+              ],
+              "key_concepts": [
+                "Information Theory & Channel Coding"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KEC-602",
+          "subject_name": "Digital Signal Processing",
+          "semester": 6,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "High (Qualcomm, Intel, Signal Processing, Embedded)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "DFT and FFT Algorithms",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 8,
+              "topics": [
+                "DFT and FFT Algorithms"
+              ],
+              "key_concepts": [
+                "DFT and FFT Algorithms"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "IIR and FIR Filter Design",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "IIR and FIR Filter Design"
+              ],
+              "key_concepts": [
+                "IIR and FIR Filter Design"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Finite Word Length Effects",
+              "weightage_percent": 25.0,
+              "is_high_yield": false,
+              "estimated_hours": 6,
+              "topics": [
+                "Finite Word Length Effects"
+              ],
+              "key_concepts": [
+                "Finite Word Length Effects"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KEC-061",
+          "subject_name": "Microcontrollers & Embedded Systems",
+          "semester": 6,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "High (Qualcomm, Intel, Signal Processing, Embedded)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "8051 Architecture & Timers",
+              "weightage_percent": 25.0,
+              "is_high_yield": false,
+              "estimated_hours": 5,
+              "topics": [
+                "8051 Architecture & Timers"
+              ],
+              "key_concepts": [
+                "8051 Architecture & Timers"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "ARM Cortex-M Programming",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 8,
+              "topics": [
+                "ARM Cortex-M Programming"
+              ],
+              "key_concepts": [
+                "ARM Cortex-M Programming"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Peripheral Interfacing (I2C, SPI)",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 7,
+              "topics": [
+                "Peripheral Interfacing (I2C, SPI)"
+              ],
+              "key_concepts": [
+                "Peripheral Interfacing (I2C, SPI)"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -579,6 +726,153 @@
                 "B+ Tree leaf node linked list for sequential scan performance",
                 "Extendible hashing directory and bucket depth doubling",
                 "WAL protocol ensuring durability before commit"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KCS-601",
+          "subject_name": "Software Engineering",
+          "semester": 6,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "High (Amazon, TCS Prime, System Architecture)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "SDLC, Agile & Scrum",
+              "weightage_percent": 25.0,
+              "is_high_yield": false,
+              "estimated_hours": 5,
+              "topics": [
+                "SDLC, Agile & Scrum"
+              ],
+              "key_concepts": [
+                "SDLC, Agile & Scrum"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "System Architecture & Design Patterns",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 8,
+              "topics": [
+                "System Architecture & Design Patterns"
+              ],
+              "key_concepts": [
+                "System Architecture & Design Patterns"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Software Testing & QA",
+              "weightage_percent": 25.0,
+              "is_high_yield": false,
+              "estimated_hours": 6,
+              "topics": [
+                "Software Testing & QA"
+              ],
+              "key_concepts": [
+                "Software Testing & QA"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KCS-602",
+          "subject_name": "Web Technology",
+          "semester": 6,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "High (Amazon, TCS Prime, System Architecture)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "HTML5, CSS3, DOM & JavaScript",
+              "weightage_percent": 25.0,
+              "is_high_yield": false,
+              "estimated_hours": 4,
+              "topics": [
+                "HTML5, CSS3, DOM & JavaScript"
+              ],
+              "key_concepts": [
+                "HTML5, CSS3, DOM & JavaScript"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Async JS, Promises & RESTful APIs",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 8,
+              "topics": [
+                "Async JS, Promises & RESTful APIs"
+              ],
+              "key_concepts": [
+                "Async JS, Promises & RESTful APIs"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Microservices Architecture & DB Indexing",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 8,
+              "topics": [
+                "Microservices Architecture & DB Indexing"
+              ],
+              "key_concepts": [
+                "Microservices Architecture & DB Indexing"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KCS-603",
+          "subject_name": "Computer Networks",
+          "semester": 6,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "High (Amazon, TCS Prime, System Architecture)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "OSI & TCP/IP Layering Models",
+              "weightage_percent": 25.0,
+              "is_high_yield": false,
+              "estimated_hours": 6,
+              "topics": [
+                "OSI & TCP/IP Layering Models"
+              ],
+              "key_concepts": [
+                "OSI & TCP/IP Layering Models"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Routing Protocols (OSPF, BGP)",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 8,
+              "topics": [
+                "Routing Protocols (OSPF, BGP)"
+              ],
+              "key_concepts": [
+                "Routing Protocols (OSPF, BGP)"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "TCP Congestion Control & Flow Control",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "TCP Congestion Control & Flow Control"
+              ],
+              "key_concepts": [
+                "TCP Congestion Control & Flow Control"
               ]
             }
           ]

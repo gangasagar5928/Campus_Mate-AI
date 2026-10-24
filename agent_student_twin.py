@@ -2,10 +2,11 @@
 agent_student_twin.py - Student Twin Agent (Orchestrator Node)
 Fetch.ai uAgent representing the student candidate.
 Discovered via ASI:One through official Agent Chat Protocol (ACP).
-Coordinates:
-- Departmental Syllabus Engine (Curriculum balance & proximity calculations)
-- Company Interviewer Engine (Technical drills, payment protocol & rubric grading)
-- Natural Language ACP Interface for Agentverse & ASI:One
+
+Combines all 3 team members' work:
+- Member 1: Agent Chat Protocol (ACP 0.3.0) orchestration, natural language intent parser & interactive UI cards
+- Member 2: Departmental Syllabus Engine (AKTU/GCET 3rd year curriculum, dynamic 60/40, 50/50, 10/90 ratio balancing & evening remedial mutation hook)
+- Member 3: Company Interviewer Engine (Qualcomm/TCS/Amazon question bank, 1.0 testnet FET Dorado payment verification, Bar Raiser rubric grading)
 """
 
 import os
@@ -62,7 +63,8 @@ with open(INTERVIEW_BANK_PATH, "r", encoding="utf-8") as f:
     INTERVIEW_BANK = json.load(f)
 
 # Engines
-balancing_engine = DeterministicBalancingEngine()
+curriculum_loader = CurriculumLoader()
+balancing_engine = DeterministicBalancingEngine(curriculum_loader=curriculum_loader)
 llm_evaluator = LLMEvaluator()
 payment_helper = PaymentProtocol()
 
@@ -104,11 +106,13 @@ class SessionState:
         self.semester = 6
         self.target_company = "Qualcomm"
         self.daily_hours = 4.0
-        self.days_to_midterm = 4
+        self.days_to_midterm = 18  # Default AKTU/GCET Academic Calendar sessional buffer
+        self.days_specified_by_user = False
         self.last_question_id = "qualcomm_verilog_01"
         self.session_id = f"sess_{sender_id[-8:] if len(sender_id) >= 8 else 'user'}"
         self.current_plan = None
         self.last_evaluation = None
+        self.evening_remedial_mutation = None
 
 sessions: Dict[str, SessionState] = {}
 
@@ -129,7 +133,6 @@ def find_question_by_id(question_id: str) -> Optional[Dict[str, Any]]:
 def select_drill_question(company_key: str, tier: str = "standard") -> Dict[str, Any]:
     comp = INTERVIEW_BANK.get("companies", {}).get(company_key.lower())
     if not comp:
-        # fallback to qualcomm
         comp = INTERVIEW_BANK.get("companies", {}).get("qualcomm")
     questions = comp.get("questions", [])
     matched = [q for q in questions if q.get("tier") == tier]
@@ -143,23 +146,55 @@ def format_action_plan_markdown(plan: SchemaDailyActionPlan, session: SessionSta
     p_mins = int(round(total_mins * plan.placement_ratio))
     s_mins = total_mins - p_mins
 
-    mode_label = "Approaching Midterm Mode"
+    # Determine allocation mode explanation
     if session.days_to_midterm < 3:
-        mode_label = "Urgent Exam Revision Mode (90% High-Yield Syllabus)"
-    elif session.days_to_midterm > 7:
-        mode_label = "Normal Prep Mode (60% Placement / 40% Coursework)"
+        mode_label = "Urgent Exam Revision Mode (90% High-Yield Syllabus / 10% Placement)"
+    elif session.days_to_midterm <= 7:
+        mode_label = "Approaching Midterm Mode (50% Placement / 50% Syllabus)"
+    else:
+        mode_label = "Normal Prep Mode (60% Placement Prep / 40% Academic Coursework)"
+
+    # Syllabus subjects for branch & semester
+    branch_subjects = curriculum_loader.get_branch_subjects(session.branch, session.semester)
 
     lines = [
         f"## 📅 Adaptive Daily Study Plan ({session.branch} — Semester {session.semester})",
-        f"**Target Company:** {session.target_company} | **Study Budget:** {session.daily_hours:.1f} Hours | **Days to Midterm:** {session.days_to_midterm} Days",
+        f"**Target Company:** {session.target_company} | **Study Budget:** {session.daily_hours:.1f} Hours/Day",
         "",
-        f"### ⚖️ Workload Allocation ({mode_label})",
-        f"- 📘 **Academic Syllabus Revision:** **{s_pct}%** ({s_mins} mins)",
-        f"- 🎯 **Placement Technical Drills:** **{p_pct}%** ({p_mins} mins)",
-        "",
-        "---",
-        "### 📝 Today's Recommended Task Schedule:",
+        "### ⏳ Exam Proximity & Calendar Synchronization:",
     ]
+
+    if session.days_specified_by_user:
+        lines.append(f"- 📌 **User-Specified Exam Date:** Midterm in **{session.days_to_midterm} Days**.")
+    else:
+        lines.append(
+            f"- 📌 **College Academic Calendar Synced (AKTU/GCET):** Sessional Midterms start in **{session.days_to_midterm} Days** "
+            "(no immediate exam debt, operating in Normal Placement Focus)."
+        )
+        lines.append("  *(💡 If your college announced a different date, simply message e.g. **\"my exam is in 3 days\"** to adapt!)*")
+
+    lines.append("")
+    lines.append(f"### ⚖️ Deterministic Workload Allocation ({mode_label})")
+    lines.append(f"- 🎯 **Target Placement Drills:** **{p_pct}%** ({p_mins} mins)")
+    lines.append(f"- 📘 **Academic Syllabus Revision:** **{s_pct}%** ({s_mins} mins)")
+    lines.append("")
+    lines.append("---")
+
+    # Syllabus overview
+    lines.append(f"### 📚 Active Academic Syllabus ({session.branch} — Semester {session.semester}):")
+    for subj in branch_subjects:
+        code = subj.get("subject_code", "")
+        name = subj.get("subject_name", "")
+        relevance = subj.get("placement_relevance", "Core Technical Value")
+        units = subj.get("units", [])
+        unit_titles = [u.get("unit_title", "") for u in units[:2]]
+        units_text = " • ".join(unit_titles) if unit_titles else "Core Units"
+        lines.append(f"- **{code} — {name}:** {units_text}")
+        lines.append(f"  *Recruitment Value:* _{relevance}_")
+
+    lines.append("")
+    lines.append("---")
+    lines.append("### 📝 Today's Recommended Task Schedule:")
 
     time_blocks = ["🌅 Morning Block", "☀️ Mid-Day Block", "🌆 Afternoon Block", "📘 Evening Block", "🌙 Night Block"]
     for idx, task in enumerate(plan.tasks):
@@ -167,10 +202,14 @@ def format_action_plan_markdown(plan: SchemaDailyActionPlan, session: SessionSta
         cat_badge = "📘 Syllabus" if task.category == "Syllabus Revision" else "🎯 Placement"
         lines.append(f"{idx + 1}. **{block_label} ({task.duration_minutes}m):** `{cat_badge}` {task.title}")
 
+    # Evening remedial mutation note if present
+    if session.evening_remedial_mutation:
+        lines.append("")
+        lines.append(f"⚠️ **Evening Remedial Hook Injected:** {session.evening_remedial_mutation}")
+
     lines.append("")
     lines.append("---")
-    lines.append(f"💡 *Proximity Alert: Next sessional exam in {session.days_to_midterm} days. Schedule dynamically tuned to prevent academic debt.*")
-    lines.append(f"👉 *Ready to practice? Type: **\"Start {session.target_company} drill\"** to begin an interactive technical mock.*")
+    lines.append(f"👉 *Next Step: Type **\"Start {session.target_company} drill\"** to begin your interactive technical interview mock!*")
 
     return "\n".join(lines)
 
@@ -195,12 +234,12 @@ def format_drill_markdown(q: Dict[str, Any], is_unlocked: bool = True) -> str:
         "",
         "---",
         "✍️ **How to Submit:**",
-        "Reply directly with your explanation, analysis, or code. CampusMate will run instant rubric evaluation and generate your scoring badge.",
+        "Reply directly with your technical explanation, architecture, or code. CampusMate will run instant rubric evaluation and generate your scoring badge.",
     ]
     return "\n".join(lines)
 
 
-def format_scorecard_markdown(eval_res: Dict[str, Any], q: Dict[str, Any], has_mutation: bool = False) -> str:
+def format_scorecard_markdown(eval_res: Dict[str, Any], q: Dict[str, Any], has_mutation: bool = False, mutated_topic: str = "") -> str:
     score = eval_res.get("score", 7.0)
     badge = eval_res.get("score_badge", "Pass")
     topic = q.get("topic", "Technical Drill")
@@ -247,10 +286,13 @@ def format_scorecard_markdown(eval_res: Dict[str, Any], q: Dict[str, Any], has_m
     if has_mutation:
         lines.append("")
         lines.append("---")
-        lines.append("⚠️ **Schedule Mutation Triggered:** Score fell below 6.0/10 threshold. Balancer automatically injected a 30-minute remedial review into tonight's Evening Block.")
+        lines.append(
+            f"⚠️ **Member 2 Remedial Mutation Hook Triggered:** Score fell below the 6.0/10 threshold. "
+            f"The balancer engine dynamically injected a 30-minute remedial review (*'{mutated_topic}'*) into tonight's Evening Study Block."
+        )
 
     lines.append("")
-    lines.append("👉 *Next step: Type **\"Start Amazon Bar Raiser drill\"** or **\"Show my daily study plan\"**.*")
+    lines.append("👉 *Next step: Type **\"Show my daily study plan\"** to see the updated schedule, or **\"Start Amazon Bar Raiser drill\"** for next drill.*")
 
     return "\n".join(lines)
 
@@ -260,7 +302,10 @@ def format_welcome_markdown() -> str:
         "## 🎓 Welcome to CampusMate AI!",
         "Your **Autonomous Academic & Career Agent** built on Fetch.ai `uAgents` and Agent Chat Protocol (ACP).",
         "",
-        "I balance university coursework with target company recruitment tracks so you never compromise midterms for interviews.",
+        "Combines all 3 team members' work into one seamless workflow:",
+        "- **Member 1 (Orchestration):** Agent Chat Protocol (ACP 0.3.0) discovery on ASI:One.",
+        "- **Member 2 (Syllabus Balancing):** AKTU/GCET 3rd-year curriculum, dynamic ratio balancing (60/40, 50/50, 10/90) & evening remedial mutation hook.",
+        "- **Member 3 (Interviewer & Web3):** Qualcomm/TCS/Amazon interview packs, 1.0 testnet FET Dorado micropayments & 10.0 Bar Raiser rubric grading.",
         "",
         "---",
         "### 🚀 Quick Prompts (Click or send any of these):",
@@ -310,13 +355,15 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
                 session.semester = int(payload.get("semester", session.semester))
                 session.target_company = payload.get("target_company", session.target_company)
                 session.daily_hours = float(payload.get("daily_hours", session.daily_hours))
-                session.days_to_midterm = int(payload.get("days_to_exam", session.days_to_midterm))
+                if "days_to_exam" in payload:
+                    session.days_to_midterm = int(payload.get("days_to_exam"))
+                    session.days_specified_by_user = True
                 lower = "schedule"
         except Exception:
             pass
 
     # --------------------------------------------------------------------------
-    # INTENT 1: Submit Answer & Evaluation
+    # INTENT 1: Submit Answer & Evaluation (Member 3 Rubric Engine)
     # --------------------------------------------------------------------------
     is_answer = (
         session.stage == "IN_DRILL" and len(user_text) > 30 and
@@ -324,7 +371,7 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
     ) or any(k in lower for k in [
         "blocking", "non-blocking", "pointer", "unique_ptr", "shared_ptr", "weak_ptr",
         "cache stampede", "consistent hashing", "raii", "vtable", "vptr", "setup time",
-        "hold time", "delta cycle", "metastability"
+        "hold time", "delta cycle", "metastability", "nba region"
     ])
 
     if is_answer:
@@ -337,13 +384,19 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
         session.stage = "EVALUATED"
         session.last_evaluation = eval_result
 
-        scorecard_md = format_scorecard_markdown(eval_result, q, has_mutation=has_mutation)
+        mutated_topic = ""
+        if has_mutation:
+            remedial_topics = eval_result.get("remedial_topics", ["RTL Simulation & Race Hazards"])
+            mutated_topic = remedial_topics[0]
+            session.evening_remedial_mutation = f"30m Remedial Drill: {mutated_topic} (Score was {score:.1f}/10)"
+
+        scorecard_md = format_scorecard_markdown(eval_result, q, has_mutation=has_mutation, mutated_topic=mutated_topic)
         reply = ACPChatMessage(content=[TextContent(text=scorecard_md)])
         await ctx.send(sender, reply)
         return
 
     # --------------------------------------------------------------------------
-    # INTENT 2: Start Technical Interview Drill / Mock Pack
+    # INTENT 2: Start Technical Interview Drill / Mock Pack (Member 3 Track Bank)
     # --------------------------------------------------------------------------
     if any(k in lower for k in ["drill", "interview", "verilog", "mock", "bar raiser", "tcs", "qualcomm", "amazon"]):
         ctx.logger.info("[Intent] Start Drill Requested")
@@ -370,7 +423,7 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
         return
 
     # --------------------------------------------------------------------------
-    # INTENT 3: Generate Daily Action Plan / Schedule / Exam Buffer Check
+    # INTENT 3: Generate Daily Action Plan / Schedule / Exam Proximity (Member 2 Engine)
     # --------------------------------------------------------------------------
     if any(k in lower for k in ["schedule", "plan", "study", "syllabus", "midterm", "exam", "buffer", "hours", "proximity", "semester", "sem"]):
         ctx.logger.info("[Intent] Schedule / Plan Generation")
@@ -390,12 +443,17 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
         if h_match:
             session.daily_hours = float(h_match.group(1))
 
-        # Extract Days to Midterm
+        # Check if user explicitly specified days left
         d_match = re.search(r"(?:midterm|exam|in)\s*(\d+)\s*days?", lower)
         if d_match:
             session.days_to_midterm = int(d_match.group(1))
+            session.days_specified_by_user = True
+        else:
+            # Default to AKTU / GCET college academic calendar sessional buffer
+            session.days_to_midterm = 18
+            session.days_specified_by_user = False
 
-        # Extract Company
+        # Extract Target Company
         if "amazon" in lower:
             session.target_company = "Amazon"
         elif "tcs" in lower:
@@ -403,7 +461,19 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
         elif "qualcomm" in lower:
             session.target_company = "Qualcomm"
 
-        # Generate Deterministic Plan
+        # Lookup actual syllabus subjects for this semester
+        subjs = curriculum_loader.get_branch_subjects(session.branch, session.semester)
+        upcoming_exams = [
+            SchemaExamSchedule(
+                subject_code=s.get("subject_code", "SEM-CORE"),
+                subject_name=s.get("subject_name", "Core Subject"),
+                exam_date="2026-11-11",
+                days_to_exam=session.days_to_midterm,
+                credit_weight=float(s.get("credit_weight", 4.0))
+            ) for s in subjs
+        ]
+
+        # Generate Deterministic Plan via Member 2 Balancer Engine
         prof = SchemaStudentProfile(
             student_id=sender,
             branch=session.branch,
@@ -411,15 +481,7 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
             target_company=session.target_company,
             daily_available_hours=session.daily_hours,
             days_to_midterm=session.days_to_midterm,
-            upcoming_exams=[
-                SchemaExamSchedule(
-                    subject_code="EC601",
-                    subject_name="Digital Signal Processing",
-                    exam_date="2026-10-28",
-                    days_to_exam=session.days_to_midterm,
-                    credit_weight=4.0
-                )
-            ]
+            upcoming_exams=upcoming_exams
         )
 
         plan = balancing_engine.generate_daily_action_plan(prof)
