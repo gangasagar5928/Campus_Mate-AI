@@ -101,7 +101,39 @@
       "name": "TCS Prime",
       "track": "Systems Engineering, C++ & Advanced Algorithms",
       "description": "High-performance software engineering, memory safety, C++ modern idioms, and multi-threaded systems.",
-      "questions": []
+      "questions": [
+        {
+          "id": "tcs_prime_cpp_01",
+          "company": "TCS Prime",
+          "track": "C++ & Memory Management",
+          "tier": "standard",
+          "fee_fet": 0.0,
+          "topic": "Pointers, References, Memory Leaks & RAII",
+          "difficulty": "Medium",
+          "question": "In modern C++, explain the difference between raw pointers, references, and smart pointers (`std::unique_ptr`, `std::shared_ptr`, `std::weak_ptr`). How does the RAII (Resource Acquisition Is Initialization) paradigm eliminate resource leaks, and what is the exact scenario where `std::shared_ptr` causes a fatal memory leak? How does `std::weak_ptr` break that leak?",
+          "expected_rubric": {
+            "must_include": [
+              "Differences: references cannot be null or reseated; raw pointers allow manual allocation/deallocation; smart pointers manage lifetime automatically",
+              "RAII: resources are bound to object lifetime; destructor deterministically releases heap memory/handles when scope exits",
+              "std::unique_ptr: exclusive ownership, zero overhead, move-only semantics",
+              "std::shared_ptr: shared ownership via reference-counted control block",
+              "Circular / Cyclic reference problem: two objects owning shared_ptr to each other keep use_count >= 1, preventing deallocation",
+              "std::weak_ptr: non-owning observer that does not increment strong reference count, breaking cyclic dependencies"
+            ],
+            "bonus_points": [
+              "Control block details (strong count vs weak count and make_shared memory layout)",
+              "Thread safety of shared_ptr reference count vs underlying object access",
+              "Using `std::weak_ptr::lock()` to safely acquire temporary shared ownership"
+            ],
+            "common_pitfalls": [
+              "Failing to explain how cyclic shared_ptr references prevent ref_count from reaching 0",
+              "Claiming references can be re-bound to new memory addresses",
+              "Omitting the distinction between stack unwinding during exceptions and manual delete calls"
+            ]
+          },
+          "ideal_sample_answer": "References are immutable aliases for existing objects that cannot be null or reseated. Raw pointers represent raw memory addresses requiring manual `delete`, creating high risk of leaks and dangling pointers. Modern C++ relies on RAII (Resource Acquisition Is Initialization), where resources are acquired in constructors and deterministically freed in destructors when objects go out of scope, even during exception unwinding.\n\nSmart pointers:\n1. `std::unique_ptr`: Enforces exclusive single ownership with zero runtime overhead over a raw pointer. It is move-only.\n2. `std::shared_ptr`: Enables shared ownership using a dynamically allocated control block with an atomic reference count.\n3. `std::weak_ptr`: A non-owning observer that references a `shared_ptr` managed object without incrementing the strong reference count.\n\nThe Fatal Leak Scenario: When two objects hold `std::shared_ptr` references to each other (cyclic reference), each object's strong count remains at least 1 even after all external references are destroyed. Because the reference count never reaches zero, their destructors are never invoked, causing a permanent memory leak. To fix this, one link in the cycle is converted to `std::weak_ptr`, allowing the strong count to hit zero and memory to be reclaimed."
+        }
+      ]
     }
   }
 }
