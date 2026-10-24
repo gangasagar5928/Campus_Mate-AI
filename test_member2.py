@@ -269,3 +269,5 @@ class TestSyllabusEngineAndLoadBalancer(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+# Verified dynamic ratios: Normal(60/40), Approaching(50/50), Urgent(10/90)
