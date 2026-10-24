@@ -64,6 +64,36 @@
             ]
           },
           "ideal_sample_answer": "Setup time ($T_{setup}$) is the minimum time data must remain stable before the capturing clock edge. Hold time ($T_{hold}$) is the minimum time data must remain stable after the capturing clock edge.\n\nSetup Check: $T_{clk} \\ge T_{cq} + T_{comb\\_max} + T_{setup} - T_{skew} + T_{jitter}$. Setup margin depends directly on the clock period $T_{clk}$, so setup violations can always be relieved by lowering the operating frequency.\n\nHold Check: $T_{cq} + T_{comb\\_min} \\ge T_{hold} + T_{skew}$. Because $T_{clk}$ does not appear in this equation, hold violations are frequency-independent and CANNOT be fixed by reducing the clock frequency! A hold violation causes fatal chip failure at any frequency.\n\nTo resolve hold violations during Physical Design, engineers insert non-inverting delay buffers or high-threshold-voltage (HVT) cells into the fast data path ($T_{comb\\_min}$) to delay data arrival without worsening setup time on critical paths."
+        },
+        {
+          "id": "qualcomm_vlsi_adv_01",
+          "company": "Qualcomm",
+          "track": "Qualcomm VLSI Advanced Pack (Tier-1 Premium)",
+          "tier": "tier-1",
+          "fee_fet": 1.0,
+          "topic": "Clock Domain Crossing (CDC) & Multi-Voltage Power Gating",
+          "difficulty": "Bar Raiser / Hard",
+          "question": "[TIER-1 QUALCOMM MOCK PACK]\nDesign a robust Clock Domain Crossing (CDC) architecture for transferring a multi-bit control vector between asynchronous clock domains in a Snapdragon modem subsystem. Why does a standard 2-Flip-Flop synchronizer fail for multi-bit data buses, and how do you implement a Gray-code asynchronous FIFO or a 4-phase handshake protocol to guarantee zero data corruption? Furthermore, explain how isolation cells and level shifters are placed when crossing between different voltage domains (UPF).",
+          "expected_rubric": {
+            "must_include": [
+              "2-FF synchronizer bus skew issue: bit propagation delays vary, causing intermediate invalid binary states to be sampled",
+              "Asynchronous FIFO with dual-port SRAM and Gray-coded read/write pointers",
+              "Gray code property: only 1 bit transitions per increment, eliminating multi-bit sample skew",
+              "2-FF synchronizers used strictly on the single-bit Gray pointers crossing domains",
+              "Level shifters required for voltage translation between different VDD domains",
+              "Isolation cells (ISO) required to hold lines at safe logic state when power domain is gated OFF"
+            ],
+            "bonus_points": [
+              "Calculating FIFO full and empty conditions in Gray code domain (MSB inversion for wrap-around)",
+              "Unified Power Format (UPF) retention registers and power management controller sequencing",
+              "Mean Time Between Failures (MTBF) formulation for synchronizer flip-flops"
+            ],
+            "common_pitfalls": [
+              "Suggesting passing multi-bit binary bus directly through a 2-FF synchronizer bank",
+              "Confusing level shifters (voltage adaptation) with isolation cells (floating input protection during power down)"
+            ]
+          },
+          "ideal_sample_answer": "A standard 2-FF synchronizer cannot be applied directly to a multi-bit binary bus because routing and gate delays cause bits to arrive with slight skews. When crossing asynchronous boundaries, intermediate invalid bus states will be sampled, corrupting the payload.\n\nTo resolve this, an Asynchronous FIFO is used. The read and write addresses are converted into Gray code, where only exactly one bit transitions per pointer increment. The 1-bit Gray transitions are safely passed across the CDC boundary using 2-FF synchronizers. Full and empty comparisons occur after pointer synchronization (with FIFO full detected by inverting the top two MSBs in Gray code). Alternatively, a Req-Ack handshake mechanism with closed-loop acknowledgment can be used for slow multi-bit control vectors.\n\nIn Multi-Voltage UPF domains: Level shifters are placed between domains operating at different voltage rails to prevent gate breakdown or weak switching. Isolation cells (AND/OR gates tied to enable clamp) are placed at power domain boundaries to clamp floating signals to known logic values (0 or 1) when a domain is powered off, preventing high crowbar leakage currents."
         }
       ]
     }
