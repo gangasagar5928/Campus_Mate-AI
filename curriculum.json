@@ -379,6 +379,437 @@
               ]
             }
           ]
+        },
+        {
+          "subject_code": "KAS-101",
+          "subject_name": "Engineering Physics",
+          "semester": 1,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Foundational Physics & Semiconductor Physics",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Relativistic Mechanics",
+              "weightage_percent": 20.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "Lorentz Transformations",
+                "Length Contraction",
+                "Time Dilation"
+              ],
+              "key_concepts": [
+                "Relativistic kinematics"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Electromagnetic Field Theory",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Maxwell Equations",
+                "Poynting Vector",
+                "Wave Propagation"
+              ],
+              "key_concepts": [
+                "Maxwell equations in vacuum & dielectric"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Quantum Mechanics",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "De-Broglie Waves",
+                "Schrodinger Wave Equation",
+                "Particle in a 1D Box"
+              ],
+              "key_concepts": [
+                "Wave function physical interpretation"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KEE-201",
+          "subject_name": "Basic Electrical Engineering",
+          "semester": 2,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Circuit Analysis & Power Systems Foundation",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "DC Circuit Analysis",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 9,
+              "topics": [
+                "Thevenin Theorem",
+                "Norton Theorem",
+                "Superposition",
+                "KVL/KCL"
+              ],
+              "key_concepts": [
+                "Mesh and Nodal circuit reduction"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "AC Circuit Analysis",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Phasor Representation",
+                "Series/Parallel Resonance",
+                "Power Factor"
+              ],
+              "key_concepts": [
+                "Q-factor and resonance frequency"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Transformers & Electrical Machines",
+              "weightage_percent": 25.0,
+              "is_high_yield": false,
+              "estimated_hours": 9,
+              "topics": [
+                "Single Phase Transformer",
+                "OC/SC Tests",
+                "DC Machines"
+              ],
+              "key_concepts": [
+                "Transformer equivalent circuit"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KEC-301",
+          "subject_name": "Electronic Devices & Semiconductor Physics",
+          "semester": 3,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "High (VLSI, Qualcomm, Intel, Texas Instruments)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Semiconductor Physics & PN Junction",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Carrier Transport",
+                "Diffusion and Drift",
+                "PN Junction Depletion Region",
+                "Diode Capacitance"
+              ],
+              "key_concepts": [
+                "Bandgap theory & diode equation"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Bipolar Junction Transistors (BJT)",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "CE, CB, CC Configurations",
+                "Ebers-Moll Model",
+                "Transistor Biasing",
+                "Early Effect"
+              ],
+              "key_concepts": [
+                "BJT current gain & thermal stability"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "MOSFET & Field Effect Transistors",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "MOS Capacitor",
+                "Threshold Voltage",
+                "Depletion/Enhancement MOSFET",
+                "Subthreshold Conduction"
+              ],
+              "key_concepts": [
+                "I-V characteristics in linear and saturation"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KEC-302",
+          "subject_name": "Digital System Design",
+          "semester": 3,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "High (VLSI & FPGA RTL Modeling)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Combinational Logic & Minimization",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 9,
+              "topics": [
+                "K-Maps up to 5 variables",
+                "Quine-McCluskey",
+                "Look-Ahead Carry Adders"
+              ],
+              "key_concepts": [
+                "Hazards and glitches in logic circuits"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Synchronous Sequential Circuits",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 11,
+              "topics": [
+                "Mealy and Moore Machines",
+                "State Reduction and Assignment",
+                "Setup/Hold Margins"
+              ],
+              "key_concepts": [
+                "FSM state diagram to hardware synthesis"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KEC-401",
+          "subject_name": "Analog Circuits",
+          "semester": 4,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Analog IC Design (TI, Analog Devices)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Operational Amplifiers (Op-Amps)",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 11,
+              "topics": [
+                "Ideal vs Practical Op-Amp",
+                "Inverting/Non-inverting",
+                "Integrator and Differentiator",
+                "CMRR & Slew Rate"
+              ],
+              "key_concepts": [
+                "Virtual ground concept and frequency response"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Feedback Amplifiers & Oscillators",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Negative Feedback Topologies",
+                "Barkhausen Criterion",
+                "Wien Bridge and Colpitts"
+              ],
+              "key_concepts": [
+                "Feedback stability and phase margin"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KEC-402",
+          "subject_name": "Signals & Systems",
+          "semester": 4,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "DSP & Communications (Qualcomm, MediaTek)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Continuous & Discrete Time Signals",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Linear Time Invariant (LTI) Systems",
+                "Convolution Integral & Sum",
+                "Impulse Response"
+              ],
+              "key_concepts": [
+                "BIBO stability & causality"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Fourier & Z-Transforms",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Continuous-Time Fourier Transform",
+                "Z-Transform ROC",
+                "Inverse Z-Transform"
+              ],
+              "key_concepts": [
+                "Region of Convergence (ROC) properties"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KEC-701",
+          "subject_name": "VLSI Design & CMOS Circuit Architecture",
+          "semester": 7,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Top Tier (Qualcomm, Nvidia, Apple Silicon)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "CMOS Inverter & Static Logic",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "CMOS Static Inverter VTC",
+                "Noise Margins",
+                "Propagation Delay & Elmore Delay",
+                "Power Dissipation"
+              ],
+              "key_concepts": [
+                "Dynamic vs static power and sizing ratio"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Dynamic Logic & Clocking",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Domino Logic",
+                "Charge Sharing",
+                "Clock Skew & Jitter",
+                "Pipeline Retiming"
+              ],
+              "key_concepts": [
+                "Metastability mitigation in multi-clock designs"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Physical Design & Static Timing Analysis",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Placement & Routing",
+                "Clock Tree Synthesis (CTS)",
+                "Setup/Hold Slack Equations"
+              ],
+              "key_concepts": [
+                "Multi-corner timing closure"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KEC-702",
+          "subject_name": "Optical Fiber & Wireless Communication",
+          "semester": 7,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Telecom & RF Engineering",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Optical Waveguides & Fibers",
+              "weightage_percent": 25.0,
+              "is_high_yield": false,
+              "estimated_hours": 9,
+              "topics": [
+                "Total Internal Reflection",
+                "Numerical Aperture",
+                "Modal Dispersion",
+                "Attenuation"
+              ],
+              "key_concepts": [
+                "Single-mode vs multimode dispersion"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Cellular Radio & 5G Architectures",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 11,
+              "topics": [
+                "Cellular Concept",
+                "Frequency Reuse",
+                "Handoff Strategies",
+                "MIMO & Beamforming"
+              ],
+              "key_concepts": [
+                "Co-channel interference and capacity scaling"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KEC-801",
+          "subject_name": "Radar, Satellite & Microwave Systems",
+          "semester": 8,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Defense, Aerospace & Satellite Comms (ISRO, DRDO)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Radar Systems & Range Equations",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Radar Range Equation",
+                "Pulse Doppler",
+                "MTI Radar",
+                "Antenna Arrays"
+              ],
+              "key_concepts": [
+                "Doppler shift & target tracking"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Satellite Link Budget Design",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Kepler Laws",
+                "Geostationary Orbits",
+                "Link Budget Calculations",
+                "Carrier-to-Noise Ratio"
+              ],
+              "key_concepts": [
+                "Free space path loss and transponder design"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -873,6 +1304,582 @@
               ],
               "key_concepts": [
                 "TCP Congestion Control & Flow Control"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KCS-101",
+          "subject_name": "Programming for Problem Solving (C)",
+          "semester": 1,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Foundational Coding (TCS, Infosys, Cognizant)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "C Syntax & Control Structures",
+              "weightage_percent": 25.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "Variables",
+                "Operators",
+                "Loops",
+                "Branching"
+              ],
+              "key_concepts": [
+                "Control flow mechanics"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Functions, Arrays & Pointers",
+              "weightage_percent": 35.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Pointer Arithmetic",
+                "Dynamic Memory Allocation (malloc/free)",
+                "Array-Pointer duality"
+              ],
+              "key_concepts": [
+                "Memory leaks & pointer manipulation"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KCS-301",
+          "subject_name": "Data Structures & Algorithms",
+          "semester": 3,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Top Tier (Google, Amazon, Microsoft, Adobe)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Linear Data Structures",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Stacks",
+                "Queues",
+                "Circular Queues",
+                "Singly/Doubly Linked Lists"
+              ],
+              "key_concepts": [
+                "LIFO/FIFO complexity and pointer updates"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Trees & Binary Search Trees",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Binary Trees",
+                "BST Validation",
+                "AVL Balancing",
+                "Heap and Priority Queue"
+              ],
+              "key_concepts": [
+                "Tree traversal, LCA and height-balanced rotations"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Graphs & Dynamic Programming",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "BFS",
+                "DFS",
+                "Dijkstra Shortest Path",
+                "0/1 Knapsack",
+                "Memoization"
+              ],
+              "key_concepts": [
+                "Graph cycle detection & optimal substructure"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KCS-302",
+          "subject_name": "Computer Organization & Architecture",
+          "semester": 3,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Systems Engineering & High Performance Computing",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Instruction Set Architecture & CPU",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 9,
+              "topics": [
+                "Von Neumann vs Harvard",
+                "Addressing Modes",
+                "ALU and Control Unit (Hardwired vs Microprogrammed)"
+              ],
+              "key_concepts": [
+                "Instruction cycle and micro-operations"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Memory Hierarchy & Pipelining",
+              "weightage_percent": 35.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Direct/Associative Cache Mapping",
+                "Cache Hits/Misses",
+                "RISC Pipelining",
+                "Data/Control Hazards"
+              ],
+              "key_concepts": [
+                "Branch prediction & pipeline stalls"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KCS-401",
+          "subject_name": "Operating Systems",
+          "semester": 4,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Top Tier Core (Amazon, Microsoft, Google)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Process Management & Scheduling",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "PCB",
+                "Context Switching",
+                "CPU Scheduling (FCFS, Round Robin, SRTF)"
+              ],
+              "key_concepts": [
+                "Preemptive scheduling & response time"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Synchronization & Deadlocks",
+              "weightage_percent": 35.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Critical Section Problem",
+                "Mutex & Semaphores",
+                "Dining Philosophers",
+                "Banker Algorithm"
+              ],
+              "key_concepts": [
+                "Deadlock 4 conditions & avoidance"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Memory Management & Virtual Memory",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Paging",
+                "Segmentation",
+                "TLB",
+                "Page Replacement (LRU, FIFO, Optimal)",
+                "Thrashing"
+              ],
+              "key_concepts": [
+                "Page table lookup & working set model"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KCS-402",
+          "subject_name": "Theory of Automata & Formal Languages",
+          "semester": 4,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "GATE & Compiler Engineering",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Finite Automata & Regular Languages",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 11,
+              "topics": [
+                "DFA and NFA",
+                "Subset Construction",
+                "Pumping Lemma for Regular Languages"
+              ],
+              "key_concepts": [
+                "Equivalence of DFA and NFA"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Context Free Grammars & Turing Machines",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 11,
+              "topics": [
+                "CFG",
+                "Pushdown Automata (PDA)",
+                "Turing Machine",
+                "Halting Problem"
+              ],
+              "key_concepts": [
+                "Chomsky hierarchy & undecidability"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KCS-701",
+          "subject_name": "Cloud Computing & Distributed Systems",
+          "semester": 7,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Top Tier Backend (Amazon AWS, Microsoft Azure, Google Cloud)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Cloud Architectures & Virtualization",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "IaaS, PaaS, SaaS",
+                "Hypervisors Type 1/2",
+                "Docker Containers & Kubernetes Orchestration"
+              ],
+              "key_concepts": [
+                "Containerization vs hypervisor overhead"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Distributed Consensus & Consistency",
+              "weightage_percent": 35.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "CAP Theorem",
+                "PACELC",
+                "Two-Phase Commit (2PC)",
+                "Raft and Paxos Consensus",
+                "Eventual Consistency"
+              ],
+              "key_concepts": [
+                "Distributed replication tradeoffs"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KCS-702",
+          "subject_name": "Artificial Intelligence & Machine Learning",
+          "semester": 7,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "AI/ML Engineering Tracks",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Search Algorithms & Heuristics",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 9,
+              "topics": [
+                "A* Search",
+                "Admissibility",
+                "Minimax & Alpha-Beta Pruning"
+              ],
+              "key_concepts": [
+                "Heuristic optimality"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Supervised & Unsupervised Learning",
+              "weightage_percent": 35.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Linear/Logistic Regression",
+                "Decision Trees",
+                "SVM",
+                "K-Means Clustering",
+                "Backpropagation"
+              ],
+              "key_concepts": [
+                "Gradient descent & over-fitting mitigation"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KCS-801",
+          "subject_name": "Deep Learning & Natural Language Processing",
+          "semester": 8,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "GenAI & LLM Systems (OpenAI, Anthropic, Meta)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Neural Networks & Transformers",
+              "weightage_percent": 35.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "CNN Architecture",
+                "RNN and LSTM",
+                "Self-Attention Mechanism",
+                "Transformer Encoder-Decoder"
+              ],
+              "key_concepts": [
+                "Attention query-key-value formulation"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Large Language Models & Fine-Tuning",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 11,
+              "topics": [
+                "Pretraining vs SFT",
+                "LoRA & PEFT",
+                "RLHF",
+                "Vector Embeddings & RAG"
+              ],
+              "key_concepts": [
+                "Retrieval augmented generation pipeline"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "IT": {
+      "branch_name": "IT",
+      "branch_code": "IT",
+      "subjects": [
+        {
+          "subject_code": "KIT-501",
+          "subject_name": "Design & Analysis of Algorithms",
+          "semester": 5,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Core Software (TCS, Amazon, Infosys)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Asymptotic Analysis & Divide-and-Conquer",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 9,
+              "topics": [
+                "Big O, Theta, Omega",
+                "Master Theorem",
+                "Merge Sort",
+                "Quick Sort"
+              ],
+              "key_concepts": [
+                "Recurrence relation solving"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KIT-601",
+          "subject_name": "Cloud Computing & Distributed Systems",
+          "semester": 6,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Cloud Infra (AWS, Azure)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Virtualization & Containers",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Containers vs VMs",
+                "Kubernetes",
+                "Microservices"
+              ],
+              "key_concepts": [
+                "Containerization architecture"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "CAP Theorem & Consensus",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "CAP Theorem",
+                "Distributed Storage",
+                "Consistent Hashing"
+              ],
+              "key_concepts": [
+                "Partition tolerance"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KIT-701",
+          "subject_name": "Cryptography & Network Security",
+          "semester": 7,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Cybersecurity & Fintech",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Symmetric & Asymmetric Encryption",
+              "weightage_percent": 35.0,
+              "is_high_yield": true,
+              "estimated_hours": 11,
+              "topics": [
+                "AES",
+                "DES",
+                "RSA Algorithm",
+                "Diffie-Hellman Key Exchange"
+              ],
+              "key_concepts": [
+                "Public key infrastructure"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Authentication & Hash Functions",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "SHA-256",
+                "Digital Signatures",
+                "HMAC",
+                "TLS/SSL Handshake"
+              ],
+              "key_concepts": [
+                "Cryptographic integrity"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "MECH": {
+      "branch_name": "MECH",
+      "branch_code": "MECH",
+      "subjects": [
+        {
+          "subject_code": "KME-301",
+          "subject_name": "Thermodynamics",
+          "semester": 3,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Core Mechanical (Tata Motors, L&T)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Laws of Thermodynamics",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "First Law for Closed/Open Systems",
+                "Carnot Cycle",
+                "Entropy Generation"
+              ],
+              "key_concepts": [
+                "Second law and reversibility"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KME-401",
+          "subject_name": "Fluid Mechanics",
+          "semester": 4,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Fluid Systems (DRDO, ISRO)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Fluid Statics & Bernoulli Equation",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Navier-Stokes Equations",
+                "Bernoulli Principle",
+                "Pipe Flow Losses"
+              ],
+              "key_concepts": [
+                "Laminar vs turbulent boundary layers"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KME-601",
+          "subject_name": "Refrigeration and Air Conditioning",
+          "semester": 6,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "HVAC Industry (Voltas, Daikin)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Vapour Compression Cycles",
+              "weightage_percent": 35.0,
+              "is_high_yield": true,
+              "estimated_hours": 11,
+              "topics": [
+                "Standard VCR Cycle",
+                "p-h and T-s Diagrams",
+                "COP Calculations"
+              ],
+              "key_concepts": [
+                "Superheating and subcooling effects"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Psychrometry & Heat Load",
+              "weightage_percent": 30.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Psychrometric Chart",
+                "Sensible Heat Factor",
+                "Cooling Load Estimation"
+              ],
+              "key_concepts": [
+                "Enthalpy of moist air"
               ]
             }
           ]

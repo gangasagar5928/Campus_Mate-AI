@@ -292,6 +292,137 @@
           "ideal_sample_answer": "Part A (Technical Architecture):\n1. Partitioning & Balancing: Keys are mapped to nodes using Consistent Hashing on a 128-bit ring (e.g., Murmur3/CityHash). Each physical node owns 150-200 virtual nodes (tokens) uniformly distributed across the ring to prevent unbalanced load spikes and minimize key migration ($1/N$ fraction) when nodes join or fail.\n2. Eviction & Data Structure: In-memory storage uses an $O(1)$ Hash Map combined with a Doubly Linked List for LRU eviction (or 2Q/Segmented LRU to resist scan resistance).\n3. Cache Stampede Mitigation: When a hot product key expires, thousands of concurrent requests could overwhelm the primary database. We mitigate this using Probabilistic Early Expiration (XFetch algorithm: $e^{-\\beta \\cdot \\Delta \\cdot \\ln(\\text{rand})} > \\text{TTL}$) or distributed lease locks (only one thread fetches and refreshes cache while others wait or serve stale data for 200ms).\n4. Coherence: We utilize Cache-Aside with Write-Through for critical ordering data, with asynchronous invalidation events published over Amazon SNS/SQS to purge replica node caches.\n\nPart B (Leadership Principles - STAR):\n- Situation: During Prime Day preview, a top-selling retail category triggered severe cache thrashing, elevating P99 latency from 15ms to 850ms, degrading customer checkout completion by 4.2%.\n- Task: As technical lead, I prioritized Customer Obsession\u2014buyers couldn't complete orders. I had to identify the root cause without taking down checkout services.\n- Action (Dive Deep & Decision Framing): Diving deep into metrics, I noticed 12 distinct marketing promotion keys had zero jitter on TTLs, expiring simultaneously at the top of every hour and dog-piling the read replicas. Recognizing a reversible Two-Way Door decision, I implemented an immediate emergency hot-patch injecting a 15% Gaussian jitter to key expiration windows and enabled stale-while-revalidate fallback.\n- Result: P99 latency plunged back to 11ms within 4 minutes. Zero data loss occurred, preserving an estimated $1.8M in Prime Day transactions. We followed up with a permanent One-Way Door architecture review introducing automated cache lease locks across all tier-1 microservices."
         }
       ]
+    },
+    "google": {
+      "name": "Google",
+      "track": "Systems Architecture & Algorithmic Scalability",
+      "description": "Distributed systems, algorithmic optimization, high-throughput RPCs, and scale-out architecture.",
+      "questions": [
+        {
+          "id": "google_sys_01",
+          "company": "Google",
+          "track": "Distributed Systems",
+          "tier": "standard",
+          "fee_fet": 0.0,
+          "topic": "Consistent Hashing & Distributed Sharding",
+          "difficulty": "Medium-Hard",
+          "question": "In large-scale distributed storage systems (like Google Bigtable or Dynamo), explain how Consistent Hashing solves the $O(N)$ key remapping storm that occurs when adding or removing cache nodes under standard modulus hashing ($hash(key) \\pmod N$). How do virtual nodes (vnodes) address nonuniform key distribution and hot-spotting?",
+          "expected_rubric": {
+            "must_include": [
+              "Modulus hashing remaps nearly all keys when N changes (O(N) data migration catastrophe)",
+              "Consistent hashing maps both servers and keys to a 2^32 or 2^64 circular hash ring",
+              "A key is assigned to the first server encountered moving clockwise along the ring",
+              "Adding or removing a server only relocates keys between immediate neighbor nodes (O(K/N) migration)",
+              "Virtual nodes (vnodes) distribute multiple ring tokens per physical server, mitigating hot spots and balancing load"
+            ],
+            "bonus_points": [
+              "Replication factor R strategy (storing replicas on next R distinct physical servers)",
+              "Handling heterogeneous server capacities by assigning proportional vnode counts",
+              "Binary search (O(log M)) lookup along the token ring array"
+            ],
+            "common_pitfalls": [
+              "Confusing cryptographic hash security with consistent hash ring geometry",
+              "Failing to explain how vnodes solve non-uniform hash clustering"
+            ]
+          },
+          "ideal_sample_answer": "Under standard modulo hashing (hash(key) % N), changing the server count from N to N+1 alters almost every key's destination, causing a massive data migration storm and catastrophic cache invalidation. Consistent hashing maps both server node IDs and data keys onto a continuous hash ring (e.g. 0 to 2^64 - 1). A key is assigned to the first server encountered when traversing the ring clockwise. When a node is added or removed, only the keys in the immediate predecessor interval are affected, reducing required data migration to O(K/N).\n\nTo prevent hot spots caused by non-uniform server placement along the ring, consistent hashing utilizes virtual nodes (vnodes). Each physical server is assigned multiple distinct virtual positions on the ring (e.g., 256 vnodes per node). This ensures statistical uniform key distribution, supports heterogeneous machines with weighted tokens, and prevents cascading node failures."
+        },
+        {
+          "id": "google_dsa_adv_01",
+          "company": "Google",
+          "track": "Advanced DSA & Competitive Algorithms",
+          "tier": "tier-1",
+          "fee_fet": 1.0,
+          "topic": "Dynamic Programming on Trees & Diameter Optimization",
+          "difficulty": "Hard",
+          "question": "Design an optimal algorithm to find the diameter (longest simple path between any two nodes) of an unweighted undirected tree with $N$ vertices ($N \\le 2 \\cdot 10^5$). Explain both the 2-BFS/DFS method and the Tree-DP post-order traversal method. Why does the 2-BFS method fail on trees with negative edge weights while Tree-DP remains valid?",
+          "expected_rubric": {
+            "must_include": [
+              "2-BFS method: pick arbitrary root u, find furthest node v, find furthest node w from v; distance(v, w) is diameter",
+              "Tree-DP method: at each node u, diameter is max(d_1 + d_2) where d_1 and d_2 are top 2 deepest child subtree depths",
+              "Tree-DP post-order traversal runs in strict O(N) time and O(N) space",
+              "2-BFS failure with negative weights: greedy choice property breaks since longer paths can have lower total weight"
+            ],
+            "bonus_points": [
+              "Heavy-Light Decomposition for path queries",
+              "Centroid decomposition overview for divide-and-conquer on trees"
+            ],
+            "common_pitfalls": [
+              "Attempting All-Pairs Shortest Path (Floyd-Warshall) in O(N^3) time",
+              "Failing to account for diameter passing through the root vs entirely inside a child subtree"
+            ]
+          },
+          "ideal_sample_answer": "The tree diameter can be solved via two approaches:\n1. 2-BFS/DFS Method: Select an arbitrary start node u, run BFS/DFS to find the furthest node v. Run a second BFS/DFS from v to find furthest node w. The distance between v and w is the tree diameter. This runs in O(N) time.\n2. Tree-DP Method: Root the tree arbitrarily. For every node u, maintain the longest path from u down to any leaf in its subtree: height(u) = 1 + max(height(child)). The longest path passing through u as the lowest common ancestor is the sum of the two largest child heights: diameter_through_u = top1_height + top2_height. In a single post-order traversal, update the global maximum diameter. Total complexity is O(N) time and O(H) recursion stack space.\n\nWhy 2-BFS fails on negative edge weights: 2-BFS relies on the greedy property that the furthest node from any arbitrary starting vertex is guaranteed to be one endpoint of the diameter. When negative weights exist, reaching a far node in hop-count or distance does not preserve the optimal substructure, causing 2-BFS to terminate at suboptimal nodes. Tree-DP correctly explores all subtree path combinations."
+        }
+      ]
+    },
+    "microsoft": {
+      "name": "Microsoft",
+      "track": "Cloud Platforms, Distributed Systems & Modern Concurrency",
+      "description": "Azure cloud services, microservices resilience, async concurrency, and high-throughput backend architecture.",
+      "questions": [
+        {
+          "id": "msft_sys_01",
+          "company": "Microsoft",
+          "track": "Backend Concurrency",
+          "tier": "standard",
+          "fee_fet": 0.0,
+          "topic": "Thread Pools, Context Switching & Async/Await Mechanics",
+          "difficulty": "Medium",
+          "question": "In high-throughput web APIs (.NET / Java / Node.js), explain why allocating a dedicated OS thread per HTTP request causes server thrashing under 100,000 concurrent connections. Contrast synchronous thread blocking with asynchronous non-blocking I/O (`async/await` and completion ports), detailing the memory footprint and CPU context-switching overhead.",
+          "expected_rubric": {
+            "must_include": [
+              "OS Thread stack memory overhead (1MB per thread = 100GB for 100k threads, causing OOM)",
+              "CPU context-switching thrashing: CPU spends more cycles swapping register/kernel state than executing business logic",
+              "Non-blocking async I/O uses OS event notification (epoll, kqueue, Windows I/O Completion Ports - IOCP)",
+              "State machine generation in async/await freeing the executing thread back to the thread pool while awaiting I/O"
+            ],
+            "bonus_points": [
+              "Thread pool starvation mitigation",
+              "Work-stealing schedulers (like .NET TaskScheduler or Go runtime)"
+            ],
+            "common_pitfalls": [
+              "Thinking async/await creates a new background OS thread for every await call",
+              "Confusing CPU-bound parallelism with I/O-bound asynchronous concurrency"
+            ]
+          },
+          "ideal_sample_answer": "Under the thread-per-request model, 100,000 concurrent requests require 100,000 OS threads. Each thread typically allocates 1 MB of stack memory, demanding ~100 GB of RAM just for thread stacks, triggering Out-Of-Memory (OOM) crashes. Furthermore, having thousands of active threads forces the OS kernel into continuous context-switching: saving and restoring CPU register banks, cache pollution, and kernel transitions, causing CPU thrashing where zero useful work completes.\n\nAsync/await with non-blocking I/O solves this by utilizing operating system completion notifications (e.g. Windows IOCP, Linux epoll). When an I/O operation begins, the compiler-generated async state machine captures the continuation and returns the worker thread to the shared thread pool. No thread sleeps or blocks. When the OS completes the disk/network transfer, an event notification re-enqueues the continuation onto an available pool thread. A small pool of 8\u201316 threads can effortlessly service 100,000 concurrent connections with minimal memory and negligible context switching."
+        }
+      ]
+    },
+    "nvidia": {
+      "name": "Nvidia",
+      "track": "GPU Architecture, Parallel Computing & CUDA Systems",
+      "description": "CUDA kernels, SIMT execution, memory coalescing, warp divergence, and deep learning acceleration.",
+      "questions": [
+        {
+          "id": "nvidia_gpu_01",
+          "company": "Nvidia",
+          "track": "GPU Architecture & CUDA",
+          "tier": "standard",
+          "fee_fet": 0.0,
+          "topic": "Warp Divergence, Shared Memory Bank Conflicts & Memory Coalescing",
+          "difficulty": "Medium-Hard",
+          "question": "In Nvidia GPU microarchitectures (Hopper / Blackwell / Ampere), explain the SIMT (Single Instruction Multiple Threads) execution model. What happens during Warp Divergence when threads in a 32-thread warp evaluate different conditional `if-else` branches? How do shared memory bank conflicts and uncoalesced global memory access degrade kernel throughput?",
+          "expected_rubric": {
+            "must_include": [
+              "SIMT executes threads in synchronized groups of 32 called warps on Streaming Multiprocessors (SMs)",
+              "Warp divergence: conditional branching causes the warp to serially execute both paths with inactive threads masked off, halving efficiency",
+              "Shared memory bank conflicts: 32 memory banks service addresses; if multiple threads in a warp access different words in the same bank, accesses are serialized",
+              "Global memory coalescing: consecutive threads in a warp must access contiguous 32/64/128-byte aligned memory to maximize cache-line bandwidth utilization"
+            ],
+            "bonus_points": [
+              "Pad array columns to eliminate stride-induced bank conflicts (e.g., float shared[32][33])",
+              "Tensor Core warp-level matrix multiply-accumulate (WMMA) instructions"
+            ],
+            "common_pitfalls": [
+              "Confusing CPU SIMD vector lanes with GPU SIMT independent program counters",
+              "Claiming divergent threads execute in true hardware parallelism"
+            ]
+          },
+          "ideal_sample_answer": "In Nvidia GPU microarchitecture, Streaming Multiprocessors (SMs) execute instructions using SIMT (Single Instruction Multiple Threads) in lockstep bundles of 32 threads known as a Warp. All threads in a warp share an instruction pointer.\n\n1. Warp Divergence: If threads within the same warp take different paths in an `if (condition) ... else ...` block, the warp must execute both branches sequentially. The hardware activates threads taking the 'if' branch while masking off 'else' threads, and then reverses the mask for the 'else' branch. This serialization cuts effective computational throughput by 50% or more.\n\n2. Shared Memory Bank Conflicts: On-chip shared memory is divided into 32 equally sized memory banks (4 bytes per bank). When multiple threads in a warp request distinct memory addresses that map to the same bank, a bank conflict occurs and requests are serialized. If all 32 threads access different banks, memory access occurs in a single clock cycle.\n\n3. Global Memory Coalescing: The GPU memory controller loads data from High-Bandwidth Memory (HBM) in 32-byte or 128-byte aligned transactions. If threads in a warp access contiguous addresses, the entire warp's data is retrieved in a single memory transaction (coalesced). If access is strided or scattered, the hardware issues up to 32 separate transactions, squandering memory bus bandwidth."
+        }
+      ]
     }
   }
 }
