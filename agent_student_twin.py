@@ -5,8 +5,8 @@ Discovered via ASI:One through official Agent Chat Protocol (ACP).
 
 Combines all 3 team members' work:
 - Member 1: Agent Chat Protocol (ACP 0.3.0) orchestration, natural language intent parser & interactive UI cards
-- Member 2: Departmental Syllabus Engine (AKTU/GCET 3rd year curriculum, dynamic 60/40, 50/50, 10/90 ratio balancing & evening remedial mutation hook)
-- Member 3: Company Interviewer Engine (Qualcomm/TCS/Amazon question bank, 1.0 testnet FET Dorado payment verification, Bar Raiser rubric grading)
+- Member 2: Departmental Syllabus Engine (AKTU/GCET 1st-8th sem curriculum, dynamic 60/40, 50/50, 10/90 ratio balancing & evening remedial mutation hook)
+- Member 3: Company Interviewer Engine (Qualcomm, Google, Nvidia, Microsoft, Amazon, TCS Prime bank, 1.0 testnet FET Dorado payment verification, Bar Raiser rubric grading)
 """
 
 import os
@@ -304,16 +304,18 @@ def format_welcome_markdown() -> str:
         "",
         "Combines all 3 team members' work into one seamless workflow:",
         "- **Member 1 (Orchestration):** Agent Chat Protocol (ACP 0.3.0) discovery on ASI:One.",
-        "- **Member 2 (Syllabus Balancing):** AKTU/GCET 3rd-year curriculum, dynamic ratio balancing (60/40, 50/50, 10/90) & evening remedial mutation hook.",
-        "- **Member 3 (Interviewer & Web3):** Qualcomm/TCS/Amazon interview packs, 1.0 testnet FET Dorado micropayments & 10.0 Bar Raiser rubric grading.",
+        "- **Member 2 (Syllabus Balancing):** AKTU/GCET 1st-8th sem curriculum, dynamic ratio balancing (60/40, 50/50, 10/90) & evening remedial mutation hook.",
+        "- **Member 3 (Interviewer & Web3):** Qualcomm, Google, Nvidia, Microsoft, Amazon, TCS Prime bank, 1.0 testnet FET Dorado micropayments & 10.0 Bar Raiser rubric grading.",
         "",
         "---",
         "### 🚀 Quick Prompts (Click or send any of these):",
-        "1. **📅 Study Schedule:**  \n   *\"Create personalized study schedule for ECE Semester 6 with 4 hours daily\"*",
-        "2. **⚡ Hardware & VLSI Drill:**  \n   *\"Start Qualcomm Verilog mock technical interview drill\"*",
-        "3. **💻 Software & C++ Drill:**  \n   *\"Start TCS Prime C++ drill\"*",
-        "4. **🏢 System Design & Leadership Drill:**  \n   *\"Unlock Amazon Bar Raiser mock interview pack\"*",
-        "5. **📊 Exam Proximity Check:**  \n   *\"Check syllabus exam proximity and calculate study buffer\"*",
+        "1. **📖 Course Topics & Syllabus:**  \n   *\"Tell me the topics for ECE semester 6\"*",
+        "2. **📅 Study Timetable:**  \n   *\"Create study schedule for ECE Semester 6 with 4 hours daily\"*",
+        "3. **⚡ Hardware & VLSI Drill:**  \n   *\"Start Qualcomm Verilog mock technical interview drill\"*",
+        "4. **🔍 Google Distributed Systems:**  \n   *\"Start Google drill\"*",
+        "5. **🎮 Nvidia GPU & CUDA:**  \n   *\"Start Nvidia drill\"*",
+        "6. **🏢 Amazon Bar Raiser:**  \n   *\"Unlock Amazon Bar Raiser mock interview pack\"*",
+        "7. **🎯 All Interview Tracks:**  \n   *\"Show interview tracks\"*",
     ]
     return "\n".join(lines)
 
@@ -334,14 +336,15 @@ async def on_startup(ctx: Context):
 
 @chat_proto.on_message(model=ACPChatMessage)
 async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMessage):
-    ctx.logger.info(f"[ACP 0.3.0] Received message from {sender}")
-    # 1. Send mandatory ACP acknowledgment
-    ack = ChatAcknowledgement(acknowledged_msg_id=msg.msg_id)
-    await ctx.send(sender, ack)
-
     session = get_session(sender)
-    user_text = msg.text().strip()
-    ctx.logger.info(f"[User Input]: {user_text[:80]}...")
+    raw_text = msg.text().strip()
+
+    # Clean out @mention tag if present from ASI:One chat
+    user_text = re.sub(r"@agent1[a-z0-9]+\s*", "", raw_text).strip()
+    if not user_text:
+        user_text = raw_text
+
+    ctx.logger.info(f"[ACP 0.3.0] Received from {sender}: {user_text[:80]}...")
     lower = user_text.lower()
 
     # Detect JSON / urlencoded postback
@@ -363,15 +366,88 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
             pass
 
     # --------------------------------------------------------------------------
+    # INTENT 0A: Direct Syllabus / Topic Breakdown Inquiry
+    # --------------------------------------------------------------------------
+    is_topic_inquiry = any(k in lower for k in ["topic", "topics", "syllabus", "subject", "subjects", "curriculum"]) and not any(k in lower for k in ["schedule", "hours", "plan", "timetable", "routine"])
+    if is_topic_inquiry:
+        ctx.logger.info("[Intent] Direct Syllabus / Topic Breakdown Inquiry")
+        b_match = re.search(r"\b(ece|cse|it|mech)\b", lower)
+        if b_match:
+            session.branch = b_match.group(1).upper()
+        s_match = re.search(r"(?:semester|sem)\s*(\d+)", lower)
+        if s_match:
+            session.semester = int(s_match.group(1))
+
+        branch_subjs = curriculum_loader.get_branch_subjects(session.branch, session.semester)
+        lines = [
+            f"## 📚 AKTU Official Syllabus Breakdown ({session.branch} — Semester {session.semester})",
+            f"**University Scheme:** Dr. A.P.J. Abdul Kalam Technical University (AKTU / GCET AICTE Model)",
+            "",
+            "### 📖 Core Subjects & Syllabus Units:",
+        ]
+        for s in branch_subjs:
+            code = s.get("subject_code", "")
+            name = s.get("subject_name", "")
+            relevance = s.get("placement_relevance", "Core Technical Engineering Value")
+            credits = s.get("credit_weight", 4.0)
+            lines.append(f"#### 📘 {code} — {name} (Credits: {credits})")
+            for u in s.get("units", []):
+                u_num = u.get("unit_number", 1)
+                u_title = u.get("unit_title", "Unit")
+                is_hy = "🔥 High-Yield" if u.get("is_high_yield") else "Standard"
+                topics = ", ".join(u.get("topics", [])[:4])
+                lines.append(f"- **Unit {u_num} ({is_hy}):** {u_title}")
+                if topics:
+                    lines.append(f"  *Key Topics:* {topics}")
+            lines.append(f"  *Placement Target:* _{relevance}_")
+            lines.append("")
+
+        lines.append("---")
+        lines.append(f"👉 *To generate your balanced daily study routine, send: **\"Create study plan for {session.branch} Sem {session.semester} with 4 hours daily\"***")
+        lines.append(f"👉 *To test your technical preparation, send: **\"Start Qualcomm Verilog drill\"** or **\"Start Google drill\"***")
+
+        topics_md = "\n".join(lines)
+        reply = ACPChatMessage(content=[TextContent(text=topics_md)])
+        await ctx.send(sender, reply)
+        return
+
+    # --------------------------------------------------------------------------
+    # INTENT 0B: Available Interview Tracks & Companies Overview
+    # --------------------------------------------------------------------------
+    if any(k in lower for k in ["interview track", "interview prep", "companies", "what tracks", "available tracks", "show tracks"]):
+        ctx.logger.info("[Intent] Interview Prep Tracks Overview")
+        lines = [
+            "## 🎯 CampusMate Interview Preparation Hub",
+            "Tailored technical drill tracks aligned with tier-1 engineering recruitment:",
+            "",
+            "| Company | Recruitment Track | Quick Launch Command |",
+            "| :--- | :--- | :--- |",
+            "| **Qualcomm** | Hardware / VLSI RTL / STA | `Start Qualcomm Verilog drill` |",
+            "| **Google** | Distributed Systems & Dynamic Programming | `Start Google drill` |",
+            "| **Nvidia** | GPU CUDA, SIMT & Shared Memory | `Start Nvidia drill` |",
+            "| **Microsoft** | High-Throughput Concurrency & Async I/O | `Start Microsoft drill` |",
+            "| **Amazon** | System Design & Bar Raiser Cache | `Unlock Amazon Bar Raiser mock interview pack` |",
+            "| **TCS Prime** | Modern C++ Smart Pointers & RAII | `Start TCS Prime drill` |",
+            "",
+            "---",
+            "💡 *All drills include instant Senior Bar Raiser 10.0 rubric evaluation and automatic evening schedule mutation if score < 6.0/10.*",
+            "👉 *Send any command from the table above to start drilling immediately.*"
+        ]
+        prep_md = "\n".join(lines)
+        reply = ACPChatMessage(content=[TextContent(text=prep_md)])
+        await ctx.send(sender, reply)
+        return
+
+    # --------------------------------------------------------------------------
     # INTENT 1: Submit Answer & Evaluation (Member 3 Rubric Engine)
     # --------------------------------------------------------------------------
     is_answer = (
         session.stage == "IN_DRILL" and len(user_text) > 30 and
-        not any(cmd in lower for cmd in ["schedule", "plan", "start", "unlock", "check", "hello", "hi"])
+        not any(cmd in lower for cmd in ["schedule", "plan", "start", "unlock", "check", "hello", "hi", "topics"])
     ) or any(k in lower for k in [
         "blocking", "non-blocking", "pointer", "unique_ptr", "shared_ptr", "weak_ptr",
         "cache stampede", "consistent hashing", "raii", "vtable", "vptr", "setup time",
-        "hold time", "delta cycle", "metastability", "nba region"
+        "hold time", "delta cycle", "metastability", "nba region", "virtual nodes", "warp divergence"
     ])
 
     if is_answer:
@@ -386,7 +462,7 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
 
         mutated_topic = ""
         if has_mutation:
-            remedial_topics = eval_result.get("remedial_topics", ["RTL Simulation & Race Hazards"])
+            remedial_topics = eval_result.get("remedial_topics", ["Core Technical Concepts"])
             mutated_topic = remedial_topics[0]
             session.evening_remedial_mutation = f"30m Remedial Drill: {mutated_topic} (Score was {score:.1f}/10)"
 
@@ -398,9 +474,22 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
     # --------------------------------------------------------------------------
     # INTENT 2: Start Technical Interview Drill / Mock Pack (Member 3 Track Bank)
     # --------------------------------------------------------------------------
-    if any(k in lower for k in ["drill", "interview", "verilog", "mock", "bar raiser", "tcs", "qualcomm", "amazon"]):
+    if any(k in lower for k in ["drill", "interview", "verilog", "mock", "bar raiser", "tcs", "qualcomm", "amazon", "google", "nvidia", "microsoft"]):
         ctx.logger.info("[Intent] Start Drill Requested")
-        if "amazon" in lower or "bar raiser" in lower:
+        if "google" in lower:
+            comp_key = "google"
+            tier = "tier-1" if "adv" in lower or "hard" in lower else "standard"
+            q = select_drill_question(comp_key, tier=tier)
+            session.target_company = "Google"
+        elif "nvidia" in lower or "cuda" in lower or "gpu" in lower:
+            comp_key = "nvidia"
+            q = select_drill_question(comp_key, tier="standard")
+            session.target_company = "Nvidia"
+        elif "microsoft" in lower or "msft" in lower:
+            comp_key = "microsoft"
+            q = select_drill_question(comp_key, tier="standard")
+            session.target_company = "Microsoft"
+        elif "amazon" in lower or "bar raiser" in lower:
             comp_key = "amazon"
             tier = "tier-1" if "bar raiser" in lower or "tier-1" in lower or "tier 1" in lower else "standard"
             q = select_drill_question(comp_key, tier=tier)
@@ -425,7 +514,7 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
     # --------------------------------------------------------------------------
     # INTENT 3: Generate Daily Action Plan / Schedule / Exam Proximity (Member 2 Engine)
     # --------------------------------------------------------------------------
-    if any(k in lower for k in ["schedule", "plan", "study", "syllabus", "midterm", "exam", "buffer", "hours", "proximity", "semester", "sem"]):
+    if any(k in lower for k in ["schedule", "plan", "study", "timetable", "routine", "midterm", "exam", "buffer", "hours", "proximity", "semester", "sem"]):
         ctx.logger.info("[Intent] Schedule / Plan Generation")
 
         # Extract Branch
@@ -449,12 +538,17 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
             session.days_to_midterm = int(d_match.group(1))
             session.days_specified_by_user = True
         else:
-            # Default to AKTU / GCET college academic calendar sessional buffer
             session.days_to_midterm = 18
             session.days_specified_by_user = False
 
         # Extract Target Company
-        if "amazon" in lower:
+        if "google" in lower:
+            session.target_company = "Google"
+        elif "nvidia" in lower:
+            session.target_company = "Nvidia"
+        elif "microsoft" in lower:
+            session.target_company = "Microsoft"
+        elif "amazon" in lower:
             session.target_company = "Amazon"
         elif "tcs" in lower:
             session.target_company = "TCS Prime"
