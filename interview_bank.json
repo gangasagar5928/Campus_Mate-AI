@@ -96,6 +96,12 @@
           "ideal_sample_answer": "A standard 2-FF synchronizer cannot be applied directly to a multi-bit binary bus because routing and gate delays cause bits to arrive with slight skews. When crossing asynchronous boundaries, intermediate invalid bus states will be sampled, corrupting the payload.\n\nTo resolve this, an Asynchronous FIFO is used. The read and write addresses are converted into Gray code, where only exactly one bit transitions per pointer increment. The 1-bit Gray transitions are safely passed across the CDC boundary using 2-FF synchronizers. Full and empty comparisons occur after pointer synchronization (with FIFO full detected by inverting the top two MSBs in Gray code). Alternatively, a Req-Ack handshake mechanism with closed-loop acknowledgment can be used for slow multi-bit control vectors.\n\nIn Multi-Voltage UPF domains: Level shifters are placed between domains operating at different voltage rails to prevent gate breakdown or weak switching. Isolation cells (AND/OR gates tied to enable clamp) are placed at power domain boundaries to clamp floating signals to known logic values (0 or 1) when a domain is powered off, preventing high crowbar leakage currents."
         }
       ]
+    },
+    "tcs_prime": {
+      "name": "TCS Prime",
+      "track": "Systems Engineering, C++ & Advanced Algorithms",
+      "description": "High-performance software engineering, memory safety, C++ modern idioms, and multi-threaded systems.",
+      "questions": []
     }
   }
 }
