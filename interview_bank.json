@@ -258,6 +258,38 @@
             ]
           },
           "ideal_sample_answer": "In fulfillment networks, route optimization depends on graph topology:\n1. Dijkstra's Algorithm works on general directed graphs (which may contain cycles) with non-negative edge weights. Because edges can lead back or branch unpredictably, it maintains a Min-Heap priority queue to always greedily process the unvisited vertex with the minimum tentative distance. Updating the heap on edge relaxations yields an $O((V + E) \\log V)$ time complexity.\n\n2. DAG Shortest Path works when the network is a Directed Acyclic Graph (e.g. assembly dependencies). In a DAG, we can perform a Topological Sort (using Kahn's algorithm or DFS post-order) in $O(V + E)$. In topological order, all directed edges point strictly from earlier vertices to later vertices. We then iterate through the linear order, relaxing outgoing edges of each vertex. When we reach vertex $u$, all possible paths leading into $u$ have already been permanently resolved! Thus, no min-heap is required, and every vertex and edge is processed once in $O(V + E)$ linear time."
+        },
+        {
+          "id": "amazon_bar_raiser_01",
+          "company": "Amazon",
+          "track": "Amazon Bar Raiser Drill (Tier-1 Premium)",
+          "tier": "tier-1",
+          "fee_fet": 1.0,
+          "topic": "Distributed In-Memory Cache with Write-Back & Leadership Principles",
+          "difficulty": "Bar Raiser / Hard",
+          "question": "[TIER-1 AMAZON BAR RAISER DRILL]\nPart A (System Architecture): Design an Amazon-scale distributed caching layer (like ElastiCache/DynamoDB Accelerator) supporting millions of concurrent read/write queries per second. Detail your eviction policy (LRU/LFU), cache coherence strategy (Cache-Aside vs Write-Through vs Write-Back), handling of Cache Stampede (dog-piling on hot keys), and consistent hashing with virtual nodes for partitioning.\n\nPart B (Amazon Leadership Principles): Explain a scenario where you applied 'Customer Obsession' and 'Dive Deep' during a catastrophic production latency regression caused by cache thrashing. How did you push through ambiguities, make a high-judgment trade-off (Two-Way vs One-Way door), and deliver results?",
+          "expected_rubric": {
+            "must_include": [
+              "Part A: Consistent hashing with virtual nodes (e.g. 100-256 tokens per node) to prevent hot-spotting and ensure smooth rebalancing",
+              "Part A: LRU eviction using doubly-linked list + hash map, or segmented LRU",
+              "Part A: Cache Stampede mitigation: distributed mutex locks, probabilistic early expiration (XFetch), or background pre-warming",
+              "Part A: Coherence: Write-Aside/Write-Through trade-offs vs Write-Back data loss risks on crash",
+              "Part B: Clear demonstration of Amazon Leadership Principles (Customer Obsession, Dive Deep, Bias for Action)",
+              "Part B: STAR method framing (Situation, Task, Action, Result) with metrics and root-cause analysis",
+              "Part B: Clear distinction between One-Way Doors (irreversible architectural commitments) and Two-Way Doors (reversible experiments)"
+            ],
+            "bonus_points": [
+              "Multi-AZ active-active replication and gossiping protocols for membership (e.g. SWIM)",
+              "Sliding window TTL with jitter to prevent synchronized mass expiration",
+              "Measurable business impact (e.g., P99 latency dropped from 450ms to 8ms, 99.999% availability)"
+            ],
+            "common_pitfalls": [
+              "Focusing only on the technical architecture while treating the Amazon Leadership Principle question as an afterthought",
+              "Not addressing Cache Stampede when millions of clients request an expired key simultaneously",
+              "Omitting virtual nodes when explaining consistent hashing"
+            ]
+          },
+          "ideal_sample_answer": "Part A (Technical Architecture):\n1. Partitioning & Balancing: Keys are mapped to nodes using Consistent Hashing on a 128-bit ring (e.g., Murmur3/CityHash). Each physical node owns 150-200 virtual nodes (tokens) uniformly distributed across the ring to prevent unbalanced load spikes and minimize key migration ($1/N$ fraction) when nodes join or fail.\n2. Eviction & Data Structure: In-memory storage uses an $O(1)$ Hash Map combined with a Doubly Linked List for LRU eviction (or 2Q/Segmented LRU to resist scan resistance).\n3. Cache Stampede Mitigation: When a hot product key expires, thousands of concurrent requests could overwhelm the primary database. We mitigate this using Probabilistic Early Expiration (XFetch algorithm: $e^{-\\beta \\cdot \\Delta \\cdot \\ln(\\text{rand})} > \\text{TTL}$) or distributed lease locks (only one thread fetches and refreshes cache while others wait or serve stale data for 200ms).\n4. Coherence: We utilize Cache-Aside with Write-Through for critical ordering data, with asynchronous invalidation events published over Amazon SNS/SQS to purge replica node caches.\n\nPart B (Leadership Principles - STAR):\n- Situation: During Prime Day preview, a top-selling retail category triggered severe cache thrashing, elevating P99 latency from 15ms to 850ms, degrading customer checkout completion by 4.2%.\n- Task: As technical lead, I prioritized Customer Obsession\u2014buyers couldn't complete orders. I had to identify the root cause without taking down checkout services.\n- Action (Dive Deep & Decision Framing): Diving deep into metrics, I noticed 12 distinct marketing promotion keys had zero jitter on TTLs, expiring simultaneously at the top of every hour and dog-piling the read replicas. Recognizing a reversible Two-Way Door decision, I implemented an immediate emergency hot-patch injecting a 15% Gaussian jitter to key expiration windows and enabled stale-while-revalidate fallback.\n- Result: P99 latency plunged back to 11ms within 4 minutes. Zero data loss occurred, preserving an estimated $1.8M in Prime Day transactions. We followed up with a permanent One-Way Door architecture review introducing automated cache lease locks across all tier-1 microservices."
         }
       ]
     }
