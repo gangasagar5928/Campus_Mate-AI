@@ -109,3 +109,37 @@ async def handle_legacy_syllabus_request(ctx: Context, sender: str, req: Syllabu
 
     ctx.logger.info(f"[Syllabus] Dispatching DailyActionPlan ({plan.mode.value}) to {sender}...")
     await ctx.send(sender, plan)
+
+
+@syllabus_agent.on_message(model=CurriculumQueryRequest)
+async def handle_curriculum_query(ctx: Context, sender: str, query: CurriculumQueryRequest):
+    """Responds with prioritized curriculum units for a branch."""
+    ctx.logger.info(f"[Syllabus] Curriculum query for branch {query.branch}")
+    profile = StudentProfile(
+        student_id="QUERY-CALLER",
+        name="Query Profile",
+        branch=query.branch.upper(),
+        upcoming_exams=[
+            ExamSchedule(
+                subject_code=query.subject_code or "QUERY",
+                subject_name="Query Subject",
+                exam_date="2026-10-30",
+                days_to_exam=query.days_to_exam if query.days_to_exam is not None else 10,
+                credit_weight=4.0
+            )
+        ] if query.days_to_exam is not None else []
+    )
+    priorities = balancer_engine.calculate_priorities_for_profile(profile)
+    resp = CurriculumQueryResponse(branch=query.branch, priorities=priorities)
+    await ctx.send(sender, resp)
+
+
+@syllabus_agent.on_message(model=InterviewEvaluation)
+async def handle_interview_eval(ctx: Context, sender: str, msg: InterviewEvaluation):
+    """Direct evaluation ingestion from Member 3 Interview Agent."""
+    ctx.logger.info(f"[Syllabus] Received evaluation from {sender}: Topic={msg.topic}, Score={msg.score}")
+
+
+if __name__ == "__main__":
+    print("[CampusMate] Starting Departmental Syllabus Agent on Port 8002...")
+    syllabus_agent.run()
