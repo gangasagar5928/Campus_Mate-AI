@@ -13,7 +13,7 @@
   "branches": {
     "ECE": {
       "branch_name": "Electronics & Communication Engineering",
-      "semester": 5,
+      "branch_code": "ECE",
       "subjects": [
         {
           "subject_code": "KEC-502",
@@ -237,7 +237,7 @@
     },
     "CSE": {
       "branch_name": "Computer Science & Engineering",
-      "semester": 5,
+      "branch_code": "CSE",
       "subjects": [
         {
           "subject_code": "KCS-501",
@@ -580,6 +580,214 @@
                 "Extendible hashing directory and bucket depth doubling",
                 "WAL protocol ensuring durability before commit"
               ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "ECE": {
+    "6": {
+      "semester_name": "ECE 6th Semester (AKTU / GCET)",
+      "subjects": [
+        {
+          "code": "KEC-601",
+          "name": "Digital Communication",
+          "units": [
+            {
+              "unit_num": 1,
+              "title": "Pulse Modulation (PAM, PWM, PPM)",
+              "difficulty": 3,
+              "estimated_hours": 6
+            },
+            {
+              "unit_num": 2,
+              "title": "Digital Modulation Techniques (ASK, PSK, QPSK)",
+              "difficulty": 4,
+              "estimated_hours": 8
+            },
+            {
+              "unit_num": 3,
+              "title": "Information Theory & Channel Coding",
+              "difficulty": 5,
+              "estimated_hours": 10
+            }
+          ]
+        },
+        {
+          "code": "KEC-602",
+          "name": "Digital Signal Processing",
+          "units": [
+            {
+              "unit_num": 1,
+              "title": "DFT and FFT Algorithms",
+              "difficulty": 4,
+              "estimated_hours": 8
+            },
+            {
+              "unit_num": 2,
+              "title": "IIR and FIR Filter Design",
+              "difficulty": 5,
+              "estimated_hours": 10
+            },
+            {
+              "unit_num": 3,
+              "title": "Finite Word Length Effects",
+              "difficulty": 3,
+              "estimated_hours": 6
+            }
+          ]
+        },
+        {
+          "code": "KEC-061",
+          "name": "Microcontrollers & Embedded Systems",
+          "units": [
+            {
+              "unit_num": 1,
+              "title": "8051 Architecture & Timers",
+              "difficulty": 3,
+              "estimated_hours": 5
+            },
+            {
+              "unit_num": 2,
+              "title": "ARM Cortex-M Programming",
+              "difficulty": 4,
+              "estimated_hours": 8
+            },
+            {
+              "unit_num": 3,
+              "title": "Peripheral Interfacing (I2C, SPI)",
+              "difficulty": 4,
+              "estimated_hours": 7
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "CSE": {
+    "6": {
+      "semester_name": "CSE 6th Semester (AKTU / GCET)",
+      "subjects": [
+        {
+          "code": "KCS-601",
+          "name": "Software Engineering",
+          "units": [
+            {
+              "unit_num": 1,
+              "title": "SDLC, Agile & Scrum",
+              "difficulty": 2,
+              "estimated_hours": 5
+            },
+            {
+              "unit_num": 2,
+              "title": "System Architecture & Design Patterns",
+              "difficulty": 4,
+              "estimated_hours": 8
+            },
+            {
+              "unit_num": 3,
+              "title": "Software Testing & QA",
+              "difficulty": 3,
+              "estimated_hours": 6
+            }
+          ]
+        },
+        {
+          "code": "KCS-602",
+          "name": "Web Technology",
+          "units": [
+            {
+              "unit_num": 1,
+              "title": "HTML5, CSS3, DOM & JavaScript",
+              "difficulty": 2,
+              "estimated_hours": 4
+            },
+            {
+              "unit_num": 2,
+              "title": "Async JS, Promises & RESTful APIs",
+              "difficulty": 4,
+              "estimated_hours": 8
+            },
+            {
+              "unit_num": 3,
+              "title": "Microservices Architecture & DB Indexing",
+              "difficulty": 4,
+              "estimated_hours": 8
+            }
+          ]
+        },
+        {
+          "code": "KCS-603",
+          "name": "Computer Networks",
+          "units": [
+            {
+              "unit_num": 1,
+              "title": "OSI & TCP/IP Layering Models",
+              "difficulty": 3,
+              "estimated_hours": 6
+            },
+            {
+              "unit_num": 2,
+              "title": "Routing Protocols (OSPF, BGP)",
+              "difficulty": 4,
+              "estimated_hours": 8
+            },
+            {
+              "unit_num": 3,
+              "title": "TCP Congestion Control & Flow Control",
+              "difficulty": 5,
+              "estimated_hours": 10
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "IT": {
+    "6": {
+      "semester_name": "IT 6th Semester (AKTU / GCET)",
+      "subjects": [
+        {
+          "code": "KIT-601",
+          "name": "Cloud Computing & Distributed Systems",
+          "units": [
+            {
+              "unit_num": 1,
+              "title": "Virtualization, Hypervisors & Containers",
+              "difficulty": 3,
+              "estimated_hours": 6
+            },
+            {
+              "unit_num": 2,
+              "title": "CAP Theorem & Distributed Consensus",
+              "difficulty": 5,
+              "estimated_hours": 9
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "MECH": {
+    "6": {
+      "semester_name": "MECH 6th Semester (AKTU / GCET)",
+      "subjects": [
+        {
+          "code": "KME-601",
+          "name": "Refrigeration and Air Conditioning",
+          "units": [
+            {
+              "unit_num": 1,
+              "title": "Vapour Compression Cycles",
+              "difficulty": 4,
+              "estimated_hours": 8
+            },
+            {
+              "unit_num": 2,
+              "title": "Psychrometry & Heat Load Estimation",
+              "difficulty": 4,
+              "estimated_hours": 7
             }
           ]
         }
