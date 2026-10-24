@@ -4,6 +4,17 @@
 
 # CampusMate AI — Autonomous Academic & Career Agent System
 
+<p align="center">
+  <a href="https://github.com/gangasagar5928/Campus_Mate-AI/actions/workflows/ci.yml">
+    <img src="https://github.com/gangasagar5928/Campus_Mate-AI/actions/workflows/ci.yml/badge.svg" alt="CI/CD Pipeline" />
+  </a>
+  <img src="https://img.shields.io/badge/uAgents-v0.26.1-blue.svg" alt="uAgents" />
+  <img src="https://img.shields.io/badge/ACP-0.3.0-purple.svg" alt="ACP" />
+  <img src="https://img.shields.io/badge/Network-Fetch.ai%20Dorado-green.svg" alt="Dorado" />
+  <img src="https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue.svg" alt="Python Versions" />
+  <img src="https://img.shields.io/badge/Tests-16%2F16%20Passed-brightgreen.svg" alt="Tests" />
+</p>
+
 > **Track:** ASI:One Agent Challenge – From Intent to Action  
 > **Team:** Code Innovex  
 > **Target Platforms:** Fetch.ai uAgents, Agentverse, ASI:One (Agent Chat Protocol - ACP)
@@ -57,18 +68,18 @@ sequenceDiagram
 
 | File | Purpose |
 |---|---|
-| [`interview_bank.json`](file:///c:/Users/himan/Downloads/omniRoute-setup/interview_bank.json) | Curated company question bank with recruitment tracks (Qualcomm, TCS Prime, Amazon, Tier-1 packs). |
-| [`prompts.py`](file:///c:/Users/himan/Downloads/omniRoute-setup/prompts.py) | Structured LLM evaluation prompts, score badge definitions, and grading rubrics out of 10.0. |
-| [`llm_evaluator.py`](file:///c:/Users/himan/Downloads/omniRoute-setup/llm_evaluator.py) | Evaluation engine supporting Gemini/OpenAI/OmniRoute with a deterministic semantic rubric fallback. |
-| [`payment_protocol.py`](file:///c:/Users/himan/Downloads/omniRoute-setup/payment_protocol.py) | Fetch.ai testnet FET payment verification (CosmPy, Dorado network, replay attack defense). |
-| [`models.py`](file:///c:/Users/himan/Downloads/omniRoute-setup/models.py) | Fetch.ai uAgents Model schemas (`InterviewQuery`, `InterviewEvaluation`, etc.). |
-| [`agent_interviewer.py`](file:///c:/Users/himan/Downloads/omniRoute-setup/agent_interviewer.py) | Company Interviewer Agent (uAgent) serving questions and returning evaluations. |
-| [`agent_student_twin.py`](file:///c:/Users/himan/Downloads/omniRoute-setup/agent_student_twin.py) | Companion Student Twin Agent (uAgent) demonstrating the automated interview drill flow. |
-| [`demo_multiagent_bureau.py`](file:///c:/Users/himan/Downloads/omniRoute-setup/demo_multiagent_bureau.py) | 1-click Fetch.ai Bureau running both agents concurrently in an event loop. |
-| [`interactive_chat.py`](file:///c:/Users/himan/Downloads/omniRoute-setup/interactive_chat.py) | Interactive CLI and modern Tailwind Web dashboard for live candidate drills. |
-| [`test_interviewer_suite.py`](file:///c:/Users/himan/Downloads/omniRoute-setup/test_interviewer_suite.py) | Comprehensive test suite covering all 4 core technical pillars (8/8 passing). |
-| [`video_script.md`](file:///c:/Users/himan/Downloads/omniRoute-setup/video_script.md) | Video Lead hackathon demonstration script and recording storyboard. |
-| [`requirements.txt`](file:///c:/Users/himan/Downloads/omniRoute-setup/requirements.txt) | Python dependencies. |
+| [`interview_bank.json`](interview_bank.json) | Curated company question bank with recruitment tracks (Qualcomm, Google, Nvidia, Microsoft, Amazon, TCS Prime). |
+| [`prompts.py`](prompts.py) | Structured LLM evaluation prompts, score badge definitions, and grading rubrics out of 10.0. |
+| [`llm_evaluator.py`](llm_evaluator.py) | Evaluation engine supporting Gemini/OpenAI/OmniRoute with a deterministic semantic rubric fallback. |
+| [`payment_protocol.py`](payment_protocol.py) | Fetch.ai testnet FET payment verification (CosmPy, Dorado network, replay attack defense). |
+| [`models.py`](models.py) | Fetch.ai uAgents Model schemas (`InterviewQuery`, `InterviewEvaluation`, etc.). |
+| [`agent_interviewer.py`](agent_interviewer.py) | Company Interviewer Agent (uAgent) serving questions and returning evaluations. |
+| [`agent_student_twin.py`](agent_student_twin.py) | Companion Student Twin Agent (uAgent) demonstrating the automated interview drill flow. |
+| [`demo_multiagent_bureau.py`](demo_multiagent_bureau.py) | 1-click Fetch.ai Bureau running both agents concurrently in an event loop. |
+| [`interactive_chat.py`](interactive_chat.py) | Interactive CLI and modern Tailwind Web dashboard for live candidate drills. |
+| [`test_interviewer_suite.py`](test_interviewer_suite.py) | Comprehensive test suite covering all 4 core technical pillars (8/8 passing). |
+| [`video_script.md`](video_script.md) | Video Lead hackathon demonstration script and recording storyboard. |
+| [`requirements.txt`](requirements.txt) | Python dependencies. |
 
 ---
 
@@ -80,6 +91,13 @@ Covers deep recruitment tracks with official rubrics (`must_include`, `bonus_poi
   - Standard: *Verilog Blocking (`=`) vs. Non-Blocking (`<=`) Assignments*, event scheduling queues, delta cycles, and latch synthesis avoidance.
   - Standard: *Setup ($T_{setup}$) & Hold Time ($T_{hold}$) Violations*, clock skew margin inequalities, and why hold violations cannot be fixed by lowering clock frequency.
   - Tier-1 Advanced Pack: *Clock Domain Crossing (CDC) Asynchronous FIFOs*, Gray-coded pointers, and UPF multi-voltage power gating with level shifters and isolation cells.
+- **Google Track:**
+  - Standard: *Consistent Hashing, Virtual Nodes (vnodes) & Distributed Key-Value Ring Sharding*.
+  - Tier-1 Pack: *Dynamic Programming on Trees & Tree Diameter Optimization*.
+- **Nvidia Track:**
+  - Standard: *GPU SIMT Execution, Warp Divergence, Shared Memory Bank Conflicts & Coalesced Memory Access*.
+- **Microsoft Track:**
+  - Standard: *OS Thread Stack Memory, Kernel Context Switching & Non-Blocking Async/Await (IOCP/epoll)*.
 - **TCS Prime Track:**
   - Standard: *C++ Pointers, References, Memory Leaks & RAII*, smart pointers (`std::unique_ptr`, `std::shared_ptr`, `std::weak_ptr`), and cyclic reference resolution.
   - Standard: *Virtual Functions, `vtable`/`vptr` Mechanics & Object Slicing*.
@@ -118,33 +136,21 @@ Covers deep recruitment tracks with official rubrics (`must_include`, `bonus_poi
 # Activate Python 3.10 virtual environment
 .\venv\Scripts\Activate.ps1
 
-# Install requirements (already satisfied in venv)
+# Install requirements
 pip install -r requirements.txt
 ```
 
 ### 2. Run the Full Test Suite
 ```powershell
-python -m unittest test_interviewer_suite.py
+python -m unittest discover -s . -p "test_*.py" -v
 ```
-*Output: 8/8 unit and integration tests passing!*
+*Output: 16/16 unit and integration tests passing!*
 
 ### 3. Launch 1-Click Multi-Agent Bureau Demo
 ```powershell
 python demo_multiagent_bureau.py
 ```
-*Spins up both `CompanyInterviewerAgent` and `StudentTwinAgent` in an asynchronous Bureau event loop.*
-
-### 4. Launch Interactive Web Dashboard
-```powershell
-python interactive_chat.py --web --port 5000
-```
-*Open `http://127.0.0.1:5000` to interact with the sleek modern UI, test FET vouchers, and view live Bar Raiser LLM evaluations.*
-
-### 5. Launch CLI Chat Drill
-```powershell
-python interactive_chat.py
-```
-
+*Spins up `CompanyInterviewerAgent`, `DepartmentalSyllabusAgent`, and `StudentTwinAgent` in an asynchronous Bureau event loop.*
 
 ---
 
@@ -152,7 +158,7 @@ python interactive_chat.py
 
 ### Deliverables Owned
 - `schemas.py`: Canonical shared data contracts across all three agents.
-- `curriculum.json`: Structured AKTU/GCET 3rd-year branch curriculum database (ECE & CSE).
+- `curriculum.json`: Structured AKTU/GCET 1st through 8th-semester branch curriculum database (ECE, CSE, IT, MECH).
 - `load_balancer.py`: Deterministic dynamic balancing engine with Evening Remedial Mutation Hook.
 - `agent_syllabus.py`: Background Fetch.ai `uAgent` worker node on port 8002.
 - `test_member2.py`: Automated unit test suite verifying deterministic formulas, high-yield filters, and mutation hooks.
@@ -166,8 +172,3 @@ $$\text{Study Allocation} = \begin{cases}
 
 ### Evening Remedial Mutation Hook
 When an evaluation reports `score < 6.0 / 10.0`, the mutation hook deterministically injects a **30-minute remedial session** into the candidate's **Evening Block** (`TimeBlock.EVENING`).
-
-### Verification & Test Suite
-- Schema validation: Pydantic v1 & v2 uAgents dual compatibility.
-- Curriculum validation: AKTU ECE (Digital Electronics, Microprocessors) and CSE (DSA, OS, DBMS).
-- Balancer validation: 100% test pass rate across all 8 test cases.
