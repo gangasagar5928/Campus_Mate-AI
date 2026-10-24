@@ -298,7 +298,7 @@ class DeterministicBalancingEngine:
             task_type=TaskType.REMEDIAL,
             category="Remedial Intervention",
             duration_minutes=30,
-            priority=9,
+            priority=10,
             time_block=TimeBlock.EVENING,
             is_remedial=True,
             mutation_source=evaluation.evaluation_id or evaluation.session_id or "Low Mock Interview Score"
