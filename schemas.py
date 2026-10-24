@@ -227,3 +227,41 @@ class PlanResponse(Model):
     success: bool
     plan: Optional[DailyActionPlan] = None
     error_message: Optional[str] = None
+
+
+class SyllabusRequest(Model):
+    """Sent by StudentTwinAgent to DepartmentalSyllabusAgent to calculate study split."""
+    student_id: str
+    branch: str
+    semester: int
+    target_company: str
+    daily_available_hours: float
+    days_to_midterm: int
+
+
+class CurriculumQueryRequest(Model):
+    """Query message to inspect unit priorities for a subject or branch."""
+    branch: str
+    subject_code: Optional[str] = None
+    days_to_exam: Optional[int] = None
+
+
+class UnitPriorityItem(Model):
+    """Item representing a unit with calculated priority."""
+    subject_code: str
+    subject_name: str
+    unit_number: int
+    unit_title: str
+    weightage_percent: float
+    credit_weight: float
+    is_high_yield: bool
+    calculated_priority: float
+    recommended_study_minutes: int
+    topics: List[str]
+
+
+class CurriculumQueryResponse(Model):
+    """Response containing calculated unit priorities."""
+    branch: str
+    priorities: List[UnitPriorityItem] = Field(default_factory=list)
+    timestamp: str = Field(default="2026-10-24T12:00:00")
