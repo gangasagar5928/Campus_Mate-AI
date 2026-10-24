@@ -34,6 +34,36 @@
             ]
           },
           "ideal_sample_answer": "In Verilog, blocking assignments (`=`) are evaluated and committed immediately in the Active region of the simulation event queue, blocking the execution of subsequent statements within the procedural block. In contrast, non-blocking assignments (`<=`) evaluate the Right-Hand-Side (RHS) in the Active region, but defer updating the Left-Hand-Side (LHS) until the NBA (Non-Blocking Assignment) event region, after all active evaluations have finished.\n\nIn sequential logic `always @(posedge clk)`, non-blocking assignments must always be used. If blocking assignments are used, the execution order between independent always blocks at the same clock edge is non-deterministic, causing simulation-synthesis mismatches and race conditions (e.g., in a shift register where data shoots through multiple stages in one clock edge). In combinational logic `always @(*)`, blocking assignments should be used so that intermediate variable updates propagate immediately, preventing accidental latch inference."
+        },
+        {
+          "id": "qualcomm_sta_02",
+          "company": "Qualcomm",
+          "track": "VLSI / Physical Design & STA",
+          "tier": "standard",
+          "fee_fet": 0.0,
+          "topic": "Setup and Hold Time Violations",
+          "difficulty": "Medium-Hard",
+          "question": "Define Setup Time ($T_{setup}$) and Hold Time ($T_{hold}$) for a D-Flip-Flop. Provide the governing mathematical timing inequalities for both setup and hold checks including clock skew ($T_{skew}$), clock jitter, and combinational path delay ($T_{comb}$). Which violation can NEVER be fixed by simply reducing clock frequency, and how do physical design engineers fix hold violations during clock tree synthesis?",
+          "expected_rubric": {
+            "must_include": [
+              "T_setup: minimum duration data must be stable before the active clock edge",
+              "T_hold: minimum duration data must be stable after the active clock edge",
+              "Setup inequality: T_clk >= T_cq + T_comb_max + T_setup - T_skew + T_jitter",
+              "Hold inequality: T_cq + T_comb_min >= T_hold + T_skew",
+              "Hold violation cannot be resolved by lowering clock frequency (independent of T_clk)",
+              "Hold violation fix: inserting delay buffers / inverter pairs along the data path"
+            ],
+            "bonus_points": [
+              "Explaining positive vs negative clock skew impact on setup vs hold",
+              "Metastability risk and MTBF (Mean Time Between Failures) if setup/hold is violated",
+              "Multi-corner analysis (fast-fast / slow-slow silicon corners)"
+            ],
+            "common_pitfalls": [
+              "Thinking hold violations depend on clock period",
+              "Adding delay buffers to the clock path instead of the data path to fix hold time"
+            ]
+          },
+          "ideal_sample_answer": "Setup time ($T_{setup}$) is the minimum time data must remain stable before the capturing clock edge. Hold time ($T_{hold}$) is the minimum time data must remain stable after the capturing clock edge.\n\nSetup Check: $T_{clk} \\ge T_{cq} + T_{comb\\_max} + T_{setup} - T_{skew} + T_{jitter}$. Setup margin depends directly on the clock period $T_{clk}$, so setup violations can always be relieved by lowering the operating frequency.\n\nHold Check: $T_{cq} + T_{comb\\_min} \\ge T_{hold} + T_{skew}$. Because $T_{clk}$ does not appear in this equation, hold violations are frequency-independent and CANNOT be fixed by reducing the clock frequency! A hold violation causes fatal chip failure at any frequency.\n\nTo resolve hold violations during Physical Design, engineers insert non-inverting delay buffers or high-threshold-voltage (HVT) cells into the fast data path ($T_{comb\\_min}$) to delay data arrival without worsening setup time on critical paths."
         }
       ]
     }
