@@ -198,7 +198,39 @@
       "name": "Amazon",
       "track": "Data Structures, Algorithms & Distributed Systems",
       "description": "Amazon Technical Track: Tree/Graph algorithms, scalable cloud architecture, and Leadership Principles.",
-      "questions": []
+      "questions": [
+        {
+          "id": "amazon_bst_01",
+          "company": "Amazon",
+          "track": "DSA / Binary Search Trees",
+          "tier": "standard",
+          "fee_fet": 0.0,
+          "topic": "Binary Search Tree Validation and Lowest Common Ancestor",
+          "difficulty": "Medium",
+          "question": "Given the root of a binary tree, describe an optimal algorithm to determine whether it is a valid Binary Search Tree (BST). Why is checking `node.left.val < node.val < node.right.val` locally insufficient? Provide the time and space complexity. Additionally, explain how to find the Lowest Common Ancestor (LCA) of two given nodes in a BST in $O(h)$ time without additional memory.",
+          "expected_rubric": {
+            "must_include": [
+              "Local check flaw: a node in the right subtree of the left child could exceed the root value while satisfying local child check",
+              "Correct BST validation: range bounded traversal (low, high) or in-order traversal strictly increasing",
+              "Time complexity: O(N) visiting each node once",
+              "Space complexity: O(h) where h is tree height for recursive call stack / explicit stack",
+              "LCA in BST: walk down from root; if both p and q are less than root, move left; if both greater, move right; split point is the LCA",
+              "LCA time O(h) and space O(1) iterative"
+            ],
+            "bonus_points": [
+              "Handling integer overflow edge cases using 64-bit integer bounds or nullable pointers",
+              "Morris in-order traversal for O(1) auxiliary space validation",
+              "Degenerate skewed tree worst-case O(N) height vs balanced tree O(log N)"
+            ],
+            "common_pitfalls": [
+              "Only validating immediate parent-child relationships instead of global subtree bounds",
+              "Allowing duplicate values in strict BST without defining duplicate policy",
+              "Using recursive stack for LCA when a simple while loop achieves O(1) space"
+            ]
+          },
+          "ideal_sample_answer": "Validating a BST cannot be done by merely checking `node.left.val < node.val < node.right.val` because that only tests local parent-child validity. For example, a left child could have a right grandchild whose value is greater than the root, violating the global BST property.\n\nOptimal Algorithm: Traverse the tree while propagating valid value bounds `(min_allowed, max_allowed)` initialized to `(-\u221e, +\u221e)`. For each node:\n1. Check if `min_val < node.val < max_val`. If not, return False.\n2. Recurse left with `(min_val, node.val)`.\n3. Recurse right with `(node.val, max_val)`.\nAlternatively, perform an in-order traversal and verify that visited values are strictly monotonically increasing. Time Complexity: $O(N)$ where $N$ is total nodes. Space Complexity: $O(h)$ for the recursion stack ($O(\\log N)$ balanced, $O(N)$ worst-case skewed).\n\nLowest Common Ancestor (LCA) in BST: Starting at root:\n- If both $p.val < node.val$ and $q.val < node.val$, the LCA must be in the left subtree; move $node = node.left$.\n- If both $p.val > node.val$ and $q.val > node.val$, move $node = node.right$.\n- As soon as $p$ and $q$ diverge (or one equals $node$), current $node$ is the Lowest Common Ancestor. This iterative search takes $O(h)$ time and $O(1)$ auxiliary space."
+        }
+      ]
     }
   }
 }
