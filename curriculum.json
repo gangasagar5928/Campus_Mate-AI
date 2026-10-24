@@ -348,6 +348,240 @@
               ]
             }
           ]
+        },
+        {
+          "subject_code": "KCS-502",
+          "subject_name": "Operating Systems",
+          "semester": 5,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Critical (Core Subject for All Tech Interviews, Systems Roles)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Introduction & Operating System Structures",
+              "weightage_percent": 15.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "Functions and Goals of Operating Systems",
+                "Dual Mode Operation (User Mode vs Kernel Mode)",
+                "System Calls (fork(), exec(), wait(), exit())",
+                "OS Architectures: Monolithic, Microkernel, Hybrid",
+                "Process Concept, Process States, Process Control Block (PCB)",
+                "Context Switching Mechanics and Overhead"
+              ],
+              "key_concepts": [
+                "Privileged vs non-privileged instructions",
+                "fork() copy-on-write semantics",
+                "Context switch state saving"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Process Management & CPU Scheduling",
+              "weightage_percent": 20.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Thread Concepts: User-level Threads vs Kernel-level Threads",
+                "Multithreading Models (Many-to-One, One-to-One, Many-to-Many)",
+                "Scheduling Criteria (Throughput, Turnaround, Waiting, Response Time)",
+                "Preemptive vs Non-Preemptive Scheduling",
+                "Algorithms: FCFS, Shortest Job First (SJF / SRTF)",
+                "Round Robin (Quantum sizing trade-offs)",
+                "Priority Scheduling and Multilevel Feedback Queue (MLFQ)"
+              ],
+              "key_concepts": [
+                "Convoy effect in FCFS",
+                "SJF optimality proof for waiting time",
+                "Time quantum selection in Round Robin"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Process Synchronization & Deadlocks",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Critical Section Problem and Correctness Criteria",
+                "Peterson's Solution and Hardware Instructions (Test-and-Set, CAS)",
+                "Mutex Locks and Semaphores (Counting vs Binary)",
+                "Classic Problems: Producer-Consumer, Readers-Writers, Dining Philosophers",
+                "Four Necessary Conditions for Deadlock (Coffman Conditions)",
+                "Resource Allocation Graphs (RAG)",
+                "Deadlock Prevention, Avoidance (Banker's Algorithm)",
+                "Deadlock Detection and Recovery Techniques"
+              ],
+              "key_concepts": [
+                "Mutual exclusion, progress, and bounded waiting",
+                "Semaphores wait() (P) and signal() (V) atomic operations",
+                "Banker's algorithm safety state verification"
+              ]
+            },
+            {
+              "unit_number": 4,
+              "unit_title": "Memory Management & Virtual Memory",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Logical vs Physical Address Space",
+                "Contiguous Allocation, Fragmentation (Internal vs External)",
+                "Paging Architecture, Page Table Structures, Translation Lookaside Buffer (TLB)",
+                "Effective Memory Access Time (EMAT) Calculations",
+                "Segmentation and Segmented Paging",
+                "Virtual Memory Concepts and Demand Paging",
+                "Page Fault Handling Lifecycle",
+                "Page Replacement Algorithms: FIFO, Belady's Anomaly, Optimal, Least Recently Used (LRU)",
+                "Thrashing and Working Set Model"
+              ],
+              "key_concepts": [
+                "TLB hit ratio impact on EMAT",
+                "Belady's anomaly in FIFO page replacement",
+                "Working set model to prevent thrashing"
+              ]
+            },
+            {
+              "unit_number": 5,
+              "unit_title": "File Systems & Storage Management",
+              "weightage_percent": 15.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "File Attributes, Operations, and File Types",
+                "File Allocation Methods (Contiguous, Linked, Indexed / Inode)",
+                "Free Space Management (Bitmaps, Linked Lists)",
+                "Disk Structure and Physical Geometry",
+                "Disk Scheduling Algorithms: FCFS, SSTF, SCAN (Elevator), C-SCAN, LOOK, C-LOOK",
+                "RAID Levels (RAID 0, 1, 5, 6, 10) and Fault Tolerance"
+              ],
+              "key_concepts": [
+                "Unix Inode direct, indirect, and double-indirect pointers",
+                "Disk seek time optimization with SCAN/C-SCAN",
+                "RAID 5 parity distribution"
+              ]
+            }
+          ]
+        },
+        {
+          "subject_code": "KCS-503",
+          "subject_name": "Database Management Systems",
+          "semester": 5,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "Critical (Backend, Database Architecture, System Design Interviews)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Database Architecture & ER Modeling",
+              "weightage_percent": 15.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "DBMS vs File System Architecture",
+                "Three-Schema Architecture (Internal, Conceptual, External)",
+                "Data Independence (Physical and Logical)",
+                "Entity Types, Entity Sets, Attributes, Keys (Super, Candidate, Primary)",
+                "Relationship Sets, Degree, Cardinality Ratios, Participation Constraints",
+                "Weak Entity Sets and Identifying Relationships",
+                "ER Diagram to Relational Table Mapping"
+              ],
+              "key_concepts": [
+                "Three-tier schema decoupling",
+                "Weak entity double rectangle / discriminator key",
+                "Mapping 1:N and M:N relationships to foreign keys"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Relational Model & Formal Query Languages",
+              "weightage_percent": 15.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "Relational Model Concepts and Integrity Constraints (Domain, Entity, Referential)",
+                "Relational Algebra Operators: Selection, Projection, Rename",
+                "Set Operations: Union, Intersection, Set Difference, Cartesian Product",
+                "Join Operations: Theta Join, Equi-Join, Natural Join, Outer Joins (Left, Right, Full)",
+                "Division Operator and its Practical Queries",
+                "Tuple Relational Calculus (TRC) and Domain Relational Calculus (DRC)"
+              ],
+              "key_concepts": [
+                "Referential integrity and cascade delete/update rules",
+                "Relational algebra query equivalence and optimization",
+                "Division operator for 'for all' relational queries"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "SQL & Relational Database Design / Normalization",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "SQL DDL, DML, DCL, and TCL Commands",
+                "Complex Queries, Nested Subqueries, Correlated Subqueries",
+                "Aggregate Functions and GROUP BY / HAVING Clauses",
+                "Anomalies in Unnormalized Relations (Insertion, Deletion, Update)",
+                "Functional Dependencies, Closure of Attribute Sets, Canonical Cover",
+                "Candidate Key Finding Algorithm",
+                "Normal Forms: First Normal Form (1NF), Second Normal Form (2NF), Third Normal Form (3NF)",
+                "Boyce-Codd Normal Form (BCNF)",
+                "Lossless Join Decomposition and Dependency Preservation Verification"
+              ],
+              "key_concepts": [
+                "Correlated subquery execution logic",
+                "Attribute closure algorithm to identify candidate keys",
+                "3NF (prime attribute escape) vs BCNF (strictly superkey determinant)"
+              ]
+            },
+            {
+              "unit_number": 4,
+              "unit_title": "Transaction Processing & Concurrency Control",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Transaction Concepts and State Diagram",
+                "ACID Properties (Atomicity, Consistency, Isolation, Durability)",
+                "Schedules: Serial, Concurrent, Conflict Serializable, View Serializable",
+                "Testing for Conflict Serializability using Precedence Graphs",
+                "Recoverable, Cascadeless, and Strict Schedules",
+                "Concurrency Problems: Dirty Read, Unrepeatable Read, Lost Update, Phantom Read",
+                "Lock-Based Protocols: Shared vs Exclusive Locks, Two-Phase Locking (2PL, Strict 2PL, Rigorous 2PL)",
+                "Timestamp Ordering Protocol and Thomas Write Rule",
+                "Deadlock Prevention (Wait-Die, Wound-Wait) and Detection"
+              ],
+              "key_concepts": [
+                "Precedence graph cycle check for conflict serializability",
+                "Strict 2PL prevents cascading rollbacks",
+                "Wound-Wait and Wait-Die non-preemptive vs preemptive strategies"
+              ]
+            },
+            {
+              "unit_number": 5,
+              "unit_title": "Indexing, Hashing & Query Optimization",
+              "weightage_percent": 20.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "File Organization (Heap, Sorted, Hash)",
+                "Indexing Types: Primary Index, Clustering Index, Secondary Index",
+                "Dense vs Sparse Indexes, Multilevel Indexes",
+                "B-Tree and B+ Tree Index Structures (Insertion, Deletion, Search, Range Queries)",
+                "Static Hashing vs Dynamic Hashing (Extendible and Linear Hashing)",
+                "Query Processing Steps (Parsing, Optimization, Code Generation, Execution)",
+                "Database Recovery Techniques (Log-Based Recovery, Write-Ahead Logging WAL, Checkpointing, ARIES)"
+              ],
+              "key_concepts": [
+                "B+ Tree leaf node linked list for sequential scan performance",
+                "Extendible hashing directory and bucket depth doubling",
+                "WAL protocol ensuring durability before commit"
+              ]
+            }
+          ]
         }
       ]
     }
