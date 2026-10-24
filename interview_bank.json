@@ -132,6 +132,35 @@
             ]
           },
           "ideal_sample_answer": "References are immutable aliases for existing objects that cannot be null or reseated. Raw pointers represent raw memory addresses requiring manual `delete`, creating high risk of leaks and dangling pointers. Modern C++ relies on RAII (Resource Acquisition Is Initialization), where resources are acquired in constructors and deterministically freed in destructors when objects go out of scope, even during exception unwinding.\n\nSmart pointers:\n1. `std::unique_ptr`: Enforces exclusive single ownership with zero runtime overhead over a raw pointer. It is move-only.\n2. `std::shared_ptr`: Enables shared ownership using a dynamically allocated control block with an atomic reference count.\n3. `std::weak_ptr`: A non-owning observer that references a `shared_ptr` managed object without incrementing the strong reference count.\n\nThe Fatal Leak Scenario: When two objects hold `std::shared_ptr` references to each other (cyclic reference), each object's strong count remains at least 1 even after all external references are destroyed. Because the reference count never reaches zero, their destructors are never invoked, causing a permanent memory leak. To fix this, one link in the cycle is converted to `std::weak_ptr`, allowing the strong count to hit zero and memory to be reclaimed."
+        },
+        {
+          "id": "tcs_prime_oop_02",
+          "company": "TCS Prime",
+          "track": "Object Oriented Architecture & Polymorphism",
+          "tier": "standard",
+          "fee_fet": 0.0,
+          "topic": "Virtual Functions, VTables & Object Slicing",
+          "difficulty": "Medium",
+          "question": "Explain how runtime polymorphism is implemented in C++ under the hood using `vptr` and `vtable`. Why is it critical to declare a virtual destructor in a base class containing virtual functions, and what happens during 'Object Slicing' when a derived class instance is assigned to a base class variable by value?",
+          "expected_rubric": {
+            "must_include": [
+              "vtable is a per-class static lookup table storing pointers to virtual member functions",
+              "vptr is an invisible pointer embedded in every object instance pointing to its class vtable",
+              "Dynamic dispatch: call resolution dereferences vptr at runtime to locate correct derived function",
+              "Virtual destructor: ensures deleting derived object through base pointer invokes derived destructor first, avoiding resource leaks",
+              "Object Slicing: copying derived object by value into base object truncates derived member variables and resets vptr to base class"
+            ],
+            "bonus_points": [
+              "Memory layout diagram/description showing vptr offset in object memory",
+              "Performance overhead of vtable cache miss vs direct function inlining",
+              "Use of `= default` and pure virtual destructors"
+            ],
+            "common_pitfalls": [
+              "Thinking each object instance contains its own copy of the vtable instead of just a pointer (vptr)",
+              "Forgetting that object slicing happens when passing by value rather than pointer or reference"
+            ]
+          },
+          "ideal_sample_answer": "In C++, dynamic polymorphism uses two structures: a `vtable` (virtual table) and a `vptr` (virtual pointer). The compiler generates one static `vtable` per polymorphic class containing function pointers to its virtual methods. Each instantiated object contains an invisible hidden `vptr` member pointing to its class's `vtable`. When a virtual function is invoked on a pointer/reference, the program dereferences the object's `vptr`, locates the function index in the `vtable`, and dispatches the call dynamically.\n\nVirtual Destructor: If a base class pointer points to a derived class object allocated on the heap, executing `delete base_ptr` without a virtual destructor results in undefined behavior\u2014only the base destructor runs! The derived class destructor is bypassed, leaking derived dynamic members. Declaring a virtual destructor ensures the derived destructor executes first.\n\nObject Slicing: Occurs when a derived class instance is assigned to a base class variable by value (`Base b = derived;`). The compiler allocates only enough space for the Base class, 'slicing off' derived attributes and copying only base fields. The `vptr` in `b` is initialized to the Base class `vtable`, losing polymorphic behavior."
         }
       ]
     }
