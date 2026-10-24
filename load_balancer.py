@@ -133,3 +133,20 @@ class DeterministicBalancingEngine:
 
         priority_items.sort(key=lambda item: item.calculated_priority, reverse=True)
         return priority_items
+
+    @classmethod
+    def determine_allocation_mode(
+        cls, days_to_exam: Optional[int]
+    ) -> Tuple[AllocationMode, float, float]:
+        """
+        Dynamically allocates study ratios deterministically:
+          - > 7 days (or no exams): Normal (60% Placement / 40% Syllabus)
+          - 3 <= days <= 7: Approaching Midterm (50% Placement / 50% Syllabus)
+          - < 3 days: Urgent Exam Mode (10% Placement / 90% High-Weightage Syllabus)
+        """
+        if days_to_exam is None or days_to_exam > 7:
+            return AllocationMode.NORMAL, RATIO_NORMAL[0], RATIO_NORMAL[1]
+        elif 3 <= days_to_exam <= 7:
+            return AllocationMode.APPROACHING_MIDTERM, RATIO_APPROACHING[0], RATIO_APPROACHING[1]
+        else:
+            return AllocationMode.URGENT_EXAM, RATIO_URGENT[0], RATIO_URGENT[1]
