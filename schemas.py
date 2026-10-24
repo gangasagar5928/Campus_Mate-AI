@@ -41,3 +41,10 @@ class TimeBlock(str, Enum):
     AFTERNOON = "afternoon"
     EVENING = "evening"
     NIGHT = "night"
+
+
+class AllocationMode(str, Enum):
+    """Dynamic allocation modes dictated by exam proximity."""
+    NORMAL = "NORMAL"                          # > 7 days to midterm: 60% Placement / 40% Syllabus
+    APPROACHING_MIDTERM = "APPROACHING_MIDTERM" # 3 <= days <= 7: 50% Placement / 50% Syllabus
+    URGENT_EXAM = "URGENT_EXAM"                # < 3 days: 10% Placement / 90% High-Weightage Syllabus
