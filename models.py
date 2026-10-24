@@ -86,3 +86,60 @@ class PaymentVerificationResponse(Model):
     sender: str
     recipient: str
     message: str
+
+
+# ==========================================
+# ACP (Agent Chat Protocol) / ASI:One Models
+# ==========================================
+class ChatMessage(Model):
+    """Raw text or JSON card payload from ASI:One."""
+    text: str
+
+
+# ==========================================
+# Student Profile & Intake Models
+# ==========================================
+class StudentProfile(Model):
+    """Intake form data representing the student's academic standing and target company."""
+    branch: str = "ECE"
+    semester: int = 6
+    target_company: str = "Qualcomm"
+    daily_available_hours: float = 3.0
+    days_to_midterm: int = 4
+
+
+# ==========================================
+# Departmental Syllabus & Schedule Models
+# ==========================================
+class SyllabusRequest(Model):
+    """Sent by StudentTwinAgent to DepartmentalSyllabusAgent to calculate study split."""
+    student_id: str
+    branch: str
+    semester: int
+    target_company: str
+    daily_available_hours: float
+    days_to_midterm: int
+
+
+class StudyTask(Model):
+    """Individual task item inside the DailyActionPlan."""
+    task_name: str
+    duration_minutes: int
+    category: str  # "Syllabus Revision" or "Placement Prep"
+    priority: str  # "High", "Medium", "Urgent"
+
+
+class DailyActionPlan(Model):
+    """Returned by DepartmentalSyllabusAgent with mathematically computed time allocation."""
+    student_id: str = "default_student"
+    academic_ratio: float  # e.g., 0.40
+    placement_ratio: float # e.g., 0.60
+    tasks: List[StudyTask]
+    notes: Optional[str] = None
+
+
+class ScheduleMutation(Model):
+    """Event emitted to add remedial study blocks following interview drill evaluation."""
+    student_id: str
+    remedial_topic: str
+    additional_minutes: int = 30
