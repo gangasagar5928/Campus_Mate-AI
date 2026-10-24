@@ -61,12 +61,16 @@ MAILBOX_KEY = os.getenv("AGENT_MAILBOX_KEY", None)
 INTERVIEWER_ADDRESS = os.getenv("INTERVIEWER_AGENT_ADDRESS", "")
 SYLLABUS_ADDRESS = os.getenv("SYLLABUS_AGENT_ADDRESS", "")
 
+AGENT_ENDPOINT = os.getenv("AGENT_ENDPOINT", "")
+
 agent_kwargs = {
     "name": STUDENT_AGENT_NAME,
     "port": STUDENT_PORT,
     "seed": STUDENT_SEED,
     "mailbox": USE_MAILBOX
 }
+if AGENT_ENDPOINT:
+    agent_kwargs["endpoint"] = [AGENT_ENDPOINT]
 if MAILBOX_KEY and USE_MAILBOX:
     agent_kwargs["agentverse"] = {"key": MAILBOX_KEY}
 
