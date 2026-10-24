@@ -81,3 +81,41 @@ class StudyTask(Model):
         default=None,
         description="Reason or evaluation ID that triggered remedial injection"
     )
+
+
+# ==============================================================================
+# Shared Contract 1: StudentProfile (Member 1 <-> Member 2)
+# ==============================================================================
+
+class StudentProfile(Model):
+    """
+    Primary student persona and academic profile owned by Member 1's StudentTwinAgent
+    and consumed by Member 2's Syllabus Engine.
+    """
+    student_id: str = Field(default="GCET-STUDENT-001", description="Unique student ID or roll number")
+    name: str = Field(default="Campus Candidate", description="Student full name")
+    branch: str = Field(default="ECE", description="Academic branch: 'ECE' or 'CSE'")
+    year: int = Field(default=3, ge=1, le=4, description="Current academic year (e.g. 3rd year)")
+    semester: int = Field(default=5, ge=1, le=8, description="Current semester (5 or 6 for 3rd year)")
+    college: str = Field(default="GCET (AKTU)", description="Affiliated institution")
+    daily_available_hours: float = Field(
+        default=4.0, ge=1.0, le=12.0,
+        description="Available daily self-study hours outside regular college lectures"
+    )
+    target_company: Optional[str] = Field(default="Qualcomm", description="Primary target company")
+    target_companies: List[str] = Field(
+        default_factory=list,
+        description="Target companies for placement preparation"
+    )
+    weak_topics: List[str] = Field(
+        default_factory=list,
+        description="List of self-identified or interview-identified weak topics"
+    )
+    upcoming_exams: List[ExamSchedule] = Field(
+        default_factory=list,
+        description="Sorted schedule of upcoming midterm/semester examinations"
+    )
+    days_to_midterm: Optional[int] = Field(
+        default=None,
+        description="Days remaining to midterm for compatibility with intake forms"
+    )
