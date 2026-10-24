@@ -31,3 +31,16 @@ class LLMEvaluator:
                 return resp.json()["choices"][0]["message"]["content"]
         except Exception: pass
         return None
+
+    def _extract_and_validate_json(self, raw_text: str) -> Optional[Dict[str, Any]]:
+        try:
+            cleaned = raw_text.strip()
+            if cleaned.startswith("```"):
+                cleaned = re.sub(r"^```(?:json)?\n?", "", cleaned)
+                cleaned = re.sub(r"\n?```$", "", cleaned)
+            data = json.loads(cleaned)
+            if "score" in data and "strengths" in data and "synthesis_risks" in data:
+                data["score"] = round(float(data["score"]), 1)
+                return data
+        except Exception: pass
+        return None
