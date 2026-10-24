@@ -46,3 +46,13 @@ syllabus_agent = Agent(
     mailbox=False,
     loop=loop
 )
+
+
+@syllabus_agent.on_event("startup")
+async def handle_startup(ctx: Context):
+    ctx.logger.info("=" * 60)
+    ctx.logger.info("[CampusMate] Departmental Syllabus Agent Active")
+    ctx.logger.info(f"Agent Name    : {syllabus_agent.name}")
+    ctx.logger.info(f"Agent Address : {syllabus_agent.address}")
+    ctx.logger.info(f"Listening Port: {PORT}")
+    ctx.logger.info("=" * 60)
