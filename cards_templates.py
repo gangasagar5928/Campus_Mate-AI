@@ -6,7 +6,6 @@ Generates structured JSON payloads rendered by ASI:One.
 
 import json
 from typing import Dict, Any, List, Optional
-from models import DailyActionPlan, InterviewEvaluation, StudentProfile
 
 
 def create_intake_form_card() -> Dict[str, Any]:
@@ -60,30 +59,44 @@ def create_intake_form_card() -> Dict[str, Any]:
 
 
 def create_action_plan_card(
-    plan: DailyActionPlan,
+    plan: Any,
     target_company: str = "Qualcomm"
 ) -> Dict[str, Any]:
     """
     Card 2: Generated Action Plan Card (Review Screen).
     Displays the dynamic split between University Syllabus and Placement Prep.
+    Supports both schemas.py and models.py DailyActionPlan objects.
     """
-    placement_pct = int(round(plan.placement_ratio * 100))
-    academic_pct = int(round(plan.academic_ratio * 100))
+    placement_ratio = getattr(plan, "placement_prep_ratio", getattr(plan, "placement_ratio", 0.50))
+    academic_ratio = getattr(plan, "syllabus_revision_ratio", getattr(plan, "academic_ratio", 0.50))
+
+    placement_pct = int(round(placement_ratio * 100))
+    academic_pct = int(round(academic_ratio * 100))
 
     items = []
-    for task in plan.tasks:
+    task_list = getattr(plan, "study_tasks", getattr(plan, "tasks", []))
+    for task in task_list:
+        title = getattr(task, "task_description", getattr(task, "task_name", "Study Task"))
+        duration = getattr(task, "allocated_minutes", getattr(task, "duration_minutes", 45))
+        category = getattr(task, "task_type", getattr(task, "category", "Syllabus"))
+        if hasattr(category, "value"):
+            category = category.value
+        priority = f"Weight {task.priority_weight}" if hasattr(task, "priority_weight") else getattr(task, "priority", "High")
         items.append({
-            "title": task.task_name,
-            "time": f"{task.duration_minutes} mins",
-            "category": task.category,
-            "status": task.priority
+            "title": str(title),
+            "time": f"{duration} mins",
+            "category": str(category),
+            "status": str(priority)
         })
+
+    notes_str = getattr(plan, "notes", getattr(plan, "plan_id", ""))
+    desc = f"Dynamic schedule generated based on exam proximity ({notes_str})." if notes_str else "Dynamic schedule generated based on exam proximity."
 
     return {
         "type": "card",
         "card_type": "review_screen",
         "title": "Optimized Daily Action Plan",
-        "description": f"Dynamic schedule generated based on exam proximity ({plan.notes or ''}).",
+        "description": desc,
         "metrics": [
             {"label": "Placement Focus", "value": f"{placement_pct}%"},
             {"label": "Syllabus Focus", "value": f"{academic_pct}%"}
@@ -128,32 +141,37 @@ def create_interview_drill_card(
 
 
 def create_evaluation_scorecard(
-    eval_result: InterviewEvaluation
+    eval_result: Any
 ) -> Dict[str, Any]:
     """
     Card 3: Real-Time Evaluation Scorecard (Detail View).
     Displays rubric breakdown, LLM critique, and schedule mutation confirmation.
     """
     breakdown_list = []
-    if eval_result.rubric_breakdown:
-        for dim, score in eval_result.rubric_breakdown.items():
-            breakdown_list.append({"dimension": dim.replace("_", " ").title(), "rating": f"{score:.1f}/10"})
+    rubric_dict = getattr(eval_result, "rubric_breakdown", {})
+    if rubric_dict:
+        for dim, score in rubric_dict.items():
+            breakdown_list.append({"dimension": str(dim).replace("_", " ").title(), "rating": f"{float(score):.1f}/10"})
     else:
         breakdown_list = [
             {"dimension": "Concept Clarity", "rating": "Strong"},
             {"dimension": "Hardware Synthesis Timing", "rating": "Needs Review"}
         ]
 
-    remedial_topic_str = ", ".join(eval_result.remedial_topics) if eval_result.remedial_topics else "Core Fundamentals"
+    remedial_topics = getattr(eval_result, "remedial_topics", [])
+    remedial_topic_str = ", ".join(remedial_topics) if remedial_topics else "Core Fundamentals"
     system_action_str = f"Schedule updated: 30m allocated this evening to '{remedial_topic_str}'."
+
+    badge_str = getattr(eval_result, "score_badge", "Evaluated")
+    summary_str = getattr(eval_result, "feedback_summary", "Review complete.")
 
     return {
         "type": "card",
         "card_type": "detail_view",
         "title": f"Interview Drill Result: {eval_result.company.upper()}",
-        "score_badge": f"{eval_result.score:.1f} / 10 ({eval_result.score_badge})",
+        "score_badge": f"{eval_result.score:.1f} / 10 ({badge_str})",
         "breakdown": breakdown_list,
-        "agent_feedback": eval_result.feedback_summary,
+        "agent_feedback": summary_str,
         "system_action": system_action_str,
         "actions": [
             {

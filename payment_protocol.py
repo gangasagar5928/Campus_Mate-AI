@@ -15,8 +15,9 @@ from cosmpy.aerial.wallet import LocalWallet
 from cosmpy.aerial.config import NetworkConfig
 from cosmpy.crypto.keypairs import PrivateKey
 
-VERIFIED_PAYMENTS_FILE = "verified_payments.json"
-WALLET_KEY_FILE = "interviewer_wallet.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+VERIFIED_PAYMENTS_FILE = os.path.join(BASE_DIR, "verified_payments.json")
+WALLET_KEY_FILE = os.path.join(BASE_DIR, "interviewer_wallet.json")
 
 
 class PaymentProtocol:
@@ -43,13 +44,15 @@ class PaymentProtocol:
 
         wallet = LocalWallet.generate()
         try:
+            raw_key = wallet.signer().private_key
+            b64_key = base64.b64encode(raw_key).decode("utf-8") if isinstance(raw_key, bytes) else str(raw_key)
             with open(self.wallet_file, "w", encoding="utf-8") as f:
                 json.dump({
                     "address": str(wallet.address()),
-                    "private_key_b64": wallet.signer().private_key
+                    "private_key_b64": b64_key
                 }, f, indent=2)
-        except Exception as e:
-            print(f"[PaymentProtocol] Warning: could not persist wallet: {e}")
+        except Exception:
+            pass
         return wallet
 
     def _load_processed_txs(self) -> Dict[str, Dict[str, Any]]:

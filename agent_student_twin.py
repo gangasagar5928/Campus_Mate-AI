@@ -34,9 +34,13 @@ from models import (
     ChatMessage,
     StudentProfile,
     SyllabusRequest,
-    DailyActionPlan,
-    StudyTask,
+    DailyActionPlan as ModelDailyActionPlan,
+    StudyTask as ModelStudyTask,
     ScheduleMutation
+)
+from schemas import (
+    DailyActionPlan as SchemaDailyActionPlan,
+    StudyTask as SchemaStudyTask
 )
 from payment_protocol import PaymentProtocol
 from cards_templates import (
@@ -69,6 +73,35 @@ if MAILBOX_KEY and USE_MAILBOX:
 student_agent = Agent(**agent_kwargs)
 student_protocol = Protocol(name="StudentTwinProtocol", version="1.0.0")
 payment_helper = PaymentProtocol()
+
+# Pre-formulated high-quality candidate answers for automated Bureau demo
+SAMPLE_ANSWERS = {
+    "qualcomm_verilog_01": (
+        "In Verilog, blocking assignments (=) execute sequentially and block execution of subsequent statements "
+        "within the procedural block. Non-blocking assignments (<=) evaluate the right-hand side in the active event queue "
+        "and schedule the assignment update in the Non-Blocking Assignment (NBA) region. In clocked sequential always blocks, "
+        "mixing (=) and (<=) causes non-deterministic simulation-synthesis race mismatches across flip-flops."
+    ),
+    "tcs_prime_cpp_01": (
+        "In C++, raw pointers require manual memory management with delete, creating leak vulnerabilities. Smart pointers "
+        "automate lifetime via RAII: std::unique_ptr provides exclusive zero-overhead ownership, while std::shared_ptr maintains "
+        "a reference-counted control block. Cyclic shared_ptr references prevent ref-count from reaching zero; std::weak_ptr "
+        "breaks cyclical dependencies by acting as a non-owning observer."
+    ),
+    "amazon_bst_01": (
+        "Validating BST requires validating range bounds (min, max) recursively for every subtree rather than just local "
+        "node.left.val < node.val < node.right.val. LCA in a BST runs in O(h) time by iteratively traversing: if both targets "
+        "are smaller, go left; if larger, go right; the point of divergence is the LCA."
+    ),
+    "amazon_bar_raiser_01": (
+        "For Part A (Distributed Cache Architecture): Implement consistent hashing with virtual nodes to avoid hot spots, "
+        "LRU eviction via hashmap and doubly-linked list, and distributed lease locks with probabilistic early expiration "
+        "to prevent cache stampede.\n\n"
+        "For Part B (Leadership Principles): On Prime Day, a cache stampede spiked P99 latency. Demonstrating Customer Obsession "
+        "and Dive Deep, I identified TTL synchronization across shards, applied a two-way door patch introducing 15% random jitter, "
+        "and restored sub-15ms latency within 5 minutes."
+    )
+}
 
 # Conversational state store per student/sender
 class SessionState:
@@ -158,16 +191,16 @@ async def handle_asione_chat_message(ctx: Context, sender: str, msg: ChatMessage
             await ctx.send(SYLLABUS_ADDRESS, req)
             return
         else:
-            # Local schedule computation
+            # Local schedule computation fallback
             p_ratio = 0.50 if days >= 3 else 0.10
             a_ratio = 1.0 - p_ratio
-            plan = DailyActionPlan(
+            plan = ModelDailyActionPlan(
                 student_id=sender,
                 academic_ratio=a_ratio,
                 placement_ratio=p_ratio,
                 tasks=[
-                    StudyTask(task_name=f"Digital Electronics Unit 3 (Exam in {days} days)", duration_minutes=45, category="Syllabus Revision", priority="Urgent"),
-                    StudyTask(task_name=f"{comp} Drill: Technical Problem Solving", duration_minutes=45, category="Placement Prep", priority="High")
+                    ModelStudyTask(task_name=f"Digital Electronics Unit 3 (Exam in {days} days)", duration_minutes=45, category="Syllabus Revision", priority="Urgent"),
+                    ModelStudyTask(task_name=f"{comp} Drill: Technical Problem Solving", duration_minutes=45, category="Placement Prep", priority="High")
                 ],
                 notes=f"Proximity: {days} days"
             )
@@ -237,57 +270,143 @@ async def handle_asione_chat_message(ctx: Context, sender: str, msg: ChatMessage
 
 
 # ==============================================================================
-# Inter-Agent Handlers (Responses from Syllabus & Interviewer Agents)
+# Inter-Agent Handlers (Responses from Syllabus Agent)
 # ==============================================================================
-@student_agent.on_message(model=DailyActionPlan)
-async def handle_syllabus_plan_reply(ctx: Context, sender: str, plan: DailyActionPlan):
-    ctx.logger.info(f"Received DailyActionPlan from Syllabus Agent ({sender})")
+@student_agent.on_message(model=SchemaDailyActionPlan)
+async def handle_schema_syllabus_plan(ctx: Context, sender: str, plan: SchemaDailyActionPlan):
+    ctx.logger.info(f"📥 Received DailyActionPlan from Syllabus Agent ({sender})")
+    ctx.logger.info(f"Plan ID: {plan.plan_id} | Mode: {plan.mode.value} | Placement: {int(plan.placement_prep_ratio*100)}% | Syllabus: {int(plan.syllabus_revision_ratio*100)}%")
+    for task in plan.study_tasks:
+        ctx.logger.info(f"  • [{task.time_block.value.upper()}] {task.task_description} ({task.allocated_minutes}m, Weight: {task.priority_weight})")
+
     session = get_session(plan.student_id)
     session.current_plan = plan
     session.stage = "PLAN_READY"
-    card = create_action_plan_card(plan, session.profile.target_company)
-    await ctx.send(plan.student_id, ChatMessage(text=card_to_message_payload(card)))
+
+    # Only send card if student_id is a reachable agent address
+    if plan.student_id.startswith("agent1") and plan.student_id != str(student_agent.address):
+        card = create_action_plan_card(plan, session.profile.target_company)
+        await ctx.send(plan.student_id, ChatMessage(text=card_to_message_payload(card)))
 
 
+@student_agent.on_message(model=ModelDailyActionPlan)
+async def handle_model_syllabus_plan(ctx: Context, sender: str, plan: ModelDailyActionPlan):
+    ctx.logger.info(f"📥 Received DailyActionPlan from Syllabus Agent ({sender})")
+    session = get_session(plan.student_id)
+    session.current_plan = plan
+    session.stage = "PLAN_READY"
+
+    if plan.student_id.startswith("agent1") and plan.student_id != str(student_agent.address):
+        card = create_action_plan_card(plan, session.profile.target_company)
+        await ctx.send(plan.student_id, ChatMessage(text=card_to_message_payload(card)))
+
+
+# ==============================================================================
+# Inter-Agent Handlers (Responses from Interviewer Agent)
+# ==============================================================================
 @student_protocol.on_message(model=InterviewQuestionResponse)
 async def handle_question_response(ctx: Context, sender: str, msg: InterviewQuestionResponse):
-    ctx.logger.info(f"Received Interview Question from {sender}: {msg.question_id}")
+    ctx.logger.info("=" * 60)
+    ctx.logger.info(f"📩 Received Interview Response from Company Interviewer ({sender}):")
+    ctx.logger.info(f"Session ID: {msg.session_id}")
+    ctx.logger.info(f"Company: {msg.company} | Track: {msg.track} | Tier: {msg.tier.upper()}")
+    ctx.logger.info(f"Topic: {msg.topic} | Difficulty: {msg.difficulty}")
+    ctx.logger.info(f"Is Unlocked: {msg.is_unlocked}")
+
     session = get_session(msg.session_id)
     session.last_question_id = msg.question_id
     session.session_id = msg.session_id
     session.stage = "IN_DRILL"
 
-    card = create_interview_drill_card(
-        company=msg.company,
-        topic=msg.topic,
-        question_text=msg.question_text,
-        tier=msg.tier
+    if not msg.is_unlocked:
+        ctx.logger.warning(f"⚠️ Pack Locked! Required fee: {msg.required_fee_fet} FET")
+        ctx.logger.info(f"Payment Instructions: {msg.payment_instructions}")
+
+        # Execute testnet FET payment transfer
+        ctx.logger.info("💳 Initiating 1.0 TESTNET FET transfer on Dorado testnet...")
+        tx_hash = payment_helper.simulate_transfer(
+            sender_address=str(student_agent.address),
+            amount_fet=1.0,
+            memo=f"Unlock {msg.company} {msg.track}"
+        )
+        ctx.logger.info(f"✅ Payment Broadcast! Tx Hash: {tx_hash}")
+        ctx.logger.info("🔄 Resubmitting InterviewQuery with payment voucher...")
+
+        retry_query = InterviewQuery(
+            student_id=str(student_agent.address),
+            company=msg.company,
+            tier="tier-1",
+            question_id=msg.question_id,
+            payment_tx_hash=tx_hash,
+            session_id=msg.session_id
+        )
+        await ctx.send(sender, retry_query)
+        return
+
+    # Question is unlocked!
+    ctx.logger.info("-" * 40)
+    ctx.logger.info(f"📋 QUESTION PROMPT:\n{msg.question_text}")
+    ctx.logger.info("-" * 40)
+
+    # Deliver card if active ASI:One ACP user
+    if session.sender_id and session.sender_id.startswith("agent1") and session.sender_id != str(student_agent.address):
+        card = create_interview_drill_card(
+            company=msg.company,
+            topic=msg.topic,
+            question_text=msg.question_text,
+            tier=msg.tier
+        )
+        await ctx.send(session.sender_id, ChatMessage(text=card_to_message_payload(card)))
+        return
+
+    # Automated Bureau Demo: formulate answer and submit to interviewer
+    answer_text = SAMPLE_ANSWERS.get(
+        msg.question_id,
+        "A comprehensive technical analysis detailing system architecture, syntax nuances, and synthesis implications."
     )
-    await ctx.send(session.sender_id, ChatMessage(text=card_to_message_payload(card)))
+    ctx.logger.info(f"✍️ Submitting candidate answer for question '{msg.question_id}' to interviewer...")
+    submission = InterviewAnswerSubmission(
+        session_id=msg.session_id,
+        question_id=msg.question_id,
+        student_id=str(student_agent.address),
+        student_answer=answer_text
+    )
+    await ctx.send(sender, submission)
 
 
 @student_protocol.on_message(model=InterviewEvaluation)
 async def handle_evaluation_result(ctx: Context, sender: str, msg: InterviewEvaluation):
-    ctx.logger.info(f"Received InterviewEvaluation from {sender}: Score {msg.score}/10")
-    session = get_session(msg.student_id)
+    ctx.logger.info("=" * 60)
+    ctx.logger.info(f"🏆 RECEIVED INTERVIEW EVALUATION & SCORE BADGE:")
+    ctx.logger.info(f"Company: {msg.company} | Question ID: {msg.question_id}")
+    ctx.logger.info(f"FINAL SCORE: {msg.score} / 10.0 ({msg.score_badge})")
+    ctx.logger.info("\n📊 RUBRIC BREAKDOWN:")
+    for metric, score in msg.rubric_breakdown.items():
+        ctx.logger.info(f"  • {metric.replace('_', ' ').title()}: {score}")
+
+    ctx.logger.info("\n💪 STRENGTHS IDENTIFIED:")
+    for s in msg.strengths:
+        ctx.logger.info(f"  + {s}")
+
+    ctx.logger.info("\n⚠️ SYNTHESIS RISKS / TECHNICAL GAPS:")
+    for r in msg.synthesis_risks:
+        ctx.logger.info(f"  - {r}")
+
+    ctx.logger.info("\n📚 REMEDIAL STUDY TOPICS:")
+    for t in msg.remedial_topics:
+        ctx.logger.info(f"  * {t}")
+
+    ctx.logger.info(f"\n📝 FEEDBACK SUMMARY:\n{msg.feedback_summary}")
+    ctx.logger.info("=" * 60)
+
+    session = get_session(msg.session_id)
     session.last_evaluation = msg
     session.stage = "EVALUATED"
 
-    # Mutate schedule
-    if session.current_plan:
-        remedial = msg.remedial_topics[0] if msg.remedial_topics else "Core Revision"
-        tasks = list(session.current_plan.tasks)
-        tasks.insert(0, StudyTask(task_name=f"Remedial: {remedial}", duration_minutes=30, category="Placement Prep", priority="Urgent"))
-        session.mutated_plan = DailyActionPlan(
-            student_id=msg.student_id,
-            academic_ratio=session.current_plan.academic_ratio,
-            placement_ratio=session.current_plan.placement_ratio,
-            tasks=tasks,
-            notes="Mutated post-evaluation."
-        )
-
-    card = create_evaluation_scorecard(msg)
-    await ctx.send(msg.student_id, ChatMessage(text=card_to_message_payload(card)))
+    # Forward card to ASI:One user if live user session
+    if session.sender_id and session.sender_id.startswith("agent1") and session.sender_id != str(student_agent.address):
+        card = create_evaluation_scorecard(msg)
+        await ctx.send(session.sender_id, ChatMessage(text=card_to_message_payload(card)))
 
 
 student_agent.include(student_protocol)

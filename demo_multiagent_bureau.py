@@ -91,7 +91,8 @@ def main():
     print(f"Interviewer FET Wallet:       {payment_protocol.agent_address}")
     print("=" * 70)
 
-    bureau = Bureau(port=8000)
+    bureau_port = int(os.getenv("BUREAU_PORT", "8005"))
+    bureau = Bureau(port=bureau_port)
     bureau.add(student_agent)
     bureau.add(syllabus_agent)
     bureau.add(interviewer_agent)
