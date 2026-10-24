@@ -150,3 +150,15 @@ class DeterministicBalancingEngine:
             return AllocationMode.APPROACHING_MIDTERM, RATIO_APPROACHING[0], RATIO_APPROACHING[1]
         else:
             return AllocationMode.URGENT_EXAM, RATIO_URGENT[0], RATIO_URGENT[1]
+
+    @staticmethod
+    def calculate_time_budget(
+        available_hours: float,
+        placement_ratio: float,
+        syllabus_ratio: float
+    ) -> Tuple[int, int, int]:
+        """Converts available hours into minutes and divides strictly by ratios."""
+        total_minutes = int(round(available_hours * 60.0))
+        placement_minutes = int(round(total_minutes * placement_ratio))
+        syllabus_minutes = total_minutes - placement_minutes
+        return total_minutes, placement_minutes, syllabus_minutes
