@@ -31,6 +31,9 @@ wheels/
 .env
 .env.*
 !.env.example
+private_keys.json
+interviewer_wallet.json
+*.log
 
 # IDEs
 .vscode/
