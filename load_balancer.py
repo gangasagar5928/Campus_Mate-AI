@@ -172,7 +172,7 @@ class DeterministicBalancingEngine:
         """Generates a complete deterministic daily action plan."""
         evaluations = evaluations or []
         today_str = target_date or date.today().isoformat()
-        plan_id = f"PLAN-{datetime.utcnow().strftime('%Y%m%d')}-{profile.student_id[-6:]}"
+        plan_id = f"PLAN-{datetime.now().strftime('%Y%m%d')}-{profile.student_id[-6:]}"
 
         # Nearest exam lookup
         nearest_exam = self.get_nearest_exam(profile.upcoming_exams)
