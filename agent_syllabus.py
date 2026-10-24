@@ -74,3 +74,38 @@ async def handle_plan_request(ctx: Context, sender: str, req: PlanRequest):
         resp = PlanResponse(request_id=req.request_id, success=False, error_message=str(exc))
 
     await ctx.send(sender, resp)
+
+
+@syllabus_agent.on_message(model=SyllabusRequest)
+async def handle_legacy_syllabus_request(ctx: Context, sender: str, req: SyllabusRequest):
+    """Compatibility handler for StudentTwinAgent's SyllabusRequest."""
+    ctx.logger.info(f"[Syllabus] Received SyllabusRequest for {req.branch} (Sem {req.semester}) from {sender}")
+    
+    profile = StudentProfile(
+        student_id=req.student_id,
+        name="Campus Student",
+        branch=req.branch.upper(),
+        semester=req.semester,
+        daily_available_hours=req.daily_available_hours,
+        target_companies=[req.target_company],
+        upcoming_exams=[
+            ExamSchedule(
+                subject_code="CORE-SEM",
+                subject_name=f"{req.branch} Core Theory",
+                exam_date="2026-10-27",
+                days_to_exam=req.days_to_midterm,
+                credit_weight=4.0
+            )
+        ]
+    )
+
+    plan = balancer_engine.generate_daily_action_plan(profile)
+    plan.academic_ratio = plan.syllabus_revision_ratio
+    plan.placement_ratio = plan.placement_prep_ratio
+    plan.notes = plan.summary_notes
+    for t in plan.tasks:
+        t.task_name = t.title
+        t.category = "Syllabus Revision" if t.task_type.value == "syllabus_revision" else "Placement Prep"
+
+    ctx.logger.info(f"[Syllabus] Dispatching DailyActionPlan ({plan.mode.value}) to {sender}...")
+    await ctx.send(sender, plan)
