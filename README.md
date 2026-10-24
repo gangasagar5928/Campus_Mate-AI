@@ -144,3 +144,30 @@ python interactive_chat.py --web --port 5000
 ```powershell
 python interactive_chat.py
 ```
+
+
+---
+
+## 🏛️ Member 2: Departmental Syllabus Engine & Deterministic Balancing Lead
+
+### Deliverables Owned
+- `schemas.py`: Canonical shared data contracts across all three agents.
+- `curriculum.json`: Structured AKTU/GCET 3rd-year branch curriculum database (ECE & CSE).
+- `load_balancer.py`: Deterministic dynamic balancing engine with Evening Remedial Mutation Hook.
+- `agent_syllabus.py`: Background Fetch.ai `uAgent` worker node on port 8002.
+- `test_member2.py`: Automated unit test suite verifying deterministic formulas, high-yield filters, and mutation hooks.
+
+### Dynamic Allocation Formula
+$$\text{Study Allocation} = \begin{cases} 
+60\%\text{ Placement } / 40\%\text{ Syllabus}, & > 7\text{ days to exam (Normal)} \\
+50\%\text{ Placement } / 50\%\text{ Syllabus}, & 3 \le \text{days} \le 7\text{ (Approaching)} \\
+10\%\text{ Placement } / 90\%\text{ High-Yield Syllabus}, & < 3\text{ days (Urgent)}
+\end{cases}$$
+
+### Evening Remedial Mutation Hook
+When an evaluation reports `score < 6.0 / 10.0`, the mutation hook deterministically injects a **30-minute remedial session** into the candidate's **Evening Block** (`TimeBlock.EVENING`).
+
+### Verification & Test Suite
+- Schema validation: Pydantic v1 & v2 uAgents dual compatibility.
+- Curriculum validation: AKTU ECE (Digital Electronics, Microprocessors) and CSE (DSA, OS, DBMS).
+- Balancer validation: 100% test pass rate across all 8 test cases.
