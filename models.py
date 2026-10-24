@@ -26,3 +26,9 @@ class InterviewQuestionResponse(Model):
     required_fee_fet: float = 0.0
     interviewer_wallet_address: str = ""
     payment_instructions: Optional[str] = None
+
+class InterviewAnswerSubmission(Model):
+    session_id: str
+    question_id: str
+    student_id: str
+    student_answer: str
