@@ -162,3 +162,109 @@ class DeterministicBalancingEngine:
         placement_minutes = int(round(total_minutes * placement_ratio))
         syllabus_minutes = total_minutes - placement_minutes
         return total_minutes, placement_minutes, syllabus_minutes
+
+    def generate_daily_action_plan(
+        self,
+        profile: StudentProfile,
+        evaluations: Optional[List[InterviewEvaluation]] = None,
+        target_date: Optional[str] = None
+    ) -> DailyActionPlan:
+        """Generates a complete deterministic daily action plan."""
+        evaluations = evaluations or []
+        today_str = target_date or date.today().isoformat()
+        plan_id = f"PLAN-{datetime.utcnow().strftime('%Y%m%d')}-{profile.student_id[-6:]}"
+
+        # Nearest exam lookup
+        nearest_exam = self.get_nearest_exam(profile.upcoming_exams)
+        days_to_nearest = nearest_exam.days_to_exam if nearest_exam else profile.days_to_midterm
+        nearest_subject = nearest_exam.subject_name if nearest_exam else None
+
+        mode, p_ratio, s_ratio = self.determine_allocation_mode(days_to_nearest)
+        total_mins, p_mins, s_mins = self.calculate_time_budget(
+            profile.daily_available_hours, p_ratio, s_ratio
+        )
+
+        all_unit_priorities = self.calculate_priorities_for_profile(profile)
+        tasks: List[StudyTask] = []
+        task_seq = 1
+
+        # High-weightage units for Urgent mode
+        if mode == AllocationMode.URGENT_EXAM:
+            filtered_units = [u for u in all_unit_priorities if u.is_high_yield]
+            if not filtered_units:
+                filtered_units = all_unit_priorities
+        else:
+            filtered_units = all_unit_priorities
+
+        # 1. Placement Tasks
+        remaining_p_mins = p_mins
+        target_company = profile.target_company or (profile.target_companies[0] if profile.target_companies else "Tier-1 Tech")
+        block_order = [TimeBlock.MORNING, TimeBlock.AFTERNOON, TimeBlock.EVENING, TimeBlock.NIGHT]
+        
+        while remaining_p_mins >= 30:
+            duration = 45 if remaining_p_mins >= 45 else 30
+            topic = "Core Problem Solving" if profile.branch == "CSE" else "Hardware Design & Timing"
+            task = StudyTask(
+                task_id=f"TASK-{today_str.replace('-', '')}-{task_seq:03d}",
+                title=f"Placement Drill: {topic} ({target_company})",
+                task_name=f"Placement Drill: {topic} ({target_company})",
+                subject="Placement Preparation",
+                topic=topic,
+                task_type=TaskType.PLACEMENT_PREP,
+                category="Placement Prep",
+                duration_minutes=duration,
+                priority=8 if mode == AllocationMode.NORMAL else 4,
+                time_block=TimeBlock.MORNING if task_seq == 1 else TimeBlock.AFTERNOON
+            )
+            tasks.append(task)
+            task_seq += 1
+            remaining_p_mins -= duration
+
+        # 2. Syllabus Revision Tasks
+        remaining_s_mins = s_mins
+        unit_idx = 0
+        while remaining_s_mins >= 30 and filtered_units:
+            unit = filtered_units[unit_idx % len(filtered_units)]
+            unit_idx += 1
+            duration = min(60, remaining_s_mins)
+            if duration < 30:
+                duration = 30
+            topic_str = unit.topics[0] if unit.topics else unit.unit_title
+            task = StudyTask(
+                task_id=f"TASK-{today_str.replace('-', '')}-{task_seq:03d}",
+                title=f"Syllabus Revision: {unit.subject_name} - {unit.unit_title}",
+                task_name=f"Syllabus Revision: {unit.subject_name} - {unit.unit_title}",
+                subject=unit.subject_name,
+                topic=topic_str,
+                task_type=TaskType.SYLLABUS_REVISION,
+                category="Syllabus Revision",
+                duration_minutes=duration,
+                priority=10 if mode == AllocationMode.URGENT_EXAM else 6,
+                time_block=TimeBlock.AFTERNOON if task_seq <= 2 else TimeBlock.NIGHT
+            )
+            tasks.append(task)
+            task_seq += 1
+            remaining_s_mins -= duration
+
+        # Apply evening remedial mutation hook
+        plan = DailyActionPlan(
+            plan_id=plan_id,
+            student_id=profile.student_id,
+            date=today_str,
+            mode=mode,
+            days_to_nearest_exam=days_to_nearest,
+            nearest_exam_subject=nearest_subject,
+            placement_prep_ratio=p_ratio,
+            syllabus_revision_ratio=s_ratio,
+            academic_ratio=s_ratio,
+            placement_ratio=p_ratio,
+            total_allocated_minutes=sum(t.duration_minutes for t in tasks),
+            tasks=tasks,
+            remedial_sessions_count=0,
+            summary_notes=f"Deterministic Mode: {mode.value}. Allocation: {int(p_ratio*100)}% Placement / {int(s_ratio*100)}% Syllabus."
+        )
+
+        for ev in evaluations:
+            plan = self.apply_remedial_mutation(plan, ev)
+
+        return plan
