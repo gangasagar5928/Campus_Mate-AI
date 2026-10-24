@@ -268,3 +268,55 @@ class DeterministicBalancingEngine:
             plan = self.apply_remedial_mutation(plan, ev)
 
         return plan
+
+    def apply_remedial_mutation(
+        self,
+        plan: DailyActionPlan,
+        evaluation: InterviewEvaluation
+    ) -> DailyActionPlan:
+        """
+        Evening Remedial Mutation Hook:
+        If Member 3's interview evaluation reports a low score (< 6.0/10),
+        insert a 30-minute remedial session into the candidate's Evening Block (TimeBlock.EVENING).
+        """
+        if not evaluation.is_low_score(0.60):
+            return plan
+
+        remedial_topic = evaluation.topic
+        if evaluation.weak_subtopics:
+            remedial_topic = f"{evaluation.topic} ({evaluation.weak_subtopics[0]})"
+        elif evaluation.remedial_topics:
+            remedial_topic = f"{evaluation.topic} ({evaluation.remedial_topics[0]})"
+
+        remedial_id = f"REMEDIAL-{plan.date.replace('-', '')}-{len(plan.tasks) + 1:03d}"
+        remedial_task = StudyTask(
+            task_id=remedial_id,
+            title=f"Remedial Session: {remedial_topic}",
+            task_name=f"Remedial Session: {remedial_topic}",
+            subject=evaluation.subject,
+            topic=remedial_topic,
+            task_type=TaskType.REMEDIAL,
+            category="Remedial Intervention",
+            duration_minutes=30,
+            priority=9,
+            time_block=TimeBlock.EVENING,
+            is_remedial=True,
+            mutation_source=evaluation.evaluation_id or evaluation.session_id or "Low Mock Interview Score"
+        )
+
+        # Insert at top of Evening Block
+        evening_indices = [i for i, t in enumerate(plan.tasks) if t.time_block == TimeBlock.EVENING]
+        if evening_indices:
+            insert_pos = evening_indices[0]
+            plan.tasks.insert(insert_pos, remedial_task)
+        else:
+            plan.tasks.append(remedial_task)
+
+        plan.remedial_sessions_count += 1
+        plan.total_allocated_minutes += 30
+        plan.summary_notes += f" [Remedial Inserted]: 30-min Evening drill on '{remedial_topic}' due to score {evaluation.score}/10."
+        return plan
+
+
+# Global singleton instance
+balancer_engine = DeterministicBalancingEngine()
