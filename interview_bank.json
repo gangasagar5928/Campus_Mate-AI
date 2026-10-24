@@ -1,0 +1,10 @@
+{
+  "companies": {
+    "qualcomm": {
+      "name": "Qualcomm",
+      "track": "Hardware & Embedded Systems / VLSI",
+      "description": "Chip design, Verilog/SystemVerilog RTL modeling, STA timing closure, and mobile SoC architecture.",
+      "questions": []
+    }
+  }
+}
