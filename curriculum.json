@@ -127,6 +127,111 @@
               ]
             }
           ]
+        },
+        {
+          "subject_code": "KEC-501",
+          "subject_name": "Microprocessors & Microcontrollers",
+          "semester": 5,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "High (Embedded Systems, IoT, Firmware, Texas Instruments, Qualcomm)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "8085 Microprocessor Architecture",
+              "weightage_percent": 20.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "8085 Architecture Overview and Functional Block Diagram",
+                "Register Organization (A, B, C, D, E, H, L, SP, PC)",
+                "Flag Register (Sign, Zero, Auxiliary Carry, Parity, Carry)",
+                "Demultiplexing Address/Data Bus (ALE signal)",
+                "Control and Status Signals (RD, WR, IO/M, S0, S1)",
+                "Clock and Power Supply Circuitry"
+              ],
+              "key_concepts": [
+                "Demultiplexing AD0-AD7 via 74LS373 latch",
+                "Flag updates across arithmetic instructions"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "8085 Instruction Set & Assembly Programming",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Addressing Modes of 8085 (Immediate, Direct, Register, Register Indirect, Implicit)",
+                "Instruction Classification (Data Transfer, Arithmetic, Logical, Branch, Stack/IO)",
+                "Machine Cycles and Timing Diagrams (Opcode Fetch, Memory Read/Write, IO Read/Write)",
+                "Assembly Language Programs (Block Move, Array Sorting, 16-bit Addition, BCD Arithmetic)",
+                "Subroutines, CALL and RET operations, Stack Manipulation"
+              ],
+              "key_concepts": [
+                "Opcode Fetch 4T machine cycle",
+                "Timing diagram waveforms for MEMR and MEMW",
+                "Subroutine stack pointer mechanics"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "8086 16-Bit Microprocessor Architecture",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "8086 Internal Architecture: Bus Interface Unit (BIU) & Execution Unit (EU)",
+                "Pipelining and Instruction Queue (6-byte Prefetch Queue)",
+                "Memory Segmentation and Physical Address Calculation (Segment:Offset)",
+                "Segment Registers (CS, DS, SS, ES) and Pointer/Index Registers",
+                "Minimum Mode vs Maximum Mode Operation",
+                "8086 Addressing Modes and Basic Instruction Set"
+              ],
+              "key_concepts": [
+                "Physical address = (Segment * 16) + Offset",
+                "BIU and EU parallel pipelining",
+                "Bus controller 8288 in Maximum mode"
+              ]
+            },
+            {
+              "unit_number": 4,
+              "unit_title": "Peripheral Interfacing & Support Devices",
+              "weightage_percent": 15.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "Memory Interfacing (Address Decoding using 74LS138)",
+                "8255 Programmable Peripheral Interface (PPI) Architecture & Control Word",
+                "8254/8253 Programmable Interval Timer (Modes 0 to 5)",
+                "8259 Programmable Interrupt Controller (Cascading, Priority Modes)",
+                "8257/8237 Direct Memory Access (DMA) Controller"
+              ],
+              "key_concepts": [
+                "8255 BSR mode vs I/O mode control word",
+                "DMA cycle stealing vs burst transfer"
+              ]
+            },
+            {
+              "unit_number": 5,
+              "unit_title": "Interrupts & Real-Time Interfacing",
+              "weightage_percent": 15.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "8085 Interrupt Structure (TRAP, RST 7.5, RST 6.5, RST 5.5, INTR)",
+                "Hardware vs Software Interrupts, Vectored vs Non-Vectored Interrupts",
+                "Interrupt Masking (SIM and RIM instructions)",
+                "8086 Interrupt Vector Table (IVT) and Type 0-255 Interrupts",
+                "Interfacing ADC0808/0809, DAC0808, and Stepper Motor"
+              ],
+              "key_concepts": [
+                "TRAP highest priority non-maskable interrupt",
+                "SIM instruction bitmask manipulation",
+                "IVT address = Interrupt Type * 4"
+              ]
+            }
+          ]
         }
       ]
     },
