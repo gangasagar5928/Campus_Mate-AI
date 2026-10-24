@@ -119,3 +119,29 @@ class StudentProfile(Model):
         default=None,
         description="Days remaining to midterm for compatibility with intake forms"
     )
+
+
+# ==============================================================================
+# Shared Contract 2: DailyActionPlan (Member 2 -> Member 1)
+# ==============================================================================
+
+class DailyActionPlan(Model):
+    """
+    The deterministic schedule output produced by Member 2's Balancing Engine
+    and delivered to Member 1's StudentTwinAgent.
+    """
+    plan_id: str = Field(default="PLAN-001", description="Unique plan ID, e.g. PLAN-20261024-ECE-042")
+    student_id: str = Field(default="GCET-STUDENT-001", description="Target student roll number")
+    date: str = Field(default="2026-10-24", description="Date of the plan in YYYY-MM-DD format")
+    mode: AllocationMode = Field(default=AllocationMode.NORMAL, description="Dynamic allocation mode based on exam proximity")
+    days_to_nearest_exam: Optional[int] = Field(None, description="Days to closest upcoming exam (if scheduled)")
+    nearest_exam_subject: Optional[str] = Field(None, description="Subject of the closest exam")
+    placement_prep_ratio: float = Field(default=0.60, ge=0.0, le=1.0, description="Percentage of time allocated to placement")
+    syllabus_revision_ratio: float = Field(default=0.40, ge=0.0, le=1.0, description="Percentage of time allocated to syllabus")
+    academic_ratio: Optional[float] = Field(default=None, description="Alias for syllabus_revision_ratio")
+    placement_ratio: Optional[float] = Field(default=None, description="Alias for placement_prep_ratio")
+    total_allocated_minutes: int = Field(default=240, gt=0, description="Total minutes distributed across all tasks")
+    tasks: List[StudyTask] = Field(default_factory=list, description="Ordered schedule of study blocks")
+    remedial_sessions_count: int = Field(default=0, description="Number of remedial sessions injected into plan")
+    summary_notes: str = Field(default="", description="Executive summary of the day's strategy and focus areas")
+    notes: Optional[str] = Field(default=None, description="Compatibility alias for summary_notes")
