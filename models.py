@@ -12,3 +12,17 @@ class InterviewQuery(Model):
     question_id: Optional[str] = None
     payment_tx_hash: Optional[str] = None
     session_id: Optional[str] = None
+
+class InterviewQuestionResponse(Model):
+    session_id: str
+    question_id: str
+    company: str
+    track: str
+    tier: str
+    topic: str
+    difficulty: str
+    question_text: str
+    is_unlocked: bool
+    required_fee_fet: float = 0.0
+    interviewer_wallet_address: str = ""
+    payment_instructions: Optional[str] = None
