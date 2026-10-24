@@ -14,7 +14,121 @@
     "ECE": {
       "branch_name": "Electronics & Communication Engineering",
       "semester": 5,
-      "subjects": []
+      "subjects": [
+        {
+          "subject_code": "KEC-502",
+          "subject_name": "Digital Electronics & Logic Design",
+          "semester": 5,
+          "credit_weight": 4.0,
+          "is_core": true,
+          "placement_relevance": "High (VLSI, FPGA, Hardware/Firmware, Qualcomm, Intel)",
+          "units": [
+            {
+              "unit_number": 1,
+              "unit_title": "Combinational Logic Circuits",
+              "weightage_percent": 15.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "Boolean Algebra and Logic Minimization",
+                "Karnaugh Maps (K-Maps) up to 5 variables",
+                "Quine-McCluskey Minimization",
+                "Binary Adders and Subtractors",
+                "Look-Ahead Carry Generator",
+                "Multiplexers and Demultiplexers",
+                "Encoders and Priority Encoders",
+                "Decoders and Code Converters"
+              ],
+              "key_concepts": [
+                "K-Map minimization",
+                "Mux-based logic synthesis",
+                "Carry lookahead delay reduction"
+              ]
+            },
+            {
+              "unit_number": 2,
+              "unit_title": "Sequential Logic & Flip-Flops",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 12,
+              "topics": [
+                "Latches vs Flip-Flops",
+                "SR Latch and SR Flip-Flop",
+                "JK Flip-Flop and Race-Around Condition",
+                "Master-Slave JK Flip-Flop",
+                "D Flip-Flop (Delay) and T Flip-Flop (Toggle)",
+                "Characteristic Equations and Truth Tables",
+                "Excitation Tables for all Flip-Flops",
+                "Flip-Flop Conversions (e.g., SR to JK, D to T)",
+                "Edge-Triggering and Setup/Hold Times"
+              ],
+              "key_concepts": [
+                "Master-Slave elimination of race-around",
+                "Excitation tables for sequential synthesis",
+                "Setup and Hold time constraints"
+              ]
+            },
+            {
+              "unit_number": 3,
+              "unit_title": "Sequential Circuit Design: Registers & Counters",
+              "weightage_percent": 25.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Registers and Shift Registers (SISO, SIPO, PISO, PIPO)",
+                "Bidirectional and Universal Shift Registers",
+                "Asynchronous / Ripple Counters (MOD-N Counter Design)",
+                "Synchronous Counter Design using Excitation Tables",
+                "Up-Down Synchronous Counters",
+                "Ring Counter and Johnson (Twisted Ring) Counter",
+                "Decade Counter (7490 IC Architecture)"
+              ],
+              "key_concepts": [
+                "MOD-N counter state transitions",
+                "Propagation delay in ripple counters",
+                "Johnson counter decoding efficiency"
+              ]
+            },
+            {
+              "unit_number": 4,
+              "unit_title": "Finite State Machines & Synchronous Sequential Design",
+              "weightage_percent": 20.0,
+              "is_high_yield": true,
+              "estimated_hours": 10,
+              "topics": [
+                "Mealy vs Moore State Machine Models",
+                "State Diagrams and State Tables",
+                "State Minimization using Implication Charts",
+                "State Assignment Strategies (Gray Code, One-Hot)",
+                "Sequence Detectors (Overlapping vs Non-overlapping 1011/1101)"
+              ],
+              "key_concepts": [
+                "Mealy output dependence on current input",
+                "Moore output glitch immunity",
+                "Sequence detector synthesis"
+              ]
+            },
+            {
+              "unit_number": 5,
+              "unit_title": "Logic Families and Semiconductor Memories",
+              "weightage_percent": 15.0,
+              "is_high_yield": false,
+              "estimated_hours": 8,
+              "topics": [
+                "Digital IC Logic Families (TTL, CMOS, ECL)",
+                "Fan-in, Fan-out, Noise Margin, Propagation Delay",
+                "ROM, PROM, EPROM, EEPROM, Flash Memory",
+                "SRAM vs DRAM Cells",
+                "Programmable Logic Devices (PLA, PAL, CPLD, FPGA)"
+              ],
+              "key_concepts": [
+                "CMOS static power dissipation advantages",
+                "PLA vs PAL architecture and programmability"
+              ]
+            }
+          ]
+        }
+      ]
     },
     "CSE": {
       "branch_name": "Computer Science & Engineering",
