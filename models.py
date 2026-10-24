@@ -32,3 +32,17 @@ class InterviewAnswerSubmission(Model):
     question_id: str
     student_id: str
     student_answer: str
+
+class InterviewEvaluation(Model):
+    session_id: str
+    question_id: str
+    student_id: str
+    company: str
+    score: float
+    score_badge: str
+    rubric_breakdown: Dict[str, float]
+    strengths: List[str]
+    synthesis_risks: List[str]
+    remedial_topics: List[str]
+    feedback_summary: str
+    timestamp: str
