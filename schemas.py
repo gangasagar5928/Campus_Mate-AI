@@ -21,3 +21,15 @@ except ImportError:
         from pydantic.v1 import BaseModel as Model, Field
     except ImportError:
         from pydantic import BaseModel as Model, Field  # type: ignore
+
+
+# ==============================================================================
+# Enumerations & Literals
+# ==============================================================================
+
+class TaskType(str, Enum):
+    """Categorization of daily study tasks."""
+    PLACEMENT_PREP = "placement_prep"
+    SYLLABUS_REVISION = "syllabus_revision"
+    REMEDIAL = "remedial"
+    MOCK_INTERVIEW = "mock_interview"
