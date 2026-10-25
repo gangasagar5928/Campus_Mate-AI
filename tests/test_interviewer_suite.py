@@ -43,6 +43,22 @@ except ImportError:
 
 
 class TestInterviewerAgentSuite(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from core.payment import VERIFIED_PAYMENTS_FILE
+        cls._verified_path = VERIFIED_PAYMENTS_FILE
+        if os.path.exists(cls._verified_path):
+            with open(cls._verified_path, "r", encoding="utf-8") as f:
+                cls._backup_payments = f.read()
+        else:
+            cls._backup_payments = None
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls._backup_payments is not None:
+            with open(cls._verified_path, "w", encoding="utf-8") as f:
+                f.write(cls._backup_payments)
+
     def setUp(self):
         self.payment = PaymentProtocol(wallet_file="test_interviewer_wallet.json")
         self.evaluator = LLMEvaluator()
