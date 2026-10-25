@@ -22,15 +22,16 @@ except RuntimeError:
     asyncio.set_event_loop(asyncio.new_event_loop())
 
 from uagents import Bureau, Context
-from agent_interviewer import interviewer_agent, payment_protocol
-from agent_student_twin import student_agent, payment_helper
-from agent_syllabus import syllabus_agent
-from models import InterviewQuery, SyllabusRequest
-
-# Match student's payment helper with interviewer's ledger for synchronized sandbox demo
-payment_helper._simulated_ledger = payment_protocol._simulated_ledger
-payment_helper.processed_transactions = payment_protocol.processed_transactions
-payment_helper.agent_address = payment_protocol.agent_address
+try:
+    from agents.interviewer import interviewer_agent
+    from agents.student_twin import student_agent
+    from agents.syllabus import syllabus_agent
+    from models.models import InterviewQuery, SyllabusRequest
+except ImportError:
+    from agent_interviewer import interviewer_agent
+    from agent_student_twin import student_agent
+    from agent_syllabus import syllabus_agent
+    from models import InterviewQuery, SyllabusRequest
 
 
 @student_agent.on_interval(period=10.0)
@@ -58,7 +59,7 @@ async def run_scheduled_drill_flow(ctx: Context):
 
     await asyncio.sleep(3)
 
-    # Demo 2: Free Standard Qualcomm Verilog Question to Interviewer Agent
+    # Demo 2: Standard Qualcomm Verilog Question to Interviewer Agent
     ctx.logger.info("\n📍 STEP 2: Requesting Standard Qualcomm Verilog Drill from Interviewer Agent...")
     query = InterviewQuery(
         student_id=str(student_agent.address),
@@ -70,14 +71,13 @@ async def run_scheduled_drill_flow(ctx: Context):
 
     await asyncio.sleep(4)
 
-    # Demo 3: Tier-1 Amazon Bar Raiser Drill (Locked without payment)
-    ctx.logger.info("\n📍 STEP 3: Requesting Tier-1 Amazon Bar Raiser Mock Pack (Unpaid -> 1 FET Gating)...")
+    # Demo 3: Amazon Bar Raiser Drill
+    ctx.logger.info("\n📍 STEP 3: Requesting Amazon Bar Raiser Mock Pack...")
     tier1_query = InterviewQuery(
         student_id=str(student_agent.address),
         company="amazon",
         tier="tier-1",
-        question_id="amazon_bar_raiser_01",
-        payment_tx_hash=None
+        question_id="amazon_bar_raiser_01"
     )
     await ctx.send(interviewer_agent.address, tier1_query)
 
@@ -88,7 +88,6 @@ def main():
     print(f"1. Student Twin Agent:        {student_agent.address}")
     print(f"2. Departmental Syllabus:     {syllabus_agent.address}")
     print(f"3. Company Interviewer Agent: {interviewer_agent.address}")
-    print(f"Interviewer FET Wallet:       {payment_protocol.agent_address}")
     print("=" * 70)
 
     bureau_port = int(os.getenv("BUREAU_PORT", "8005"))

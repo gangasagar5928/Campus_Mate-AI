@@ -12,17 +12,15 @@ class InterviewQuery(Model):
     Sent by StudentTwinAgent to request an interview question or pack.
     """
     student_id: str
-    company: str  # e.g., 'qualcomm', 'tcs_prime', 'amazon'
-    tier: str = "standard"  # 'standard' (free) or 'tier-1' (requires 1 FET)
+    company: str  # e.g., 'qualcomm', 'tcs_prime', 'amazon', 'google', 'nvidia'
+    tier: str = "standard"
     question_id: Optional[str] = None
-    payment_tx_hash: Optional[str] = None
     session_id: Optional[str] = None
 
 
 class InterviewQuestionResponse(Model):
     """
-    Returned by CompanyInterviewerAgent with the selected drill question
-    or a payment barrier if Tier-1 pack is locked.
+    Returned by CompanyInterviewerAgent with the selected drill question.
     """
     session_id: str
     question_id: str
@@ -32,7 +30,7 @@ class InterviewQuestionResponse(Model):
     topic: str
     difficulty: str
     question_text: str
-    is_unlocked: bool
+    is_unlocked: bool = True
     required_fee_fet: float = 0.0
     interviewer_wallet_address: str = ""
     payment_instructions: Optional[str] = None
@@ -66,26 +64,6 @@ class InterviewEvaluation(Model):
     feedback_summary: str
     timestamp: str
 
-
-class PaymentVerificationQuery(Model):
-    """
-    Optional query to verify testnet FET transaction status ahead of drill.
-    """
-    student_id: str
-    tx_hash: str
-    pack_id: str
-
-
-class PaymentVerificationResponse(Model):
-    """
-    Response indicating whether payment has been confirmed on the ledger.
-    """
-    tx_hash: str
-    is_valid: bool
-    amount_fet: float
-    sender: str
-    recipient: str
-    message: str
 
 
 # ==========================================

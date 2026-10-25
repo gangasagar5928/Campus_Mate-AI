@@ -60,7 +60,7 @@ jobs:
         run: |
           python tests/test_member2.py
 
-      - name: Run Interviewer & Payment Test Suite
+      - name: Run Interviewer Test Suite
         run: |
           python tests/test_interviewer_suite.py
 
@@ -77,7 +77,6 @@ jobs:
           import models.schemas
           import core.balancer
           import core.evaluator
-          import core.payment
           import core.knowledge_engine
           import ui.cards
           import agents.student_twin

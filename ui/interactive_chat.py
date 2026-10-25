@@ -15,8 +15,12 @@ import argparse
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-from agent_interviewer import serve_interview_query, evaluate_student_submission, payment_protocol
-from models import InterviewQuery, InterviewAnswerSubmission
+try:
+    from agents.interviewer import serve_interview_query, evaluate_student_submission
+    from models.models import InterviewQuery, InterviewAnswerSubmission
+except ImportError:
+    from agent_interviewer import serve_interview_query, evaluate_student_submission
+    from models import InterviewQuery, InterviewAnswerSubmission
 
 MENU_OPTIONS = [
     {
@@ -59,17 +63,15 @@ MENU_OPTIONS = [
         "company": "amazon",
         "tier": "tier-1",
         "question_id": "amazon_bar_raiser_01",
-        "label": "Amazon: Bar Raiser Cache & Leadership Principles (Tier-1 - 1.0 FET)"
+        "label": "Amazon: Bar Raiser Cache & Leadership Principles (Tier-1)"
     }
 ]
 
 
 def print_banner():
     print("=" * 75)
-    print("   🎙️  COMPANY-TAILORED INTERVIEW DRILL & PAYMENT PROTOCOL ENGINE")
-    print("      Qualcomm  |  TCS Prime  |  Amazon  |  Fetch.ai Testnet FET")
-    print("=" * 75)
-    print(f"Interviewer FET Wallet: {payment_protocol.agent_address}")
+    print("   🎙️  COMPANY-TAILORED INTERVIEW DRILL & EVALUATION ENGINE")
+    print("      Qualcomm  |  Google  |  Nvidia  |  Microsoft  |  Amazon  |  TCS Prime")
     print("=" * 75)
 
 
@@ -91,39 +93,12 @@ def run_cli_chat():
             print("Invalid selection. Please choose 1-6 or q.")
             continue
 
-        tx_hash = None
-        if selected["tier"] == "tier-1":
-            print("\n" + "!" * 75)
-            print(f"🔒 TIER-1 SPECIALIZED PACK LOCKED: {selected['label']}")
-            print("This premium track requires 1.0 TESTNET FET on Fetch.ai Dorado network.")
-            print(f"Send 1.0 FET to Interviewer Address: {payment_protocol.agent_address}")
-            print("!" * 75)
-
-            pay_choice = input(
-                "\nPayment options:\n"
-                "  [1] Enter existing Dorado testnet tx_hash\n"
-                "  [2] Simulate 1.0 FET testnet transfer (Instant Voucher)\n"
-                "  [3] Attempt bypass without payment (test security)\n"
-                "Choose payment option (1/2/3): "
-            ).strip()
-
-            if pay_choice == "1":
-                tx_hash = input("Enter Fetch.ai tx_hash: ").strip()
-            elif pay_choice == "2":
-                sim_sender = "fetch1student_demo_wallet_address"
-                tx_hash = payment_protocol.simulate_transfer(sim_sender, amount_fet=1.0, memo=selected["label"])
-                print(f"✅ Generated simulated testnet payment voucher: {tx_hash}")
-            else:
-                print("Proceeding without payment...")
-                tx_hash = None
-
         # Build and send InterviewQuery
         query = InterviewQuery(
             student_id="student_cli_user",
             company=selected["company"],
             tier=selected["tier"],
-            question_id=selected["question_id"],
-            payment_tx_hash=tx_hash
+            question_id=selected["question_id"]
         )
 
         response = serve_interview_query(query, sender="cli_chat_interface")
@@ -234,8 +209,8 @@ def run_web_server(port: int = 5000):
             </div>
             <div class="flex items-center gap-3 bg-slate-800/80 border border-slate-700 rounded-full px-4 py-1.5 text-xs">
                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span class="text-slate-300">Testnet FET Wallet:</span>
-                <code class="text-cyan-300 font-mono" id="wallet-badge">""" + payment_protocol.agent_address[:18] + """...</code>
+                <span class="text-slate-300">Agent Status:</span>
+                <code class="text-emerald-300 font-mono" id="wallet-badge">Active & Ready</code>
             </div>
         </div>
     </header>
@@ -535,13 +510,9 @@ def run_web_server(port: int = 5000):
         resp = serve_interview_query(q, sender="web_interface")
         return JSONResponse(resp.model_dump())
 
-    class SimPayReq(BaseModel):
-        amount_fet: float = 1.0
-
     @app.post("/api/simulate-payment")
-    async def api_sim_pay(req: SimPayReq):
-        tx = payment_protocol.simulate_transfer("fetch1web_student_wallet", amount_fet=req.amount_fet)
-        return JSONResponse({"tx_hash": tx, "status": "success"})
+    async def api_sim_pay():
+        return JSONResponse({"status": "deprecated", "message": "All interview tracks are directly unlocked."})
 
     class EvalReq(BaseModel):
         session_id: str

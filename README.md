@@ -10,7 +10,6 @@
   </a>
   <img src="https://img.shields.io/badge/uAgents-v0.26.1-blue.svg" alt="uAgents" />
   <img src="https://img.shields.io/badge/ACP-0.3.0%20Compliant-purple.svg" alt="ACP" />
-  <img src="https://img.shields.io/badge/Network-Fetch.ai%20Dorado-green.svg" alt="Dorado" />
   <img src="https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue.svg" alt="Python Versions" />
   <img src="https://img.shields.io/badge/Tests-29%2F29%20Passed-brightgreen.svg" alt="Tests" />
   <img src="https://img.shields.io/badge/License-Apache%202.0-yellow.svg" alt="License" />
@@ -27,7 +26,7 @@ Engineering students face an existential dilemma every semester: **Academic Cour
 - Cramming for university midterms creates **placement debt** (neglecting LeetCode, system design, hardware RTL).
 - Focusing solely on off-campus recruitment causes **academic debt** (failing internal sessional exams, risking CGPA backlogs).
 
-**CampusMate AI** is an autonomous, decentralized student twin agent built on Fetch.ai `uAgents`. It continuously harmonizes academic requirements with tier-1 recruitment tracks, dynamically adjusting daily study schedules based on exam proximity and injecting automated remedial interventions upon interview failure.
+**CampusMate AI** is an autonomous student twin agent built on Fetch.ai `uAgents`. It continuously harmonizes academic requirements with tier-1 recruitment tracks, dynamically adjusting daily study schedules based on exam proximity and injecting automated remedial interventions upon interview failure.
 
 ---
 
@@ -41,7 +40,6 @@ sequenceDiagram
     participant RAG as Knowledge & Retrieval Engine
     participant Balancer as Deterministic Balancer Engine
     participant Interviewer as Technical Interviewer Engine
-    participant Payment as CosmPy Dorado Web3 Protocol
 
     Note over Student,Twin: Multi-Intent Conversational Ingress
     Student->>Twin: "Create study plan for ECE Sem 6 with 4 hours, exam in 4 days"
@@ -63,12 +61,6 @@ sequenceDiagram
     Twin->>Balancer: Trigger Evening Remedial Hook (Score < 6.0/10)
     Balancer-->>Twin: Mutated Tonight's Schedule (+30m Remedial Review)
     Twin-->>Student: Scorecard & Dynamic Schedule Mutation Notice
-
-    Note over Student,Payment: Premium Track Gating (Web3 Bonus)
-    Student->>Twin: "Unlock Amazon Bar Raiser pack"
-    Twin->>Payment: Verify 1.0 FET Dorado Testnet Payment (tx_hash)
-    Payment-->>Twin: On-Chain Verified (Replay Protected)
-    Twin-->>Student: Unlock Advanced System Design Pack
 ```
 
 ---
@@ -85,10 +77,9 @@ sequenceDiagram
 - **Urgent Exam Mode (< 3 days):** `10% Placement / 90% High-Yield Units`. Emergency triage filtering out non-essential units to guarantee CGPA safety.
 - **Evening Remedial Mutation Hook:** Evaluates student mock submissions. Any score `< 6.0 / 10.0` dynamically mutates tonight's evening study block, injecting a focused 30-minute remedial review on the identified gap.
 
-### 3. Company Interview & Web3 Monetization Engine (`core/evaluator.py`, `core/payment.py`)
+### 3. Company Interview & Rubric Evaluation Engine (`core/evaluator.py`, `agents/interviewer.py`)
 - **Question Bank (`data/interview_bank.json`):** Qualcomm (Hardware/VLSI), Google (Distributed Systems & Sharding), Nvidia (CUDA Warp Divergence), Microsoft (Async I/O & Thread Pools), Amazon (Distributed Cache Stampede), and TCS Prime (Modern C++ Smart Pointers).
-- **Senior Bar Raiser 10.0 Rubric:** Scores candidates across core technical mechanics, bonus edge cases, and common pitfalls.
-- **Fetch.ai CosmPy Micropayments:** Premium interview packs gated behind `1.0 FET` on the Dorado Testnet with cryptographic transaction hash validation and replay attack prevention (`data/verified_payments.json`).
+- **Senior Bar Raiser 10.0 Rubric:** Scores candidates across core technical mechanics, bonus edge cases, and common pitfalls. All tracks directly accessible without payment barriers.
 
 ---
 
@@ -110,15 +101,11 @@ Campus_Mate-AI/
 │   ├── balancer.py            # 3-Tier Load Balancer & Remedial Mutation Hook
 │   ├── evaluator.py           # Senior Bar Raiser 10.0 Rubric Evaluation Engine
 │   ├── knowledge_engine.py    # Zero-Hallucination Retrieval & Academic Engine
-│   ├── payment.py             # CosmPy Dorado 1.0 FET Web3 Payment Protocol
 │   └── prompts.py             # Rubric Checkpoints & Scoring Criteria
 ├── data/                      # Ground-Truth Databases
 │   ├── curriculum.json        # AKTU 1st-8th Sem Curriculum (ECE, CSE, IT, MECH)
-│   ├── interview_bank.json    # Qualcomm, Google, Nvidia, Microsoft, Amazon, TCS
-│   ├── interviewer_wallet.json
-│   └── verified_payments.json # Immutable Ledger of Processed Testnet Txs
+│   └── interview_bank.json    # Qualcomm, Google, Nvidia, Microsoft, Amazon, TCS
 ├── deploy/                    # Production Deployment Configurations
-│   ├── Dockerfile             # Container definition for Cloud Web Services
 │   ├── register_agentverse.py # Automated ACP registration script for Agentverse
 │   ├── render.yaml            # Render.com Blueprint Spec (Free 24/7 Hosting)
 │   ├── start_campusmate.bat   # 1-Click Windows Launcher
@@ -134,7 +121,7 @@ Campus_Mate-AI/
 │   ├── __init__.py
 │   ├── test_knowledge_engine.py  # Retrieval & intent routing tests (13 tests)
 │   ├── test_member2.py           # Load balancer & mutation hook tests (8 tests)
-│   └── test_interviewer_suite.py # Interview bank & CosmPy payment tests (8 tests)
+│   └── test_interviewer_suite.py # Interview bank & rubric grading tests (8 tests)
 ├── ui/                        # User Interface Components
 │   ├── __init__.py
 │   ├── cards.py               # Interactive Markdown UI Cards
@@ -182,7 +169,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 | :--- | :--- | :---: | :---: |
 | **Knowledge Engine** | `tests/test_knowledge_engine.py` | 13 | ✅ PASS |
 | **Syllabus & Balancer** | `tests/test_member2.py` | 8 | ✅ PASS |
-| **Interviewer & Payment** | `tests/test_interviewer_suite.py` | 8 | ✅ PASS |
+| **Technical Interviewer** | `tests/test_interviewer_suite.py` | 8 | ✅ PASS |
 | **Total Automated Coverage** | Matrix: Python 3.10, 3.11, 3.12 | **29** | **✅ 100% PASS** |
 
 ---

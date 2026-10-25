@@ -19,7 +19,6 @@ if hasattr(sys.stdout, "reconfigure"):
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 try:
-    from core.payment import PaymentProtocol
     from core.evaluator import LLMEvaluator
     from core.prompts import get_score_badge, SCORE_BADGES
     from models.models import (
@@ -30,7 +29,6 @@ try:
     )
     from agents.interviewer import serve_interview_query, evaluate_student_submission, find_question, INTERVIEW_BANK
 except ImportError:
-    from payment_protocol import PaymentProtocol
     from llm_evaluator import LLMEvaluator
     from prompts import get_score_badge, SCORE_BADGES
     from models import (
@@ -43,33 +41,8 @@ except ImportError:
 
 
 class TestInterviewerAgentSuite(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        from core.payment import VERIFIED_PAYMENTS_FILE
-        cls._verified_path = VERIFIED_PAYMENTS_FILE
-        if os.path.exists(cls._verified_path):
-            with open(cls._verified_path, "r", encoding="utf-8") as f:
-                cls._backup_payments = f.read()
-        else:
-            cls._backup_payments = None
-
-    @classmethod
-    def tearDownClass(cls):
-        if cls._backup_payments is not None:
-            with open(cls._verified_path, "w", encoding="utf-8") as f:
-                f.write(cls._backup_payments)
-
     def setUp(self):
-        self.payment = PaymentProtocol(wallet_file="test_interviewer_wallet.json")
         self.evaluator = LLMEvaluator()
-
-    def tearDown(self):
-        # Clean up test wallet file if present
-        if os.path.exists("test_interviewer_wallet.json"):
-            try:
-                os.remove("test_interviewer_wallet.json")
-            except Exception:
-                pass
 
     # --- 1. Question Bank Integrity Tests ---
     def test_01_question_bank_structure(self):
@@ -87,7 +60,6 @@ class TestInterviewerAgentSuite(unittest.TestCase):
         # Check Qualcomm Tier-1 Advanced Pack
         qualcomm_tier1 = next((q for q in qualcomm_questions if q["tier"] == "tier-1"), None)
         self.assertIsNotNone(qualcomm_tier1, "Qualcomm must have Tier-1 VLSI Advanced Pack.")
-        self.assertEqual(qualcomm_tier1["fee_fet"], 1.0)
 
         # Check TCS Prime C++ pointers and memory management
         tcs_questions = INTERVIEW_BANK["tcs_prime"]["questions"]
@@ -147,56 +119,45 @@ class TestInterviewerAgentSuite(unittest.TestCase):
         self.assertTrue(len(result["synthesis_risks"]) > 0)
         self.assertTrue(len(result["remedial_topics"]) > 0)
 
-    # --- 3. Payment Protocol & Testnet FET Monetization Tests ---
-    def test_05_tier1_locked_without_payment(self):
-        """Verifies that requesting a Tier-1 pack without valid payment returns is_unlocked=False."""
+    # --- 3. Interview Tracks & Accessibility Tests ---
+    def test_05_tier1_unlocked_directly(self):
+        """Verifies that requesting a Tier-1 Bar Raiser pack returns is_unlocked=True directly."""
         query = InterviewQuery(
             student_id="test_candidate",
             company="amazon",
             tier="tier-1",
-            question_id="amazon_bar_raiser_01",
-            payment_tx_hash=None
+            question_id="amazon_bar_raiser_01"
         )
-        response = serve_interview_query(query, sender="test_suite")
-        self.assertFalse(response.is_unlocked)
-        self.assertEqual(response.required_fee_fet, 1.0)
-        self.assertIn("LOCKED", response.question_text)
-        self.assertIsNotNone(response.payment_instructions)
-
-    def test_06_tier1_unlocked_with_valid_fet_transfer(self):
-        """Verifies that a valid 1.0 FET testnet transfer unlocks the Tier-1 mock pack."""
-        try:
-            from agents.interviewer import payment_protocol as agent_pay
-        except ImportError:
-            from agent_interviewer import payment_protocol as agent_pay
-        sender = "fetch1test_candidate_wallet"
-        tx_hash = agent_pay.simulate_transfer(sender, amount_fet=1.0, memo="Amazon Bar Raiser Drill")
-
-        query = InterviewQuery(
-            student_id="test_candidate",
-            company="amazon",
-            tier="tier-1",
-            question_id="amazon_bar_raiser_01",
-            payment_tx_hash=tx_hash
-        )
-
         response = serve_interview_query(query, sender="test_suite")
         self.assertTrue(response.is_unlocked)
+        self.assertEqual(response.required_fee_fet, 0.0)
         self.assertIn("BAR RAISER", response.question_text)
         self.assertEqual(response.tier, "tier-1")
 
-    def test_07_payment_protocol_replay_attack_prevention(self):
-        """Verifies that reusing the same tx_hash is rejected as a Replay Attack."""
-        tx_hash = self.payment.simulate_transfer("fetch1student_wallet_x", amount_fet=1.0)
+    def test_06_multi_company_recruitment_tracks(self):
+        """Verifies all target company interview tracks (Qualcomm, Google, Nvidia, Microsoft, Amazon, TCS) are available."""
+        tracks = ["qualcomm", "google", "nvidia", "microsoft", "amazon", "tcs_prime"]
+        for comp in tracks:
+            query = InterviewQuery(
+                student_id="candidate_multi",
+                company=comp,
+                tier="standard"
+            )
+            response = serve_interview_query(query, sender="test_suite")
+            self.assertTrue(response.is_unlocked, f"Track '{comp}' should be unlocked and accessible")
+            self.assertTrue(len(response.question_text) > 20, f"Track '{comp}' question text should be detailed")
 
-        # First verification must succeed
-        ok1, msg1, meta1 = self.payment.verify_payment(tx_hash, expected_min_fet=1.0, student_id="student_1")
-        self.assertTrue(ok1)
-
-        # Second verification with identical tx_hash must be blocked
-        ok2, msg2, meta2 = self.payment.verify_payment(tx_hash, expected_min_fet=1.0, student_id="student_2")
-        self.assertFalse(ok2)
-        self.assertIn("Replay Attack Detected", msg2)
+    def test_07_invalid_company_query_handling(self):
+        """Verifies that querying an unknown company returns graceful is_unlocked=False with guidance."""
+        query = InterviewQuery(
+            student_id="candidate_err",
+            company="nonexistent_corp",
+            tier="standard"
+        )
+        response = serve_interview_query(query, sender="test_suite")
+        self.assertFalse(response.is_unlocked)
+        self.assertIn("No interview question found", response.question_text)
+        self.assertIn("qualcomm", response.question_text)
 
     # --- 4. End-to-End Workflow Test ---
     def test_08_end_to_end_query_submission_evaluation(self):

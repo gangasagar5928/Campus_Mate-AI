@@ -27,22 +27,16 @@ try:
         InterviewQuery,
         InterviewQuestionResponse,
         InterviewAnswerSubmission,
-        InterviewEvaluation,
-        PaymentVerificationQuery,
-        PaymentVerificationResponse
+        InterviewEvaluation
     )
-    from core.payment import PaymentProtocol
     from core.evaluator import LLMEvaluator
 except ImportError:
     from models import (
         InterviewQuery,
         InterviewQuestionResponse,
         InterviewAnswerSubmission,
-        InterviewEvaluation,
-        PaymentVerificationQuery,
-        PaymentVerificationResponse
+        InterviewEvaluation
     )
-    from payment_protocol import PaymentProtocol
     from llm_evaluator import LLMEvaluator
 
 def resolve_bank_path() -> str:
@@ -75,7 +69,6 @@ interviewer_agent = Agent(
 interviewer_protocol = Protocol(name="CompanyInterviewerProtocol", version="1.0.0")
 
 # Core Engine components
-payment_protocol = PaymentProtocol()
 llm_evaluator = LLMEvaluator()
 
 # Load question bank
@@ -130,46 +123,14 @@ def serve_interview_query(query: InterviewQuery, sender: str = "student_agent") 
             tier=tier_requested,
             topic="Not Found",
             difficulty="N/A",
-            question_text=f"No interview question found for company '{query.company}' and tier '{tier_requested}'. Available companies: qualcomm, tcs_prime, amazon.",
+            question_text=f"No interview question found for company '{query.company}' and tier '{tier_requested}'. Available companies: qualcomm, google, nvidia, microsoft, amazon, tcs_prime.",
             is_unlocked=False,
             required_fee_fet=0.0,
-            interviewer_wallet_address=payment_protocol.agent_address,
+            interviewer_wallet_address="",
             payment_instructions=None
         )
 
-    # Check if question is a Tier-1 Premium Mock Pack
-    is_tier_1 = (q_data.get("tier", "standard").lower() == "tier-1")
-    fee_fet = float(q_data.get("fee_fet", 1.0 if is_tier_1 else 0.0))
-
-    if is_tier_1:
-        # Enforce Payment Protocol
-        is_paid, pay_msg, pay_meta = payment_protocol.verify_payment(
-            tx_hash=query.payment_tx_hash,
-            expected_min_fet=fee_fet,
-            student_id=query.student_id or sender
-        )
-        if not is_paid:
-            # Payment required: return locked gate with payment instructions
-            instructions = payment_protocol.get_payment_instructions(
-                pack_name=q_data.get("track", q_data.get("topic")),
-                fee_fet=fee_fet
-            )
-            return InterviewQuestionResponse(
-                session_id=session_id,
-                question_id=q_data["id"],
-                company=q_data["company"],
-                track=q_data["track"],
-                tier=q_data["tier"],
-                topic=q_data["topic"],
-                difficulty=q_data["difficulty"],
-                question_text=f"🔒 [LOCKED] {pay_msg}\n\nTo unlock the Tier-1 Mock Pack, submit 1.0 testnet FET transfer proof.",
-                is_unlocked=False,
-                required_fee_fet=fee_fet,
-                interviewer_wallet_address=payment_protocol.agent_address,
-                payment_instructions=instructions
-            )
-
-    # Question is unlocked (either free standard or paid Tier-1)
+    # All tracks and tiers are directly accessible
     active_sessions[session_id] = {
         "question_id": q_data["id"],
         "student_id": query.student_id,
@@ -190,7 +151,7 @@ def serve_interview_query(query: InterviewQuery, sender: str = "student_agent") 
         question_text=q_data["question"],
         is_unlocked=True,
         required_fee_fet=0.0,
-        interviewer_wallet_address=payment_protocol.agent_address,
+        interviewer_wallet_address="",
         payment_instructions=None
     )
 
@@ -244,9 +205,7 @@ async def on_startup(ctx: Context):
     ctx.logger.info("=" * 60)
     ctx.logger.info(f"🚀 Company Interviewer Agent Online: {AGENT_NAME}")
     ctx.logger.info(f"Agent Address: {interviewer_agent.address}")
-    ctx.logger.info(f"Testnet FET Wallet Address: {payment_protocol.agent_address}")
-    ctx.logger.info("Question Bank Loaded Tracks: Qualcomm, TCS Prime, Amazon")
-    ctx.logger.info("Payment Protocol: 1.0 Testnet FET required for Tier-1 Packs")
+    ctx.logger.info("Question Bank Loaded Tracks: Qualcomm, Google, Nvidia, Microsoft, Amazon, TCS Prime")
     ctx.logger.info("=" * 60)
 
 
@@ -254,10 +213,7 @@ async def on_startup(ctx: Context):
 async def handle_interview_query(ctx: Context, sender: str, msg: InterviewQuery):
     ctx.logger.info(f"[CompanyInterviewer] Received InterviewQuery from {sender} | Company: {msg.company} | Tier: {msg.tier}")
     response = serve_interview_query(msg, sender=sender)
-    if response.is_unlocked:
-        ctx.logger.info(f"[CompanyInterviewer] Serving unlocked question '{response.question_id}' to {sender}")
-    else:
-        ctx.logger.info(f"[CompanyInterviewer] Tier-1 gate locked for {sender}. Fee required: {response.required_fee_fet} FET")
+    ctx.logger.info(f"[CompanyInterviewer] Serving question '{response.question_id}' to {sender} (Unlocked: {response.is_unlocked})")
     await ctx.send(sender, response)
 
 
@@ -267,20 +223,6 @@ async def handle_answer_submission(ctx: Context, sender: str, msg: InterviewAnsw
     evaluation = evaluate_student_submission(msg)
     ctx.logger.info(f"[CompanyInterviewer] Grading completed. Score: {evaluation.score}/10.0 | Badge: {evaluation.score_badge}")
     await ctx.send(sender, evaluation)
-
-
-@interviewer_protocol.on_message(model=PaymentVerificationQuery, replies={PaymentVerificationResponse})
-async def handle_payment_query(ctx: Context, sender: str, msg: PaymentVerificationQuery):
-    is_valid, message, meta = payment_protocol.verify_payment(msg.tx_hash, expected_min_fet=1.0, student_id=msg.student_id)
-    resp = PaymentVerificationResponse(
-        tx_hash=msg.tx_hash,
-        is_valid=is_valid,
-        amount_fet=meta.get("amount_fet", 0.0),
-        sender=meta.get("sender", "unknown"),
-        recipient=payment_protocol.agent_address,
-        message=message
-    )
-    await ctx.send(sender, resp)
 
 
 interviewer_agent.include(interviewer_protocol)

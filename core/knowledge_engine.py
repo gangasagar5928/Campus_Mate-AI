@@ -293,25 +293,28 @@ def format_company_guide_markdown(company_name: str) -> str:
     ])
 
 
-def format_web3_guide_markdown() -> str:
+def format_interview_tracks_markdown() -> str:
     return "\n".join([
-        "## 🌐 Web3 Micro-Payment Protocol (Fetch.ai CosmPy Dorado)",
-        "CampusMate AI integrates on-chain micropayments over the **Fetch.ai Dorado Testnet** for premium interview packs:",
+        "## 🎯 CampusMate Interview Preparation Hub",
+        "Tailored technical drill tracks aligned with tier-1 engineering recruitment:",
         "",
-        "### 🪙 Micropayment Architecture:",
-        "- **Standard Drills:** 100% Free (Qualcomm, TCS Prime, Google Standard, Nvidia).",
-        "- **Premium / Bar Raiser Tracks:** Gated behind `1.0 FET` testnet micropayment (e.g. Amazon Bar Raiser System Design).",
-        "- **On-Chain Verification:** Autonomous CosmPy ledger query on Dorado testnet RPC.",
-        "- **Replay Protection:** Verified transaction hashes are recorded immutably in `verified_payments.json` to prevent reuse.",
+        "| Company | Recruitment Track | Quick Launch Command |",
+        "| :--- | :--- | :--- |",
+        "| **Qualcomm** | Hardware / VLSI RTL / STA | `Start Qualcomm Verilog drill` |",
+        "| **Google** | Distributed Systems & Dynamic Programming | `Start Google drill` |",
+        "| **Nvidia** | GPU CUDA, SIMT & Shared Memory | `Start Nvidia drill` |",
+        "| **Microsoft** | High-Throughput Concurrency & Async I/O | `Start Microsoft drill` |",
+        "| **Amazon** | System Design & Bar Raiser Cache | `Start Amazon Bar Raiser drill` |",
+        "| **TCS Prime** | Modern C++ Smart Pointers & RAII | `Start TCS Prime drill` |",
         "",
         "---",
-        "### 💧 Getting Free Testnet FET:",
-        "1. Open [Fetch.ai Dorado Faucet](https://faucet-dorado.fetch.ai).",
-        "2. Paste your Keplr / Fetch wallet address to receive 10.0 free testnet FET.",
-        "3. Send 1.0 FET to unlock premium tier-1 packs.",
-        "",
-        "👉 *Ready to drill? Type: **\"Unlock Amazon Bar Raiser mock interview pack\"***"
+        "💡 *All drills include instant Senior Bar Raiser 10.0 rubric evaluation and automatic evening schedule mutation if score < 6.0/10.*",
+        "👉 *Send any command from the table above to start drilling immediately.*"
     ])
+
+
+def format_web3_guide_markdown() -> str:
+    return format_interview_tracks_markdown()
 
 
 def format_exam_strategy_markdown() -> str:

@@ -2814,25 +2814,28 @@ def format_company_guide_markdown(company_name: str) -> str:
     ])
 
 
-def format_web3_guide_markdown() -> str:
+def format_interview_tracks_markdown() -> str:
     return "\n".join([
-        "## 🌐 Web3 Micro-Payment Protocol (Fetch.ai CosmPy Dorado)",
-        "CampusMate AI integrates on-chain micropayments over the **Fetch.ai Dorado Testnet** for premium interview packs:",
+        "## 🎯 CampusMate Interview Preparation Hub",
+        "Tailored technical drill tracks aligned with tier-1 engineering recruitment:",
         "",
-        "### 🪙 Micropayment Architecture:",
-        "- **Standard Drills:** 100% Free (Qualcomm, TCS Prime, Google Standard, Nvidia).",
-        "- **Premium / Bar Raiser Tracks:** Gated behind `1.0 FET` testnet micropayment (e.g. Amazon Bar Raiser System Design).",
-        "- **On-Chain Verification:** Autonomous CosmPy ledger query on Dorado testnet RPC.",
-        "- **Replay Protection:** Verified transaction hashes are recorded immutably in `verified_payments.json` to prevent reuse.",
+        "| Company | Recruitment Track | Quick Launch Command |",
+        "| :--- | :--- | :--- |",
+        "| **Qualcomm** | Hardware / VLSI RTL / STA | `Start Qualcomm Verilog drill` |",
+        "| **Google** | Distributed Systems & Dynamic Programming | `Start Google drill` |",
+        "| **Nvidia** | GPU CUDA, SIMT & Shared Memory | `Start Nvidia drill` |",
+        "| **Microsoft** | High-Throughput Concurrency & Async I/O | `Start Microsoft drill` |",
+        "| **Amazon** | System Design & Bar Raiser Cache | `Start Amazon Bar Raiser drill` |",
+        "| **TCS Prime** | Modern C++ Smart Pointers & RAII | `Start TCS Prime drill` |",
         "",
         "---",
-        "### 💧 Getting Free Testnet FET:",
-        "1. Open [Fetch.ai Dorado Faucet](https://faucet-dorado.fetch.ai).",
-        "2. Paste your Keplr / Fetch wallet address to receive 10.0 free testnet FET.",
-        "3. Send 1.0 FET to unlock premium tier-1 packs.",
-        "",
-        "👉 *Ready to drill? Type: **\"Unlock Amazon Bar Raiser mock interview pack\"***"
+        "💡 *All drills include instant Senior Bar Raiser 10.0 rubric evaluation and automatic evening schedule mutation if score < 6.0/10.*",
+        "👉 *Send any command from the table above to start drilling immediately.*"
     ])
+
+
+def format_web3_guide_markdown() -> str:
+    return format_interview_tracks_markdown()
 
 
 def format_exam_strategy_markdown() -> str:
@@ -3077,10 +3080,10 @@ async def on_acp_message(ctx: Context, sender: str, msg: ACPChatMessage):
         return
 
     # --------------------------------------------------------------------------
-    # INTENT: Web3 / FET Micropayments & Dorado Testnet
+    # INTENT: Interview Tracks & Company Drills Guide
     # --------------------------------------------------------------------------
-    if any(k in lower for k in ["fet token", "dorado", "how to unlock", "micropayment", "wallet", "faucet", "testnet fet", "dorado testnet", "1.0 fet"]):
-        md = format_web3_guide_markdown()
+    if any(k in lower for k in ["how to unlock", "tracks", "all tracks", "available drills", "what drills", "show drills", "interview tracks"]):
+        md = format_interview_tracks_markdown()
         reply = ACPChatMessage(content=[TextContent(text=md)])
         await ctx.send(sender, reply)
         return
@@ -3235,7 +3238,7 @@ async def on_acp_message(ctx: Context, sender: str, msg: ACPChatMessage):
         "Combines all 3 team members' work into one seamless workflow:",
         "- **Member 1 (Orchestration):** Agent Chat Protocol (ACP 0.3.0) discovery on ASI:One.",
         "- **Member 2 (Syllabus Balancing):** AKTU/GCET 1st-8th sem curriculum, dynamic ratio balancing (60/40, 50/50, 10/90) & evening remedial mutation hook.",
-        "- **Member 3 (Interviewer & Web3):** Qualcomm, Google, Nvidia, Microsoft, Amazon, TCS Prime bank, 1.0 testnet FET Dorado micropayments & 10.0 Bar Raiser rubric grading.",
+        "- **Member 3 (Technical Interviewer):** Qualcomm, Google, Nvidia, Microsoft, Amazon, TCS Prime bank & 10.0 Bar Raiser rubric grading.",
         "",
         "---",
         "### 🚀 Quick Prompts (Click or send any of these):",
@@ -3244,7 +3247,7 @@ async def on_acp_message(ctx: Context, sender: str, msg: ACPChatMessage):
         "3. **⚡ Hardware & VLSI Drill:**  \n   *\"Start Qualcomm Verilog mock technical interview drill\"*",
         "4. **🔍 Google Distributed Systems:**  \n   *\"Start Google drill\"*",
         "5. **🎮 Nvidia GPU & CUDA:**  \n   *\"Start Nvidia drill\"*",
-        "6. **🏢 Amazon Bar Raiser:**  \n   *\"Unlock Amazon Bar Raiser mock interview pack\"*",
+        "6. **🏢 Amazon Bar Raiser:**  \n   *\"Start Amazon Bar Raiser drill\"*",
         "7. **🎯 All Interview Tracks:**  \n   *\"Show interview tracks\"*"
     ]
     reply = ACPChatMessage(content=[TextContent(text="\n".join(lines))])

@@ -89,8 +89,9 @@ class TestKnowledgeEngine(unittest.TestCase):
 
     def test_web3_guide_format(self):
         md = format_web3_guide_markdown()
-        self.assertIn("Fetch.ai CosmPy Dorado", md)
-        self.assertIn("1.0 FET", md)
+        self.assertIn("CampusMate Interview Preparation Hub", md)
+        self.assertIn("Qualcomm", md)
+        self.assertIn("Amazon", md)
 
     def test_exam_strategy_format(self):
         md = format_exam_strategy_markdown()
