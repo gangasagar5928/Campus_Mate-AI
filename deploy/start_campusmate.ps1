@@ -28,9 +28,15 @@ while ($retries -gt 0 -and [string]::IsNullOrEmpty($tunnelUrl)) {
     Start-Sleep -Seconds 1
     if (Test-Path $logFile) {
         $content = Get-Content $logFile -Raw -ErrorAction SilentlyContinue
-        if ($content -match "https://[a-zA-Z0-9-]+\.trycloudflare\.com") {
-            $tunnelUrl = $matches[0]
-            break
+        if (-not [string]::IsNullOrEmpty($content)) {
+            $matchesList = [regex]::Matches($content, "https://([a-zA-Z0-9-]+)\.trycloudflare\.com")
+            foreach ($m in $matchesList) {
+                if ($m.Groups[1].Value -ne "api") {
+                    $tunnelUrl = $m.Value
+                    break
+                }
+            }
+            if (-not [string]::IsNullOrEmpty($tunnelUrl)) { break }
         }
     }
     $retries--
