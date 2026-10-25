@@ -151,5 +151,23 @@
     "recipient": "fetch1jvfa5n4vule23jp9t82ytxuv9dq36ld96msdqh",
     "timestamp": "2026-10-24T11:10:22Z",
     "source": "simulated_ledger"
+  },
+  "tx_fet_3a98ae28c4273c19b5a39bb464382bbf41d567f5f2b7ee45dea71c907e1ad764": {
+    "tx_hash": "tx_fet_3a98ae28c4273c19b5a39bb464382bbf41d567f5f2b7ee45dea71c907e1ad764",
+    "student_id": "test_candidate",
+    "amount_fet": 1.0,
+    "sender": "fetch1test_candidate_wallet",
+    "recipient": "fetch1w30t5x20vk7up6exq2ak3vx24utpn58wntvmh0",
+    "timestamp": "2026-10-25T04:21:14Z",
+    "source": "simulated_ledger"
+  },
+  "tx_fet_21af1d94a8ba42bc576072ac68d060dbe22863cca851d48503d19f549cdefdb4": {
+    "tx_hash": "tx_fet_21af1d94a8ba42bc576072ac68d060dbe22863cca851d48503d19f549cdefdb4",
+    "student_id": "student_1",
+    "amount_fet": 1.0,
+    "sender": "fetch1student_wallet_x",
+    "recipient": "fetch1rkrztlh7qlw02mkdk85tlvxw7yg3q7cv7sk99g",
+    "timestamp": "2026-10-25T04:21:15Z",
+    "source": "simulated_ledger"
   }
 }
