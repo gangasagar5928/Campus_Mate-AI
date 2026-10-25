@@ -18,8 +18,8 @@ $logFile = Join-Path $PSScriptRoot "tunnel.log"
 if (Test-Path $logFile) { Remove-Item $logFile -Force }
 
 $env:GODEBUG = "netdns=cgo"
-Write-Host "Establishing secure public tunnel..." -ForegroundColor Yellow
-$cfProcess = Start-Process -FilePath $cfPath -ArgumentList "tunnel", "--url", "http://127.0.0.1:8000" -RedirectStandardError $logFile -PassThru -NoNewWindow
+Write-Host "Establishing secure public tunnel (HTTP/2 TCP)..." -ForegroundColor Yellow
+$cfProcess = Start-Process -FilePath $cfPath -ArgumentList "tunnel", "--protocol", "http2", "--url", "http://127.0.0.1:8000" -RedirectStandardError $logFile -PassThru -NoNewWindow
 
 # 3. Wait for tunnel URL
 $tunnelUrl = ""
@@ -50,10 +50,15 @@ if ([string]::IsNullOrEmpty($tunnelUrl)) {
 $submitUrl = "$tunnelUrl/submit"
 Write-Host "Tunnel Established: $tunnelUrl" -ForegroundColor Green
 Write-Host "Agent Ingress:     $submitUrl" -ForegroundColor Cyan
-Write-Host "Starting Agent with ACP 0.3.0..." -ForegroundColor Yellow
 
 # Ensure working directory is project root
 Set-Location (Join-Path $PSScriptRoot "..")
 
 $env:AGENT_ENDPOINT = $submitUrl
+
+# Sync new endpoint with Agentverse automatically
+Write-Host "Syncing endpoint with Agentverse..." -ForegroundColor Yellow
+python deploy/register_agentverse.py
+
+Write-Host "Starting Agent with ACP 0.3.0..." -ForegroundColor Yellow
 python agent_student_twin.py
