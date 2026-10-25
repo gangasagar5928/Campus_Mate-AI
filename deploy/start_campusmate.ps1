@@ -18,8 +18,8 @@ $logFile = Join-Path $PSScriptRoot "tunnel.log"
 if (Test-Path $logFile) { Remove-Item $logFile -Force }
 
 $env:GODEBUG = "netdns=cgo"
-Write-Host "Establishing secure public tunnel (HTTP/2 TCP)..." -ForegroundColor Yellow
-$cfProcess = Start-Process -FilePath $cfPath -ArgumentList "tunnel", "--protocol", "http2", "--url", "http://127.0.0.1:8000" -RedirectStandardError $logFile -PassThru -NoNewWindow
+Write-Host "Establishing secure public tunnel (Cloudflare IPv4)..." -ForegroundColor Yellow
+$cfProcess = Start-Process -FilePath $cfPath -ArgumentList "tunnel", "--edge-ip-version", "4", "--url", "http://127.0.0.1:8000" -RedirectStandardError $logFile -PassThru -NoNewWindow
 
 # 3. Wait for tunnel URL
 $tunnelUrl = ""
@@ -55,6 +55,17 @@ Write-Host "Agent Ingress:     $submitUrl" -ForegroundColor Cyan
 Set-Location (Join-Path $PSScriptRoot "..")
 
 $env:AGENT_ENDPOINT = $submitUrl
+
+# Sync .env with live endpoint
+if (Test-Path ".env") {
+    $envContent = Get-Content ".env"
+    if ($envContent -match "^AGENT_ENDPOINT=") {
+        $envContent = $envContent -replace "^AGENT_ENDPOINT=.*", "AGENT_ENDPOINT=`"$submitUrl`""
+    } else {
+        $envContent += "AGENT_ENDPOINT=`"$submitUrl`""
+    }
+    $envContent | Set-Content ".env" -Encoding utf8
+}
 
 # Sync new endpoint with Agentverse automatically
 Write-Host "Syncing endpoint with Agentverse..." -ForegroundColor Yellow

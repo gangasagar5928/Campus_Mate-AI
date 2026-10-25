@@ -101,11 +101,11 @@ balancing_engine = DeterministicBalancingEngine(curriculum_loader=curriculum_loa
 llm_evaluator = LLMEvaluator()
 
 # Configuration
-STUDENT_AGENT_NAME = os.getenv("AGENT_NAME", "campusmate_student_twin")
+STUDENT_AGENT_NAME = os.getenv("AGENT_NAME", "Campusmate-AI")
 STUDENT_PORT = int(os.getenv("PORT", "8000"))
-STUDENT_SEED = os.getenv("AGENT_SEED", "campusmate_student_twin_secret_seed_gcet_2026")
+STUDENT_SEED = os.getenv("AGENT_SEED_PHRASE", os.getenv("AGENT_SEED", "campusmate_student_twin_secret_seed_gcet_2026"))
 USE_MAILBOX = os.getenv("AGENT_MAILBOX", "false").lower() in ("true", "1", "yes")
-MAILBOX_KEY = os.getenv("AGENT_MAILBOX_KEY", None)
+MAILBOX_KEY = os.getenv("AGENT_MAILBOX_KEY", os.getenv("AGENTVERSE_KEY", None))
 AGENT_ENDPOINT = os.getenv("AGENT_ENDPOINT", "")
 
 INTERVIEWER_ADDRESS = os.getenv("INTERVIEWER_AGENT_ADDRESS", "")
@@ -716,13 +716,26 @@ async def on_startup(ctx: Context):
     ctx.logger.info("=" * 60)
 
 
+@student_agent.on_interval(period=15.0)
+async def keep_alive_tunnel_heartbeat(ctx: Context):
+    """Sends lightweight heartbeat through the public tunnel to keep ISP UDP/QUIC NAT mapping permanently alive."""
+    ep = os.getenv("AGENT_ENDPOINT", AGENT_ENDPOINT)
+    if ep and ep.startswith("http"):
+        try:
+            import urllib.request
+            req = urllib.request.Request(ep, headers={"User-Agent": "CampusMate-Heartbeat/1.0"})
+            urllib.request.urlopen(req, timeout=3)
+        except Exception:
+            pass
+
+
 @chat_proto.on_message(model=ACPChatMessage)
 async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMessage):
     session = get_session(sender)
     raw_text = msg.text().strip()
 
-    # Clean out @mention tag if present from ASI:One chat
-    user_text = re.sub(r"@agent1[a-z0-9]+\s*", "", raw_text).strip()
+    # Clean out @mention tag if present from ASI:One chat (e.g. @campusmate-ai or @agent1...)
+    user_text = re.sub(r"^@\S+\s*", "", raw_text).strip()
     if not user_text:
         user_text = raw_text
 
