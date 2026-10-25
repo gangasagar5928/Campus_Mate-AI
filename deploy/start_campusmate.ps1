@@ -46,5 +46,8 @@ Write-Host "Tunnel Established: $tunnelUrl" -ForegroundColor Green
 Write-Host "Agent Ingress:     $submitUrl" -ForegroundColor Cyan
 Write-Host "Starting Agent with ACP 0.3.0..." -ForegroundColor Yellow
 
+# Ensure working directory is project root
+Set-Location (Join-Path $PSScriptRoot "..")
+
 $env:AGENT_ENDPOINT = $submitUrl
 python agent_student_twin.py

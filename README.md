@@ -119,6 +119,7 @@ Campus_Mate-AI/
 │   └── verified_payments.json # Immutable Ledger of Processed Testnet Txs
 ├── deploy/                    # Production Deployment Configurations
 │   ├── Dockerfile             # Container definition for Cloud Web Services
+│   ├── register_agentverse.py # Automated ACP registration script for Agentverse
 │   ├── render.yaml            # Render.com Blueprint Spec (Free 24/7 Hosting)
 │   ├── start_campusmate.bat   # 1-Click Windows Launcher
 │   ├── start_campusmate.ps1   # PowerShell Auto-Tunnel & Agent Launcher
