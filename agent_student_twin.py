@@ -487,6 +487,190 @@ def format_interview_concept_markdown(q: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def format_balancing_strategy_markdown() -> str:
+    return "\n".join([
+        "## ⚖️ CampusMate Dynamic Load-Balancing Algorithm",
+        "CampusMate AI eliminates **Academic Debt** by continuously harmonizing your college semester exams with tier-1 recruitment goals using a 3-tier deterministic allocation model:",
+        "",
+        "### 📊 The 3 Dynamic Workload Modes:",
+        "1. **Normal Preparation Mode (> 7 Days to Midterm):**",
+        "   - **Allocation:** `60% Placement Prep (144m)` / `40% Syllabus Revision (96m)` (based on 4 hrs)",
+        "   - **Focus:** Heavy coding drills, system design, LeetCode/Verilog, while maintaining steady syllabus momentum.",
+        "",
+        "2. **Approaching Midterm Mode (3 to 7 Days to Midterm):**",
+        "   - **Allocation:** `50% Placement Prep (120m)` / `50% Syllabus Revision (120m)`",
+        "   - **Focus:** Balanced split to prevent last-minute cramming without pausing competitive problem solving.",
+        "",
+        "3. **Urgent Exam Revision Mode (< 3 Days to Midterm):**",
+        "   - **Allocation:** `10% Placement Prep (24m)` / `90% High-Yield Syllabus Units (216m)`",
+        "   - **Focus:** Emergency academic triage. Dynamically filters out low-weight syllabus units and drills exclusively on `🔥 High-Yield` numerical derivations and diagrams to secure CGPA.",
+        "",
+        "---",
+        "### ⚡ Evening Remedial Mutation Hook:",
+        "If you score `< 6.0 / 10.0` on any technical interview drill, the engine automatically injects a **30-minute remedial session** into tonight's Evening Block, guaranteeing knowledge gaps are eliminated before sleep.",
+        "",
+        "👉 *To generate your customized plan, send: **\"Create study plan for ECE Sem 6 with 4 hours daily\"***"
+    ])
+
+
+def format_branches_coverage_markdown() -> str:
+    return "\n".join([
+        "## 🎓 AKTU / AICTE Comprehensive Academic Coverage",
+        "CampusMate AI includes official course structures, high-yield tags, and placement mappings for all 4 major engineering departments across **Semesters 1 through 8**:",
+        "",
+        "| Department | Branch Code | Supported Semesters | Placement Recruitment Targets |",
+        "| :--- | :--- | :--- | :--- |",
+        "| **Electronics & Communication** | `ECE` | Semesters 1 to 8 | Qualcomm, Intel, Texas Instruments, Nvidia, Embedded & Signal Processing |",
+        "| **Computer Science & Engg** | `CSE` | Semesters 1 to 8 | Google, Amazon, Microsoft, Systems Architecture, Distributed Cloud |",
+        "| **Information Technology** | `IT` | Semesters 1 to 8 | Cloud Computing, Full-Stack Architecture, TCS Prime, Amazon AWS |",
+        "| **Mechanical Engineering** | `MECH` | Semesters 1 to 8 | Robotics, CAD/CAM, Thermal Systems, Core Engineering Operations |",
+        "",
+        "---",
+        "### 🔍 What you can ask:",
+        "- *\"Tell me the topics for CSE semester 5\"*",
+        "- *\"What is KEC-601?\"*",
+        "- *\"Show MECH semester 4 subjects\"*",
+        "- *\"Which units in KCS-502 are high yield?\"*"
+    ])
+
+
+def format_company_guide_markdown(company_name: str) -> str:
+    comp = company_name.title()
+    dossiers = {
+        "Qualcomm": {
+            "track": "Hardware & Embedded Systems / VLSI",
+            "topics": "Verilog RTL, Blocking vs Non-Blocking Assignments, Setup & Hold Time Violations, Clock Domain Crossing (CDC), ARM Cortex Interfacing (I2C/SPI).",
+            "pitfall": "Mixing blocking (=) and non-blocking (<=) statements in sequential always blocks; ignoring clock skew in hold-time analysis.",
+            "command": "Start Qualcomm Verilog mock technical interview drill"
+        },
+        "Google": {
+            "track": "Systems Architecture & Algorithmic Scalability",
+            "topics": "Consistent Hashing with Virtual Nodes, Distributed Sharding, High-Capacity Tree-DP, Cache Invalidation at Planet Scale.",
+            "pitfall": "Failing to account for non-uniform node distribution; ignoring hotspot churn when scaling server clusters.",
+            "command": "Start Google drill"
+        },
+        "Nvidia": {
+            "track": "GPU Architecture, Parallel Computing & CUDA Systems",
+            "topics": "SIMT Execution Models, 32-Thread Warp Divergence, Shared Memory Bank Conflicts (32 banks), Coalesced Global Memory Access.",
+            "pitfall": "Allowing thread branch divergence inside a single warp; ignoring stride patterns that cause memory serialization.",
+            "command": "Start Nvidia drill"
+        },
+        "Microsoft": {
+            "track": "Cloud Platforms, High-Throughput Concurrency & Async I/O",
+            "topics": "Worker Thread Pools, Asynchronous I/O Completion Ports (IOCP), Lock-Free Ring Buffers, Semaphore vs Mutex contention.",
+            "pitfall": "Blocking thread pool worker threads with synchronous calls; deadlocks caused by priority inversions.",
+            "command": "Start Microsoft drill"
+        },
+        "Amazon": {
+            "track": "Data Structures, Distributed Caching & Bar Raiser",
+            "topics": "Cache Stampede (Thundering Herd) Prevention, Probabilistic Early Expiration (XFetch), Distributed Locks, Bar Raiser Leadership Principles.",
+            "pitfall": "Relying on standard TTL without mutex/probabilistic recompute; missing graceful degradation during downstream cache failure.",
+            "command": "Unlock Amazon Bar Raiser mock interview pack"
+        },
+        "Tcs Prime": {
+            "track": "Systems Engineering, Modern C++ & Advanced Algorithms",
+            "topics": "Modern C++ (C++17/20), Smart Pointers (`std::unique_ptr`, `std::shared_ptr`, `std::weak_ptr`), RAII, Exception Safety, Virtual Dispatch.",
+            "pitfall": "Creating cyclic references with `shared_ptr` instead of `weak_ptr`; raw memory leaks when exceptions are thrown.",
+            "command": "Start TCS Prime drill"
+        }
+    }
+    d = dossiers.get(comp, dossiers["Qualcomm"])
+    return "\n".join([
+        f"## 🏢 {comp} Recruitment Preparation Guide",
+        f"**Track:** {d['track']}",
+        "",
+        "---",
+        "### 🎯 High-Frequency Technical Topics Tested:",
+        f"{d['topics']}",
+        "",
+        "### ⚠️ Senior Bar Raiser Pitfall to Avoid:",
+        f"_{d['pitfall']}_",
+        "",
+        "---",
+        f"👉 *Launch an interactive technical mock drill: Send **\"{d['command']}\"***"
+    ])
+
+
+def format_web3_guide_markdown() -> str:
+    return "\n".join([
+        "## 🌐 Web3 Micro-Payment Protocol (Fetch.ai CosmPy Dorado)",
+        "CampusMate AI integrates on-chain micropayments over the **Fetch.ai Dorado Testnet** for premium interview packs:",
+        "",
+        "### 🪙 Micropayment Architecture:",
+        "- **Standard Drills:** 100% Free (Qualcomm, TCS Prime, Google Standard, Nvidia).",
+        "- **Premium / Bar Raiser Tracks:** Gated behind `1.0 FET` testnet micropayment (e.g. Amazon Bar Raiser System Design).",
+        "- **On-Chain Verification:** Autonomous CosmPy ledger query on Dorado testnet RPC.",
+        "- **Replay Protection:** Verified transaction hashes are recorded immutably in `verified_payments.json` to prevent reuse.",
+        "",
+        "---",
+        "### 💧 Getting Free Testnet FET:",
+        "1. Open [Fetch.ai Dorado Faucet](https://faucet-dorado.fetch.ai).",
+        "2. Paste your Keplr / Fetch wallet address to receive 10.0 free testnet FET.",
+        "3. Send 1.0 FET to unlock premium tier-1 packs.",
+        "",
+        "👉 *Ready to drill? Type: **\"Unlock Amazon Bar Raiser mock interview pack\"***"
+    ])
+
+
+def format_exam_strategy_markdown() -> str:
+    return "\n".join([
+        "## 📝 AKTU Sessional & University Exam Excellence Guide",
+        "How to secure 8.5+ CGPA while cracking Tier-1 off-campus placements:",
+        "",
+        "### 💡 Top 4 Tactical Rules for AKTU Students:",
+        "1. **Master the `🔥 High-Yield` Units First:**",
+        "   - In AKTU curricula, Units 1, 2, and 3 typically account for **70% of numerical derivations and theory** in Section B and C.",
+        "",
+        "2. **Step-Marking & Diagram Formatting:**",
+        "   - AKTU evaluators award up to 40% of marks for clear block diagrams, timing waveforms, and circuit schematics before reading text derivations.",
+        "",
+        "3. **Never Zero Out Coding:**",
+        "   - Even in exam week, dedicate 30 minutes daily to technical drills. Algorithmic thinking atrophies fast if paused completely.",
+        "",
+        "4. **Synchronize Sessional Buffer with CampusMate:**",
+        "   - College announced midterms? Simply tell CampusMate: *\"my exam is in 3 days\"* — the balancer engine instantly recalculates your daily routine to 90% exam focus.",
+        "",
+        "👉 *To generate your exam timetable, send: **\"Create study plan for ECE Sem 6 with 4 hours daily\"***"
+    ])
+
+
+def format_remedial_hook_markdown() -> str:
+    return "\n".join([
+        "## 🔄 Autonomous Evening Remedial Mutation Hook",
+        "The proprietary feedback loop between Member 2 (Syllabus Balancer) and Member 3 (Technical Interviewer):",
+        "",
+        "### ⚙️ How the Mutation Mechanism Works:",
+        "1. **Interactive Evaluation:** You submit code or explanation to a company drill prompt.",
+        "2. **Rubric Grading:** Evaluated on a 10.0 scale against expected architectural checkpoints and pitfalls.",
+        "3. **Threshold Trigger:** If score is **`< 6.0 / 10.0`**, the balancer intercepts tonight's schedule.",
+        "4. **Dynamic Mutation:** Injects a targeted **30-minute remedial review block** on your exact weak topic into your Evening Block.",
+        "5. **Schedule Regeneration:** Prevents knowledge gaps from lingering into campus placement season.",
+        "",
+        "👉 *Test the mutation hook: Send **\"Start Qualcomm drill\"** and submit an incomplete answer to watch tonight's schedule mutate dynamically!*"
+    ])
+
+
+def format_profile_status_markdown(session: SessionState) -> str:
+    exam_status = f"Midterm in **{session.days_to_midterm} Days** (User-Specified)" if session.days_specified_by_user else f"Midterm in **{session.days_to_midterm} Days** (Synced to AKTU/GCET Calendar)"
+    mode_label = "Urgent Exam Revision (10/90)" if session.days_to_midterm < 3 else ("Approaching Midterm (50/50)" if session.days_to_midterm <= 7 else "Normal Prep (60/40)")
+
+    return "\n".join([
+        "## 👤 Active Student Twin Profile",
+        f"- 🎓 **Engineering Branch:** `{session.branch}`",
+        f"- 📚 **Current Semester:** `Semester {session.semester}`",
+        f"- 🏢 **Target Company:** `{session.target_company}`",
+        f"- ⏱️ **Daily Study Budget:** `{session.daily_hours:.1f} Hours/Day`",
+        f"- ⏳ **Exam Proximity:** {exam_status}",
+        f"- ⚖️ **Current Balancer Mode:** `{mode_label}`",
+        f"- 🔄 **Remedial Hook Status:** `{'Active (' + session.evening_remedial_mutation + ')' if session.evening_remedial_mutation else 'Clear (No Academic Debt)'}`",
+        "",
+        "---",
+        "💡 *To update your profile anytime, send e.g.:*  \n*\"Switch to CSE Semester 5 with 3 hours daily targeting Google, exam in 4 days\"*",
+        "",
+        "👉 *To view your study timetable, send: **\"Show my daily study plan\"***"
+    ])
+
+
 # ==============================================================================
 # Agent Lifecycle & ACP Event Handlers
 # ==============================================================================
@@ -531,6 +715,95 @@ async def handle_official_acp_message(ctx: Context, sender: str, msg: ACPChatMes
                 lower = "schedule"
         except Exception:
             pass
+
+    # Universal Dynamic State Extraction
+    b_match = re.search(r"\b(ece|cse|it|mech)\b", lower)
+    if b_match:
+        session.branch = b_match.group(1).upper()
+    s_match = re.search(r"(?:semester|sem)\s*(\d+)", lower)
+    if s_match:
+        session.semester = int(s_match.group(1))
+    h_match = re.search(r"(\d+(?:\.\d+)?)\s*(?:hours|hrs|hr|h\b)", lower)
+    if h_match:
+        session.daily_hours = float(h_match.group(1))
+    d_match = re.search(r"(?:midterm|exam|in)\s*(\d+)\s*days?", lower)
+    if d_match:
+        session.days_to_midterm = int(d_match.group(1))
+        session.days_specified_by_user = True
+    for c in ["google", "nvidia", "microsoft", "amazon", "tcs", "qualcomm"]:
+        if c in lower:
+            session.target_company = "TCS Prime" if c == "tcs" else c.title()
+            break
+
+    # --------------------------------------------------------------------------
+    # INTENT: Profile Status
+    # --------------------------------------------------------------------------
+    if any(k in lower for k in ["my profile", "current settings", "my current branch", "my status", "who am i", "my target"]):
+        ctx.logger.info("[Intent] Student Profile Status Inquiry")
+        md = format_profile_status_markdown(session)
+        reply = ACPChatMessage(content=[TextContent(text=md)])
+        await ctx.send(sender, reply)
+        return
+
+    # --------------------------------------------------------------------------
+    # INTENT: Load-Balancing Strategy & Workload Allocation Formula
+    # --------------------------------------------------------------------------
+    if any(k in lower for k in ["how do you balance", "balancing formula", "how does it balance", "ratio", "60/40", "50/50", "10/90", "academic debt", "balancing work", "workload allocation", "balance college"]):
+        ctx.logger.info("[Intent] Balancing Strategy Inquiry")
+        md = format_balancing_strategy_markdown()
+        reply = ACPChatMessage(content=[TextContent(text=md)])
+        await ctx.send(sender, reply)
+        return
+
+    # --------------------------------------------------------------------------
+    # INTENT: Branches & AKTU University Coverage
+    # --------------------------------------------------------------------------
+    if any(k in lower for k in ["which branch", "what branches", "branches supported", "is cse supported", "is mech supported", "is it supported", "aktu coverage", "all semesters", "which engineering"]):
+        ctx.logger.info("[Intent] Branches & Coverage Inquiry")
+        md = format_branches_coverage_markdown()
+        reply = ACPChatMessage(content=[TextContent(text=md)])
+        await ctx.send(sender, reply)
+        return
+
+    # --------------------------------------------------------------------------
+    # INTENT: Target Company Recruitment & Preparation Guide
+    # --------------------------------------------------------------------------
+    if any(k in lower for k in ["how to prepare for", "recruitment guide", "placement guide", "interview tips", "what does google ask", "qualcomm prep", "nvidia prep", "amazon prep", "how to crack"]) and not any(k in lower for k in ["start", "unlock", "drill", "mock"]):
+        ctx.logger.info(f"[Intent] Company Recruitment Guide: {session.target_company}")
+        md = format_company_guide_markdown(session.target_company)
+        reply = ACPChatMessage(content=[TextContent(text=md)])
+        await ctx.send(sender, reply)
+        return
+
+    # --------------------------------------------------------------------------
+    # INTENT: Web3 / FET Micropayments & Dorado Testnet
+    # --------------------------------------------------------------------------
+    if any(k in lower for k in ["fet token", "dorado", "how to unlock", "micropayment", "wallet", "faucet", "testnet fet", "dorado testnet", "1.0 fet"]):
+        ctx.logger.info("[Intent] Web3 Micropayment Protocol Inquiry")
+        md = format_web3_guide_markdown()
+        reply = ACPChatMessage(content=[TextContent(text=md)])
+        await ctx.send(sender, reply)
+        return
+
+    # --------------------------------------------------------------------------
+    # INTENT: AKTU Sessional Exam Tips & CGPA Protection
+    # --------------------------------------------------------------------------
+    if any(k in lower for k in ["exam tips", "score high", "sessional tips", "study tips", "cgpa tips", "how to pass", "how to score", "tips for sessional"]):
+        ctx.logger.info("[Intent] Exam Strategy & CGPA Protection")
+        md = format_exam_strategy_markdown()
+        reply = ACPChatMessage(content=[TextContent(text=md)])
+        await ctx.send(sender, reply)
+        return
+
+    # --------------------------------------------------------------------------
+    # INTENT: Evening Remedial Mutation Hook Details
+    # --------------------------------------------------------------------------
+    if any(k in lower for k in ["remedial hook", "mutation hook", "why did my schedule change", "remedial mutation", "evening mutation", "schedule mutation"]):
+        ctx.logger.info("[Intent] Remedial Mutation Hook Inquiry")
+        md = format_remedial_hook_markdown()
+        reply = ACPChatMessage(content=[TextContent(text=md)])
+        await ctx.send(sender, reply)
+        return
 
     # --------------------------------------------------------------------------
     # INTENT 0A: Direct Syllabus / Topic Breakdown Inquiry
