@@ -16,16 +16,30 @@ import unittest
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-from payment_protocol import PaymentProtocol
-from llm_evaluator import LLMEvaluator
-from prompts import get_score_badge, SCORE_BADGES
-from models import (
-    InterviewQuery,
-    InterviewQuestionResponse,
-    InterviewAnswerSubmission,
-    InterviewEvaluation
-)
-from agent_interviewer import serve_interview_query, evaluate_student_submission, find_question, INTERVIEW_BANK
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+try:
+    from core.payment import PaymentProtocol
+    from core.evaluator import LLMEvaluator
+    from core.prompts import get_score_badge, SCORE_BADGES
+    from models.models import (
+        InterviewQuery,
+        InterviewQuestionResponse,
+        InterviewAnswerSubmission,
+        InterviewEvaluation
+    )
+    from agents.interviewer import serve_interview_query, evaluate_student_submission, find_question, INTERVIEW_BANK
+except ImportError:
+    from payment_protocol import PaymentProtocol
+    from llm_evaluator import LLMEvaluator
+    from prompts import get_score_badge, SCORE_BADGES
+    from models import (
+        InterviewQuery,
+        InterviewQuestionResponse,
+        InterviewAnswerSubmission,
+        InterviewEvaluation
+    )
+    from agent_interviewer import serve_interview_query, evaluate_student_submission, find_question, INTERVIEW_BANK
 
 
 class TestInterviewerAgentSuite(unittest.TestCase):
@@ -135,7 +149,10 @@ class TestInterviewerAgentSuite(unittest.TestCase):
 
     def test_06_tier1_unlocked_with_valid_fet_transfer(self):
         """Verifies that a valid 1.0 FET testnet transfer unlocks the Tier-1 mock pack."""
-        from agent_interviewer import payment_protocol as agent_pay
+        try:
+            from agents.interviewer import payment_protocol as agent_pay
+        except ImportError:
+            from agent_interviewer import payment_protocol as agent_pay
         sender = "fetch1test_candidate_wallet"
         tx_hash = agent_pay.simulate_transfer(sender, amount_fet=1.0, memo="Amazon Bar Raiser Drill")
 

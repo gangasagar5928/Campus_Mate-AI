@@ -1,0 +1,1 @@
+"""CampusMate AI Test Suite."""

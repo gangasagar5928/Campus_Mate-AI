@@ -18,27 +18,51 @@ Validates:
      InterviewQuery, and InterviewEvaluation.
 """
 
+import sys
+import os
 import unittest
 from datetime import date
 
-from schemas import (
-    StudentProfile,
-    DailyActionPlan,
-    StudyTask,
-    TaskType,
-    TimeBlock,
-    AllocationMode,
-    ExamSchedule,
-    InterviewQuery,
-    InterviewEvaluation
-)
-from load_balancer import (
-    DeterministicBalancingEngine,
-    CurriculumLoader,
-    RATIO_NORMAL,
-    RATIO_APPROACHING,
-    RATIO_URGENT
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+try:
+    from models.schemas import (
+        StudentProfile,
+        DailyActionPlan,
+        StudyTask,
+        TaskType,
+        TimeBlock,
+        AllocationMode,
+        ExamSchedule,
+        InterviewQuery,
+        InterviewEvaluation
+    )
+    from core.balancer import (
+        DeterministicBalancingEngine,
+        CurriculumLoader,
+        RATIO_NORMAL,
+        RATIO_APPROACHING,
+        RATIO_URGENT
+    )
+except ImportError:
+    from schemas import (
+        StudentProfile,
+        DailyActionPlan,
+        StudyTask,
+        TaskType,
+        TimeBlock,
+        AllocationMode,
+        ExamSchedule,
+        InterviewQuery,
+        InterviewEvaluation
+    )
+    from load_balancer import (
+        DeterministicBalancingEngine,
+        CurriculumLoader,
+        RATIO_NORMAL,
+        RATIO_APPROACHING,
+        RATIO_URGENT
+    )
 
 
 class TestSyllabusEngineAndLoadBalancer(unittest.TestCase):

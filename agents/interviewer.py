@@ -22,22 +22,47 @@ except RuntimeError:
     asyncio.set_event_loop(asyncio.new_event_loop())
 
 from uagents import Agent, Context, Protocol
-from models import (
-    InterviewQuery,
-    InterviewQuestionResponse,
-    InterviewAnswerSubmission,
-    InterviewEvaluation,
-    PaymentVerificationQuery,
-    PaymentVerificationResponse
-)
-from payment_protocol import PaymentProtocol
-from llm_evaluator import LLMEvaluator
+try:
+    from models.models import (
+        InterviewQuery,
+        InterviewQuestionResponse,
+        InterviewAnswerSubmission,
+        InterviewEvaluation,
+        PaymentVerificationQuery,
+        PaymentVerificationResponse
+    )
+    from core.payment import PaymentProtocol
+    from core.evaluator import LLMEvaluator
+except ImportError:
+    from models import (
+        InterviewQuery,
+        InterviewQuestionResponse,
+        InterviewAnswerSubmission,
+        InterviewEvaluation,
+        PaymentVerificationQuery,
+        PaymentVerificationResponse
+    )
+    from payment_protocol import PaymentProtocol
+    from llm_evaluator import LLMEvaluator
+
+def resolve_bank_path() -> str:
+    candidates = [
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "interview_bank.json"),
+        os.path.join(os.path.dirname(__file__), "interview_bank.json"),
+        os.path.join(os.getcwd(), "data", "interview_bank.json"),
+        os.path.join(os.getcwd(), "interview_bank.json")
+    ]
+    for c in candidates:
+        if os.path.exists(c):
+            return c
+    return candidates[0]
+
+INTERVIEW_BANK_PATH = resolve_bank_path()
 
 # Configuration
 AGENT_NAME = "company_interviewer"
 AGENT_PORT = int(os.getenv("INTERVIEWER_AGENT_PORT", "8000"))
 AGENT_SEED = os.getenv("INTERVIEWER_AGENT_SEED", "company_interviewer_fetchai_hackathon_seed_2026")
-INTERVIEW_BANK_PATH = os.path.join(os.path.dirname(__file__), "interview_bank.json")
 
 # Initialize Company Interviewer Agent
 interviewer_agent = Agent(

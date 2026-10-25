@@ -16,8 +16,22 @@ from cosmpy.aerial.config import NetworkConfig
 from cosmpy.crypto.keypairs import PrivateKey
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-VERIFIED_PAYMENTS_FILE = os.path.join(BASE_DIR, "verified_payments.json")
-WALLET_KEY_FILE = os.path.join(BASE_DIR, "interviewer_wallet.json")
+DATA_DIR = os.path.join(os.path.dirname(BASE_DIR), "data")
+
+def resolve_data_file(filename: str) -> str:
+    candidates = [
+        os.path.join(DATA_DIR, filename),
+        os.path.join(BASE_DIR, filename),
+        os.path.join(os.getcwd(), "data", filename),
+        os.path.join(os.getcwd(), filename)
+    ]
+    for c in candidates:
+        if os.path.exists(c):
+            return c
+    return candidates[0]
+
+VERIFIED_PAYMENTS_FILE = resolve_data_file("verified_payments.json")
+WALLET_KEY_FILE = resolve_data_file("interviewer_wallet.json")
 
 
 class PaymentProtocol:

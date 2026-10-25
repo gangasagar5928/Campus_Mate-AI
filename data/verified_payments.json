@@ -187,5 +187,68 @@
     "recipient": "fetch1rq3zzpnmlt3cx82q90qp6u3jeymxmlztyj3aa2",
     "timestamp": "2026-10-25T04:45:53Z",
     "source": "simulated_ledger"
+  },
+  "tx_fet_286bddf9e00de440195e2d2ec6ed44f0c0b7107efecd7dadb7cae04951fe7311": {
+    "tx_hash": "tx_fet_286bddf9e00de440195e2d2ec6ed44f0c0b7107efecd7dadb7cae04951fe7311",
+    "student_id": "student_1",
+    "amount_fet": 1.0,
+    "sender": "fetch1student_wallet_x",
+    "recipient": "fetch1dvww2dgvar36s40pjay62gknlahht43ue8m405",
+    "timestamp": "2026-10-25T05:17:57Z",
+    "source": "simulated_ledger"
+  },
+  "tx_fet_d2a4182b1b76f3e1e1f7a269e8dce110d781293b700cf78038752348ee427a7c": {
+    "tx_hash": "tx_fet_d2a4182b1b76f3e1e1f7a269e8dce110d781293b700cf78038752348ee427a7c",
+    "student_id": "test_candidate",
+    "amount_fet": 1.0,
+    "sender": "fetch1test_candidate_wallet",
+    "recipient": "fetch1w30t5x20vk7up6exq2ak3vx24utpn58wntvmh0",
+    "timestamp": "2026-10-25T05:19:00Z",
+    "source": "simulated_ledger"
+  },
+  "tx_fet_bdafa0713b153fddd3e3a7ded034758f78bd4904c9359dfb3716e01b106f0b07": {
+    "tx_hash": "tx_fet_bdafa0713b153fddd3e3a7ded034758f78bd4904c9359dfb3716e01b106f0b07",
+    "student_id": "student_1",
+    "amount_fet": 1.0,
+    "sender": "fetch1student_wallet_x",
+    "recipient": "fetch1typyq0xn76tjgv68y6wn32cufrl4sgvcwlyeyd",
+    "timestamp": "2026-10-25T05:19:02Z",
+    "source": "simulated_ledger"
+  },
+  "tx_fet_5d0b510deda59b4ceee11dce62098c7fc2ba310dd4171b4b0791b411b9b81872": {
+    "tx_hash": "tx_fet_5d0b510deda59b4ceee11dce62098c7fc2ba310dd4171b4b0791b411b9b81872",
+    "student_id": "test_candidate",
+    "amount_fet": 1.0,
+    "sender": "fetch1test_candidate_wallet",
+    "recipient": "fetch1w30t5x20vk7up6exq2ak3vx24utpn58wntvmh0",
+    "timestamp": "2026-10-25T05:21:12Z",
+    "source": "simulated_ledger"
+  },
+  "tx_fet_02905f1f0afe93546ee23d68240ddb85f73eba0d01250346a5b9b2d4046776fc": {
+    "tx_hash": "tx_fet_02905f1f0afe93546ee23d68240ddb85f73eba0d01250346a5b9b2d4046776fc",
+    "student_id": "student_1",
+    "amount_fet": 1.0,
+    "sender": "fetch1student_wallet_x",
+    "recipient": "fetch13hr9p34ks0nd0f22fc0q8t2nwwn99qu5dp70uj",
+    "timestamp": "2026-10-25T05:21:13Z",
+    "source": "simulated_ledger"
+  },
+  "tx_fet_9715b1ba284ee96855860c5e06c0d77646c68db953bb97ecd91ef88263ef4ec5": {
+    "tx_hash": "tx_fet_9715b1ba284ee96855860c5e06c0d77646c68db953bb97ecd91ef88263ef4ec5",
+    "student_id": "test_candidate",
+    "amount_fet": 1.0,
+    "sender": "fetch1test_candidate_wallet",
+    "recipient": "fetch1w30t5x20vk7up6exq2ak3vx24utpn58wntvmh0",
+    "timestamp": "2026-10-25T05:22:39Z",
+    "source": "simulated_ledger"
+  },
+  "tx_fet_7826b57399fd526853d5ddf1ba9130b47bd23d48b27ea8e796db892a5fc1d324": {
+    "tx_hash": "tx_fet_7826b57399fd526853d5ddf1ba9130b47bd23d48b27ea8e796db892a5fc1d324",
+    "student_id": "student_1",
+    "amount_fet": 1.0,
+    "sender": "fetch1student_wallet_x",
+    "recipient": "fetch17wm62yu52nn4h5h48s54zmf4wqm8e9cs39l277",
+    "timestamp": "2026-10-25T05:22:40Z",
+    "source": "simulated_ledger"
   }
 }

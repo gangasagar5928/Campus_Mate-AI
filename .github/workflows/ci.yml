@@ -38,38 +38,48 @@ jobs:
       - name: Validate JSON Database Integrity
         run: |
           python -c "
-          import json
-          with open('curriculum.json', 'r', encoding='utf-8') as f:
+          import json, os
+          path_curr = 'data/curriculum.json' if os.path.exists('data/curriculum.json') else 'curriculum.json'
+          path_bank = 'data/interview_bank.json' if os.path.exists('data/interview_bank.json') else 'interview_bank.json'
+          with open(path_curr, 'r', encoding='utf-8') as f:
               c = json.load(f)
               assert 'branches' in c, 'branches missing in curriculum.json'
               assert 'ECE' in c['branches'] and 'CSE' in c['branches'], 'Core branches missing'
-          with open('interview_bank.json', 'r', encoding='utf-8') as f:
+          with open(path_bank, 'r', encoding='utf-8') as f:
               b = json.load(f)
               assert 'companies' in b, 'companies missing in interview_bank.json'
               assert all(k in b['companies'] for k in ['qualcomm', 'amazon', 'tcs_prime', 'google', 'nvidia', 'microsoft']), 'Recruitment tracks missing'
           print('JSON Database Schemas: VALIDATED')
           "
 
-      - name: Run Member 2 Syllabus & Balancer Test Suite
+      - name: Run Knowledge Retrieval Engine Test Suite
         run: |
-          python test_member2.py
+          python tests/test_knowledge_engine.py
 
-      - name: Run Member 3 Interviewer & Payment Test Suite
+      - name: Run Syllabus & Balancer Test Suite
         run: |
-          python test_interviewer_suite.py
+          python tests/test_member2.py
+
+      - name: Run Interviewer & Payment Test Suite
+        run: |
+          python tests/test_interviewer_suite.py
 
       - name: Run Complete Unit Test Suite Discovery
         run: |
-          python -m unittest discover -s . -p "test_*.py" -v
+          python -m unittest discover -s tests -p "test_*.py" -v
 
       - name: Agent Module Smoke Test
         run: |
           python -c "
+          import sys, os
+          sys.path.insert(0, os.getcwd())
           import models
-          import schemas
-          import load_balancer
-          import llm_evaluator
-          import payment_protocol
-          import cards_templates
+          import models.schemas
+          import core.balancer
+          import core.evaluator
+          import core.payment
+          import core.knowledge_engine
+          import ui.cards
+          import agents.student_twin
           print('All Core Systems & Agent Modules: OPERATIONAL')
           "

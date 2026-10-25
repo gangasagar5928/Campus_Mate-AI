@@ -1,18 +1,39 @@
+import sys
+import os
 import unittest
-from agent_student_twin import (
-    match_query,
-    format_subject_markdown,
-    format_topic_markdown,
-    format_interview_concept_markdown,
-    format_balancing_strategy_markdown,
-    format_branches_coverage_markdown,
-    format_company_guide_markdown,
-    format_web3_guide_markdown,
-    format_exam_strategy_markdown,
-    format_remedial_hook_markdown,
-    format_profile_status_markdown,
-    SessionState
-)
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+try:
+    from core.knowledge_engine import (
+        match_query,
+        format_subject_markdown,
+        format_topic_markdown,
+        format_interview_concept_markdown,
+        format_balancing_strategy_markdown,
+        format_branches_coverage_markdown,
+        format_company_guide_markdown,
+        format_web3_guide_markdown,
+        format_exam_strategy_markdown,
+        format_remedial_hook_markdown,
+        format_profile_status_markdown
+    )
+    from agents.student_twin import SessionState
+except ImportError:
+    from agent_student_twin import (
+        match_query,
+        format_subject_markdown,
+        format_topic_markdown,
+        format_interview_concept_markdown,
+        format_balancing_strategy_markdown,
+        format_branches_coverage_markdown,
+        format_company_guide_markdown,
+        format_web3_guide_markdown,
+        format_exam_strategy_markdown,
+        format_remedial_hook_markdown,
+        format_profile_status_markdown,
+        SessionState
+    )
 
 class TestKnowledgeEngine(unittest.TestCase):
     def test_subject_code_match(self):

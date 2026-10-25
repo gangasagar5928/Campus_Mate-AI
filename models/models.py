@@ -146,14 +146,27 @@ class ScheduleMutation(Model):
 
 
 # Forward exports from canonical schemas.py for backwards compatibility
-from schemas import (
-    TaskType,
-    TimeBlock,
-    AllocationMode,
-    ExamSchedule,
-    PlanRequest,
-    PlanResponse,
-    CurriculumQueryRequest,
-    CurriculumQueryResponse,
-    UnitPriorityItem
-)
+try:
+    from models.schemas import (
+        TaskType,
+        TimeBlock,
+        AllocationMode,
+        ExamSchedule,
+        PlanRequest,
+        PlanResponse,
+        CurriculumQueryRequest,
+        CurriculumQueryResponse,
+        UnitPriorityItem
+    )
+except ImportError:
+    from schemas import (
+        TaskType,
+        TimeBlock,
+        AllocationMode,
+        ExamSchedule,
+        PlanRequest,
+        PlanResponse,
+        CurriculumQueryRequest,
+        CurriculumQueryResponse,
+        UnitPriorityItem
+    )

@@ -9,12 +9,20 @@ import json
 import re
 import requests
 from typing import Dict, Any, List, Optional
-from prompts import (
-    EVALUATION_SYSTEM_PROMPT,
-    EVALUATION_USER_TEMPLATE,
-    get_score_badge,
-    SCORE_BADGES
-)
+try:
+    from core.prompts import (
+        EVALUATION_SYSTEM_PROMPT,
+        EVALUATION_USER_TEMPLATE,
+        get_score_badge,
+        SCORE_BADGES
+    )
+except ImportError:
+    from prompts import (
+        EVALUATION_SYSTEM_PROMPT,
+        EVALUATION_USER_TEMPLATE,
+        get_score_badge,
+        SCORE_BADGES
+    )
 
 
 class LLMEvaluator:

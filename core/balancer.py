@@ -16,23 +16,48 @@ import uuid
 from datetime import datetime, date
 from typing import List, Dict, Any, Optional, Tuple
 
-from schemas import (
-    StudentProfile,
-    DailyActionPlan,
-    StudyTask,
-    TaskType,
-    TimeBlock,
-    AllocationMode,
-    ExamSchedule,
-    InterviewEvaluation,
-    UnitPriorityItem
-)
+try:
+    from models.schemas import (
+        StudentProfile,
+        DailyActionPlan,
+        StudyTask,
+        TaskType,
+        TimeBlock,
+        AllocationMode,
+        ExamSchedule,
+        InterviewEvaluation,
+        UnitPriorityItem
+    )
+except ImportError:
+    from schemas import (
+        StudentProfile,
+        DailyActionPlan,
+        StudyTask,
+        TaskType,
+        TimeBlock,
+        AllocationMode,
+        ExamSchedule,
+        InterviewEvaluation,
+        UnitPriorityItem
+    )
 
 RATIO_NORMAL = (0.60, 0.40)        # 60% Placement, 40% Syllabus
 RATIO_APPROACHING = (0.50, 0.50)   # 50% Placement, 50% Syllabus
 RATIO_URGENT = (0.10, 0.90)        # 10% Placement, 90% Syllabus (High-Weightage)
 
-DEFAULT_CURRICULUM_PATH = os.path.join(os.path.dirname(__file__), "curriculum.json")
+def resolve_curriculum_path() -> str:
+    candidates = [
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "curriculum.json"),
+        os.path.join(os.path.dirname(__file__), "curriculum.json"),
+        os.path.join(os.getcwd(), "data", "curriculum.json"),
+        os.path.join(os.getcwd(), "curriculum.json")
+    ]
+    for c in candidates:
+        if os.path.exists(c):
+            return c
+    return candidates[0]
+
+DEFAULT_CURRICULUM_PATH = resolve_curriculum_path()
 
 
 class CurriculumLoader:
