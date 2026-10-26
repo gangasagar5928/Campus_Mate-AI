@@ -7,6 +7,7 @@ Write-Host "============================================================" -Foreg
 Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | ForEach-Object {
     Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue
 }
+Stop-Process -Name cloudflared -Force -ErrorAction SilentlyContinue
 
 # 2. Locate cloudflared binary
 $cfPath = "C:\Users\mksin\.omniroute\cloudflared\bin\cloudflared.exe"
